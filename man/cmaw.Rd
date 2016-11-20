@@ -27,7 +27,8 @@ This calculation accounts for leap (366 day) years when they occur.
 
  x = cmaw(as.Date('2016-02-01')
  print(x)
- 1.048851 
+ 1.048851
+
  # then apply this weighting to volume values to get a scaled value
 
  32000 * x

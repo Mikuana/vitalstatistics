@@ -2,3 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# Ignore compressed data files
+*.gz
+*.zip
+inst/doc
