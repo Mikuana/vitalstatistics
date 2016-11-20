@@ -35,11 +35,11 @@ def manage(year, remove_zip=False, remove_raw=True, remove_stage=True, sample=Fa
             if not os.path.exists(p.uz_folder):
                 if not os.path.exists(p.zip):
                     ftp_get(p.zip_name, p.zip)  # if the zip doesn't exist, get it from the FTP
-                # uz(p.zip, p.uz_folder)  # unzip into data folder
+                uz(p.zip, p.uz_folder)  # unzip into data folder
 
             data_dictionary = d.year(year)
-            # stage(data_dictionary, p.stage_file, p.raw_file(), year, sample=sample)
-        # mz(p.stage_file)
+            stage(data_dictionary, p.stage_file, p.raw_file(), year, sample=sample)
+        mz(p.stage_file)
 
     if remove_raw and os.path.exists(p.uz_folder):
         shutil.rmtree(p.uz_folder)
@@ -53,11 +53,13 @@ def manage(year, remove_zip=False, remove_raw=True, remove_stage=True, sample=Fa
 
 def uz(stage_file, uz_folder):
     """ Unzip CDC file """
+    print("Unpacking {}".format(stage_file))
     subprocess.check_output(['unzip', stage_file, '-d', uz_folder])
 
 
 def mz(stage_file):
     """ Pack output csv into a gzip """
+    print("Compressing into {}".format(stage_file))
     subprocess.check_output(['gzip', stage_file])
 
 
@@ -168,28 +170,28 @@ def stage(dd, stage_file_path, raw_file_path, year, sample=False):
         with open(raw_file_path, 'rb') as r:
             print("Counting rows in {} file".format(year))
             total = sum(1 for _ in r)
+            print("{} rows".format(total))
 
             randoms = None
             if sample:
                 randoms = sorted(random.sample(range(1, total), 30000), reverse=True)
 
         with open(raw_file_path, encoding='cp1252') as r:
+            print("Writing rows for new {} file".format(year))
             lc = 0
             conscript = None
 
             for line in tqdm(r, total=total):
                 lc += 1
+                if sample is True and conscript is None:
+                    if randoms == []:
+                        break
+                    else:
+                        conscript = randoms.pop()
 
-                if randoms and conscript is not None:
-                    conscript = randoms.pop()
-                elif sample:
-                    break
-
-                if conscript and lc != conscript:
-                    pass
-                    # this skips any line that is pure whitespace, since it's not data
+                if sample is False or lc == conscript:
                     if line.isspace():
-                        pass
+                        pass  # this skips any line that is pure whitespace, since it's not data
                     else:
                         w.write(','.join(
                             [handlers[dd[c]['type']]
@@ -202,4 +204,4 @@ def stage(dd, stage_file_path, raw_file_path, year, sample=False):
 
 
 if __name__ == '__main__':
-    loop()
+    loop(start=2014, end=2014, remove_raw=False, sample=True)
