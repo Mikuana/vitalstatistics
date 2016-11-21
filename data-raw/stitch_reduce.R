@@ -71,7 +71,7 @@ staged_data = function(dictionary, year, column_selection=NA) {
     fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
         recode_na() %>%
         recode_ordered() %>%
-        # recode_flags() %>%
+        recode_flags() %>%
         add_year
 }
 

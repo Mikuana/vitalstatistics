@@ -7,3 +7,7 @@
 *.gz
 *.zip
 inst/doc
+
+
+# Ignore Study (Rmarkdown) HTML files
+studies/*.html
