@@ -65,15 +65,8 @@ staged_data = function(dictionary, year, column_selection=NA) {
     # Assemble a command to return the decompressed gz staging file
     gz_com = paste('zcat', file.path(data_folder, paste0('births', year ,'.csv.gz')))
 
-    if(!is.na(column_selection)) {
-        sel = dictionary$year[column_selection] %>% names
-    } 
-    else {
-        sel = dictionary$default[column_selection] %>% names
-    }
-    col = dictionary$year[sel] %>%  sapply(function(x) x[['type']]) %>% as.character
-
-
+    sel = ydict %>% names
+    col = setNames(ydict[sel] %>%  sapply(function(x) x[['type']]) %>% as.character, sel)
 
     fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
         recode_na() %>%
@@ -114,7 +107,7 @@ chunk1 =
             summarize(cases = n())
     }) %>% rbindlist(use.names=TRUE, fill=TRUE)
 
-chunk2 =
+chunk2 =  # this section is loading two years where characters dont match the dictionary
     lapply(2004:2008, function(x) {
         staged_data(dictionary, x) %>%
             mutate(
@@ -184,12 +177,8 @@ chunk3 =  # TODO: figure out why fields are missing for 2010
             summarize(cases = n())
     }) %>% rbindlist(use.names=TRUE, fill=TRUE)
 
-births = rbindlist( list(chunk0, chunk1, chunk2, chunk3),
-    use.names=TRUE, fill=TRUE
-    )
+births = rbindlist( list(chunk0, chunk1, chunk2, chunk3),use.names=TRUE, fill=TRUE)
 
-births = mutate(births,
-                month_date = ymd(paste(DOB_YY, DOB_MM, '01', sep='_'))
-                )
+births = mutate(births,month_date = ymd(paste(DOB_YY, DOB_MM, '01', sep='_')))
 
-devtools::use_data(births)
+devtools::use_data(births, overwrite=TRUE)
