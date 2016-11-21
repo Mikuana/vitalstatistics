@@ -4,6 +4,7 @@
 
 library(dplyr)
 library(data.table)
+library(lubridate)
 
 # call data dictionary function from this package. That means you need to build and load this
 # package before you can process the raw data
@@ -11,7 +12,7 @@ dictionary = data_dictionary()
 
 
 staged_data = function(dictionary, year, column_selection=NA) {
-    data_folder = file.path('data')
+    data_folder = file.path('data-raw', 'data')
     if(is.na(column_selection)) { column_selection=TRUE }
     dictionary = data_dictionary()
     ydict = dictionary[[as.character(year)]][column_selection]
@@ -64,10 +65,17 @@ staged_data = function(dictionary, year, column_selection=NA) {
     # Assemble a command to return the decompressed gz staging file
     gz_com = paste('zcat', file.path(data_folder, paste0('births', year ,'.csv.gz')))
 
+    if(!is.na(column_selection)) {
+        sel = dictionary$year[column_selection] %>% names
+    } 
+    else {
+        sel = dictionary$default[column_selection] %>% names
+    }
+    col = dictionary$year[sel] %>%  sapply(function(x) x[['type']]) %>% as.character
 
-    fread(input=gz_com, stringsAsFactors=FALSE,
-          select = NULL
-          ) %>%
+
+
+    fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
         recode_na() %>%
         recode_ordered() %>%
         # recode_flags() %>%
@@ -140,39 +148,42 @@ chunk2 =
 
 
 chunk3 =
-    lapply(2009:2014, function(x) {
+    lapply(2009:2010, function(x) {
         staged_data(dictionary, x) %>%
             mutate(
                 ME_ROUT_x =
                     ifelse(UME_PRIMC == 'Yes' | UME_REPEC == 'Yes', 'Cesarean',
-                           ifelse(UME_FORCP == 'Yes', 'Forceps',
-                                  ifelse(UME_VAC == 'Yes', 'Vacuum',
-                                         ifelse(UME_VAG == 'Yes' | UME_VBAC == 'Yes', 'Spontaneous',
-                                                'Unknown or not stated')))
-                    ),
+                    ifelse(UME_FORCP == 'Yes', 'Forceps',
+                    ifelse(UME_VAC == 'Yes', 'Vacuum',
+                    ifelse(UME_VAG == 'Yes' | UME_VBAC == 'Yes', 'Spontaneous',
+                    'Unknown or not stated')))
+                    )
 
-                ME_ROUT = coalesce(
-                    ifelse(ME_ROUT == 'Unknown or not stated', NA, as.character(ME_ROUT)),
-                    ME_ROUT_x,
-                    'Unknown or not stated'
-                ),
-                ME_ROUT = ordered(ME_ROUT,
-                                  levels = dictionary[['default']][['ME_ROUT']][['labels']]
-                ),
+                # ME_ROUT = 
+                #     coalesce(
+                #         ifelse(
+                #             ME_ROUT == 'Unknown or not stated', NA, as.character(ME_ROUT)
+                #         ),
+                #         ME_ROUT_x,
+                #         'Unknown or not stated'
+                #     )
+                # ,
+                # ME_ROUT = ordered(ME_ROUT,
+                #                   levels = dictionary[['default']][['ME_ROUT']][['labels']]
+                # ),
 
-                RF_CESAR = ordered(
-                    ifelse(UME_VAG == 'Yes' | UME_PRIMC == 'Yes', 'No',
-                           ifelse(UME_VBAC == 'Yes' | UME_REPEC == 'Yes', 'Yes',
-                                  'Unknown or not stated')),
-                    levels = dictionary[['default']][['RF_CESAR']][['labels']]
-                )
+                # RF_CESAR = ordered(
+                #     ifelse(UME_VAG == 'Yes' | UME_PRIMC == 'Yes', 'No',
+                #            ifelse(UME_VBAC == 'Yes' | UME_REPEC == 'Yes', 'Yes',
+                #                   'Unknown or not stated')),
+                #     levels = dictionary[['default']][['RF_CESAR']][['labels']]
+                # )
             ) %>%
             group_by(DOB_YY, DOB_MM, BFACIL3, ME_ROUT, RF_CESAR) %>%
             summarize(cases = n())
     }) %>% rbindlist(use.names=TRUE, fill=TRUE)
 
-births = rbindlist(
-    list(chunk0, chunk1, chunk2, chunk3),
+births = rbindlist( list(chunk0, chunk1, chunk2, chunk3),
     use.names=TRUE, fill=TRUE
     )
 
