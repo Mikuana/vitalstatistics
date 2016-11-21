@@ -147,7 +147,7 @@ chunk2 =
     }) %>% rbindlist(use.names=TRUE, fill=TRUE)
 
 
-chunk3 =
+chunk3 =  # TODO: figure out why fields are missing for 2010
     lapply(2009:2010, function(x) {
         staged_data(dictionary, x) %>%
             mutate(
@@ -158,26 +158,27 @@ chunk3 =
                     ifelse(UME_VAG == 'Yes' | UME_VBAC == 'Yes', 'Spontaneous',
                     'Unknown or not stated')))
                     )
+                ,
 
-                # ME_ROUT = 
-                #     coalesce(
-                #         ifelse(
-                #             ME_ROUT == 'Unknown or not stated', NA, as.character(ME_ROUT)
-                #         ),
-                #         ME_ROUT_x,
-                #         'Unknown or not stated'
-                #     )
-                # ,
-                # ME_ROUT = ordered(ME_ROUT,
-                #                   levels = dictionary[['default']][['ME_ROUT']][['labels']]
-                # ),
+                ME_ROUT = 
+                    coalesce(
+                        ifelse(
+                            ME_ROUT == 'Unknown or not stated', NA, as.character(ME_ROUT)
+                        ),
+                        as.character(ME_ROUT_x),
+                        'Unknown or not stated'
+                    )
+                ,
+                ME_ROUT = ordered(ME_ROUT,
+                                  levels = dictionary[['default']][['ME_ROUT']][['labels']]
+                ),
 
-                # RF_CESAR = ordered(
-                #     ifelse(UME_VAG == 'Yes' | UME_PRIMC == 'Yes', 'No',
-                #            ifelse(UME_VBAC == 'Yes' | UME_REPEC == 'Yes', 'Yes',
-                #                   'Unknown or not stated')),
-                #     levels = dictionary[['default']][['RF_CESAR']][['labels']]
-                # )
+                RF_CESAR = ordered(
+                    ifelse(UME_VAG == 'Yes' | UME_PRIMC == 'Yes', 'No',
+                           ifelse(UME_VBAC == 'Yes' | UME_REPEC == 'Yes', 'Yes',
+                                  'Unknown or not stated')),
+                    levels = dictionary[['default']][['RF_CESAR']][['labels']]
+                )
             ) %>%
             group_by(DOB_YY, DOB_MM, BFACIL3, ME_ROUT, RF_CESAR) %>%
             summarize(cases = n())
