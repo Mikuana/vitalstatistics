@@ -204,4 +204,4 @@ def stage(dd, stage_file_path, raw_file_path, year, sample=False):
 
 
 if __name__ == '__main__':
-    loop(start=2014, end=2014, remove_raw=False, sample=True)
+    loop(sample=True)
