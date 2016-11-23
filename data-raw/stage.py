@@ -14,6 +14,7 @@ python3 data-raw/stage.py
 """
 import os
 import shutil
+from configparser import ConfigParser
 from ftplib import FTP
 from tqdm import tqdm
 import subprocess
@@ -77,31 +78,6 @@ def ftp_get(zip_file, zip_path):
                 pbar.update(l)
                 f.write(data)
             ftp.retrbinary('RETR {}'.format(zip_file), cb)
-
-
-class PathFinder(object):
-    def __init__(self, year):
-        y = str(year)
-        zip_file_template = 'Nat{}{}.zip'
-        stage_file_template = 'births{}.csv'
-        stage_gz_template = 'births{}.csv.gz'
-        data_path = os.path.join('data')
-        data_raw_path = os.path.join('data-raw')
-
-        self.dictionary = os.path.join(data_path, 'dictionary.json')
-        self.zip_name = zip_file_template.format(y, '' if year < 1994 else 'us')
-        self.zip = os.path.join(data_raw_path, self.zip_name)
-        self.uz_folder = os.path.join(data_raw_path, y)
-        self.stage_file = os.path.join(data_raw_path, stage_file_template.format(y))
-        self.stage_gz_file = os.path.join(data_raw_path, stage_gz_template.format(y))
-
-    def raw_file(self):
-        """ Locate the raw data file by finding the largest file in the folder and assuming """
-        sizes = []
-        for f in os.listdir(self.uz_folder):
-            sizes.append((os.path.getsize(os.path.join(self.uz_folder, f)), f))
-        sizes.sort(reverse=True)
-        return os.path.join(self.uz_folder, sizes[0][1])
 
 
 class SchemaLessDD(object):
@@ -174,7 +150,12 @@ def stage(dd, stage_file_path, raw_file_path, year, sample=False):
 
             randoms = None
             if sample:
-                randoms = sorted(random.sample(range(1, total), 30000), reverse=True)
+                # Randomly sample 1% of each annual data set
+                percentage = float(config['SAMPLING']['percentage'])
+                randoms = sorted(
+                    random.sample(range(1, total), int(total * percentage)),
+                    reverse=True
+                )
 
         with open(raw_file_path, encoding='cp1252') as r:
             print("Writing rows for new {} file".format(year))
@@ -203,5 +184,35 @@ def stage(dd, stage_file_path, raw_file_path, year, sample=False):
                     conscript = None
 
 
+class PathFinder(object):
+    def __init__(self, year):
+        y = str(year)
+        zip_file_template = 'Nat{}{}.zip'
+        stage_file_template = 'births{}.csv'
+        stage_gz_template = 'births{}.csv.gz'
+        data_path = os.path.join('data')
+        data_raw_path = os.path.join('data-raw')
+
+        self.config = os.path.join(data_raw_path, 'config.ini')
+        self.dictionary = os.path.join(data_path, 'dictionary.json')
+        self.zip_name = zip_file_template.format(y, '' if year < 1994 else 'us')
+        self.zip = os.path.join(data_raw_path, 'data', self.zip_name)
+        self.uz_folder = os.path.join(data_raw_path, 'data', y)
+        self.stage_file = os.path.join(data_raw_path, 'data', stage_file_template.format(y))
+        self.stage_gz_file = os.path.join(data_raw_path, 'data', stage_gz_template.format(y))
+
+    def raw_file(self):
+        """ Locate the raw data file by finding the largest file in the folder and assuming """
+        sizes = []
+        for f in os.listdir(self.uz_folder):
+            sizes.append((os.path.getsize(os.path.join(self.uz_folder, f)), f))
+        sizes.sort(reverse=True)
+        return os.path.join(self.uz_folder, sizes[0][1])
+
+
+config = ConfigParser()
+config.read(os.path.join('data-raw', 'config.ini'))
+
+
 if __name__ == '__main__':
-    loop(sample=True)
+    loop(sample=config['SAMPLING']['enabled'] == 'True')
