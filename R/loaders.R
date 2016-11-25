@@ -6,7 +6,7 @@
 data_dictionary = function() {
     tree = jsonlite::fromJSON(file.path('data', 'dictionary.json'))
     nodes = names(tree)
-    nodes[!grepl('^__\\w+__$', nodes)]  # ignore non-field properties
+    nodes = nodes[!grepl('^__\\w+__$', nodes)]  # ignore non-field properties
 
     test_node = function(node) {
         subnodes = names(tree[[node]])

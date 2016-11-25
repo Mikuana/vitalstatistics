@@ -6,6 +6,11 @@ library(dplyr)
 library(data.table)
 library(lubridate)
 
+# Call up config file attributes and cast them for R
+config = ini::read.ini(file.path('data-raw', 'config.ini'))
+config$SAMPLING$enabled = config$SAMPLING$enabled == "True"
+config$SAMPLING$percentage = as.numeric(config$SAMPLING$percentage)
+
 # call data dictionary function from this package. That means you need to build and load this
 # package before you can process the raw data
 dictionary = data_dictionary()
@@ -68,117 +73,24 @@ staged_data = function(dictionary, year, column_selection=NA) {
     sel = ydict %>% names
     col = setNames(ydict[sel] %>%  sapply(function(x) x[['type']]) %>% as.character, sel)
 
-    fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
+    dat = fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
         recode_na() %>%
         recode_ordered() %>%
         recode_flags() %>%
         add_year
+
+    # testthat::expect_equal(nrow(dat), original_records[as.character(year)])
+
+    dat = dat %>% filter(!RESTATUS == 'Foreign resident')
+    # testthat::expect_equal(nrow(dat), final_records[as.character(year)])
+
+    return(dat)
 }
 
 
-chunk0 =
-    lapply(1968:1988, function(x) {
-        staged_data(dictionary, x) %>%
-            group_by(DOB_YY, DOB_MM) %>%
-            summarize(cases = n())
-    }) %>% rbindlist(use.names=TRUE, fill=TRUE)
 
-chunk1 =
-    lapply(1989:2003, function(x) {
-        staged_data(dictionary, x) %>%
-            mutate(
-                ME_ROUT = ordered(
-                    ifelse(UME_PRIMC == 'Yes' | UME_REPEC == 'Yes', 'Cesarean',
-                           ifelse(UME_FORCP == 'Yes', 'Forceps',
-                                  ifelse(UME_VAC == 'Yes', 'Vacuum',
-                                         ifelse(UME_VAG == 'Yes' | UME_VBAC == 'Yes', 'Spontaneous',
-                                                'Unknown or not stated')))),
-                    levels = dictionary[['default']][['ME_ROUT']][['labels']]
-                ),
-
-                RF_CESAR = ordered(
-                    ifelse(UME_VAG == 'Yes' | UME_PRIMC == 'Yes', 'No',
-                           ifelse(UME_VBAC == 'Yes' | UME_REPEC == 'Yes', 'Yes',
-                                  'Unknown or not stated')),
-                    levels = dictionary[['default']][['RF_CESAR']][['labels']]
-                )
-            ) %>%
-            group_by(DOB_YY, DOB_MM, BFACIL3, ME_ROUT, RF_CESAR) %>%
-            summarize(cases = n())
-    }) %>% rbindlist(use.names=TRUE, fill=TRUE)
-
-chunk2 =  # this section is loading two years where characters dont match the dictionary
-    lapply(2004:2008, function(x) {
-        staged_data(dictionary, x) %>%
-            mutate(
-                ME_ROUT_x =
-                    ifelse(UME_PRIMC == 'Yes' | UME_REPEC == 'Yes', 'Cesarean',
-                           ifelse(UME_FORCP == 'Yes', 'Forceps',
-                                  ifelse(UME_VAC == 'Yes', 'Vacuum',
-                                         ifelse(UME_VAG == 'Yes' | UME_VBAC == 'Yes', 'Spontaneous',
-                                                'Unknown or not stated')))
-                    ),
-
-                ME_ROUT = coalesce(
-                        ifelse(ME_ROUT == 'Unknown or not stated', NA, as.character(ME_ROUT)),
-                        ME_ROUT_x,
-                        'Unknown or not stated'
-                    ),
-                ME_ROUT = ordered(ME_ROUT,
-                                  levels = dictionary[['default']][['ME_ROUT']][['labels']]
-                    ),
-
-                RF_CESAR = ordered(
-                    ifelse(UME_VAG == 'Yes' | UME_PRIMC == 'Yes', 'No',
-                           ifelse(UME_VBAC == 'Yes' | UME_REPEC == 'Yes', 'Yes',
-                                  'Unknown or not stated')),
-                    levels = dictionary[['default']][['RF_CESAR']][['labels']]
-                )
-            ) %>%
-            group_by(DOB_YY, DOB_MM, BFACIL3, ME_ROUT, RF_CESAR) %>%
-            summarize(cases = n())
-    }) %>% rbindlist(use.names=TRUE, fill=TRUE)
-
-
-chunk3 =  # TODO: figure out why fields are missing for 2010
-    lapply(2009:2010, function(x) {
-        staged_data(dictionary, x) %>%
-            mutate(
-                ME_ROUT_x =
-                    ifelse(UME_PRIMC == 'Yes' | UME_REPEC == 'Yes', 'Cesarean',
-                    ifelse(UME_FORCP == 'Yes', 'Forceps',
-                    ifelse(UME_VAC == 'Yes', 'Vacuum',
-                    ifelse(UME_VAG == 'Yes' | UME_VBAC == 'Yes', 'Spontaneous',
-                    'Unknown or not stated')))
-                    )
-                ,
-
-                ME_ROUT = 
-                    coalesce(
-                        ifelse(
-                            ME_ROUT == 'Unknown or not stated', NA, as.character(ME_ROUT)
-                        ),
-                        as.character(ME_ROUT_x),
-                        'Unknown or not stated'
-                    )
-                ,
-                ME_ROUT = ordered(ME_ROUT,
-                                  levels = dictionary[['default']][['ME_ROUT']][['labels']]
-                ),
-
-                RF_CESAR = ordered(
-                    ifelse(UME_VAG == 'Yes' | UME_PRIMC == 'Yes', 'No',
-                           ifelse(UME_VBAC == 'Yes' | UME_REPEC == 'Yes', 'Yes',
-                                  'Unknown or not stated')),
-                    levels = dictionary[['default']][['RF_CESAR']][['labels']]
-                )
-            ) %>%
-            group_by(DOB_YY, DOB_MM, BFACIL3, ME_ROUT, RF_CESAR) %>%
-            summarize(cases = n())
-    }) %>% rbindlist(use.names=TRUE, fill=TRUE)
-
-births = rbindlist( list(chunk0, chunk1, chunk2, chunk3),use.names=TRUE, fill=TRUE)
-
-births = mutate(births,month_date = ymd(paste(DOB_YY, DOB_MM, '01', sep='_')))
+if(config$SAMPLING$enabled) {
+    births = mutate(births, cases = cases / config$SAMPLING$percentage)
+}
 
 devtools::use_data(births, overwrite=TRUE)
