@@ -99,6 +99,10 @@ class SchemaLessDD(object):
         with open(self.dict_path) as f:
             data = json.load(f)
 
+
+        for nonfield in [k for k in data if k.startswith('__') and k.endswith('__')]:
+            del data[nonfield]
+
         master = {}
         for col in data:
             col_dict = {}
