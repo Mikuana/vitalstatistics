@@ -31,3 +31,19 @@ cmaw = function(month_date) {
     (1/12) / 
         (lubridate::days_in_month(month_date) / ifelse(lubridate::leap_year(month_date), 366, 365))
 }
+
+
+# #' Birth Volume Seasonal Adjustment
+# #' @export
+# seas_birth_adj = function(month_date) {
+#     if(!lubridate::is.Date(month_date)) {
+#         stop("You did not pass a value that lubridate recognizes as a date")
+#     }
+    
+    
+#     `__seas__` <<- births dplyr::%>% 
+#         dplyr::group_by dplyr::%>%
+#         dplyr::transmute(cases = cases * cmaw(month_date)) dplyr::%>%
+#         stats::ts(frequency=12, start=1968) %>%
+#         stats::decompose(type="multiplicative")
+# }
