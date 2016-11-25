@@ -1,4 +1,9 @@
 {
+    "__overview__": {
+        "1992": {"all_records": 4069428, "resident_records": 4065014},
+        "1993": {"all_records": 4004523, "resident_records": 4000240}
+    },
+
     "DOB_MM": {
         "default": {
             "description": "Birth Month",
@@ -399,5 +404,15 @@
         "2012": {"start": 400, "end": 400},
         "2013": {"start": 400, "end": 400},
         "2014": {"start": 1336, "end": 1336}
+    },
+    "RESTATUS" :{
+        "default": {
+            "description": "Resident Status",
+            "type": "integer",
+            "levels": [1,2,3,4],
+            "labels": ["Resident", "Intrastate nonresident", "Interstate nonresident", "Foreign resident"]
+        },
+        "1992": {"start": 6, "end": 6},
+        "1993": {"start": 6, "end": 6}
     }
 }
