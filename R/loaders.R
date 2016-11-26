@@ -57,6 +57,7 @@ data_dictionary = function() {
         }
 
         dict$years = function() {
+            'Returns a vector of years that are included in the data dictionary'
             names(dict)[grep('\\d{4}', names(dict))]
         }
         return(dict)

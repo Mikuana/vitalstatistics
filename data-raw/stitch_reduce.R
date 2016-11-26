@@ -87,8 +87,27 @@ staged_data = function(set_year, column_selection=NA) {
                         NA))
                        
             )
-            } else {return(labeled_data)}
+        } else {mutate(labeled_data, cesarean_lg = NA)}
+    }
+
+    remap_BFACIL = function(labeled_data) {
+        'Remap pre-1989 place of birth records to conform with the BFACIL3 field'
+        fields = names(labeled_data)
+        if(!'BFACIL3' %in% fields){
+            if('PODEL' %in% fields) {
+                return(mutate(labeled_data,
+                    BFACIL3 = 
+                        ifelse(PODEL == 'Hospital Births', 'In Hospital',
+                        ifelse(PODEL %in% 
+                            c('Nonhospital Births', 'En route or born on arrival (BOA)'), 
+                            'Not in Hospital', 'Unknown or Not Stated')
+                        )
+                ))
+            }
+            else{return(mutate(labeled_data, BFACIL3 = 'Unknown or Not Stated')})
         }
+        else {return(labeled_data)}
+    }
 
     #===============================================================================
     # Function Execution
@@ -106,13 +125,30 @@ staged_data = function(set_year, column_selection=NA) {
         recode_flags %>%
         filter_residents %>%
         add_year %>%
-        cesarean_logical
+        cesarean_logical %>%
+        remap_BFACIL
 }
 
 
+#===============================================================================
+# RECORD REDUCTION
+# reduce the number of physical records by grouping and counting by a data set
+# with minimal dimensions.
+#===============================================================================
+births = lapply(data_dictionary()$years(), function(y) {
+    staged_data(y) %>%
+        group_by(
+            DOB_YY,
+            DOB_MM,
+            BFACIL3,
+            cesarean_lg
+        ) %>%
+        summarize(cases = n())
+}) %>% rbindlist(use.names=TRUE)
 
-# if(config$SAMPLING$enabled) {
-#     births = mutate(births, cases = cases / config$SAMPLING$percentage)
-# }
 
-# devtools::use_data(births, overwrite=TRUE)
+if(config$SAMPLING$enabled) {
+    births = mutate(births, cases = cases / config$SAMPLING$percentage)
+}
+
+devtools::use_data(births, overwrite=TRUE)
