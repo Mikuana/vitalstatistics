@@ -55,6 +55,10 @@ data_dictionary = function() {
                 dict[[year]][[node]] = c(props, defs[!names(defs) %in% names(props)])
             }
         }
+
+        dict$years = function() {
+            names(dict)[grep('\\d{4}', names(dict))]
+        }
         return(dict)
     }
     materialize()
