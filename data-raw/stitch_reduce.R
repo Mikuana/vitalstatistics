@@ -4,38 +4,32 @@
 
 library(dplyr)
 library(data.table)
-library(lubridate)
 
 # Call up config file attributes and cast them for R
 config = ini::read.ini(file.path('data-raw', 'config.ini'))
 config$SAMPLING$enabled = config$SAMPLING$enabled == "True"
 config$SAMPLING$percentage = as.numeric(config$SAMPLING$percentage)
 
-# call data dictionary function from this package. That means you need to build and load this
-# package before you can process the raw data
-dictionary = data_dictionary()
 
-
-staged_data = function(dictionary, year, column_selection=NA) {
+staged_data = function(year, column_selection=NA) {
     data_folder = file.path('data-raw', 'data')
     if(is.na(column_selection)) { column_selection=TRUE }
-    dictionary = data_dictionary()
-    ydict = dictionary[[as.character(year)]][column_selection]
+    set_dict = data_dictionary()[[as.character(year)]][column_selection]
 
     recode_ordered = function(coded_data) {
         'Read definitions from data from dictionary and apply it to dataset, and
          construct ordered factor mutate statements as strings.
         '
         fms = list()
-        for(i in names(ydict)) {
-            if(all(c('levels', 'labels') %in% names(ydict[[i]]))) {
-                levels = ydict[[i]]$levels
+        for(i in names(set_dict)) {
+            if(all(c('levels', 'labels') %in% names(set_dict[[i]]))) {
+                levels = set_dict[[i]]$levels
                 if(is.numeric(levels)) {
-                    levels = paste0(ydict[[i]]$levels, collapse=",")
+                    levels = paste0(set_dict[[i]]$levels, collapse=",")
                 }else{
-                    levels = paste0('"', ydict[[i]]$levels, '"', collapse=",")
+                    levels = paste0('"', set_dict[[i]]$levels, '"', collapse=",")
                 }
-                labels = paste0('"', ydict[[i]]$labels, '"' , collapse=",")
+                labels = paste0('"', set_dict[[i]]$labels, '"' , collapse=",")
                 fms[[i]] = paste0("ordered(",i,", levels=c(",levels,"), labels=c(",labels,"))")
             }
         }
@@ -44,8 +38,8 @@ staged_data = function(dictionary, year, column_selection=NA) {
 
     recode_flags = function(coded_data) {
         lg_fields = NULL
-        for(x in names(ydict)) {
-            if(ydict[[x]][['type']]=='logical') {
+        for(x in names(set_dict)) {
+            if(set_dict[[x]][['type']]=='logical') {
                 lg_fields = c(lg_fields, x)
             }
         }
@@ -56,35 +50,36 @@ staged_data = function(dictionary, year, column_selection=NA) {
 
     recode_na = function(coded_data) {
         na_formulas = list()
-        for(x in names(ydict)) {
-            if('na_value' %in% names(ydict[[x]])) {
-                row = ydict[[x]]
+        for(x in names(set_dict)) {
+            if('na_value' %in% names(set_dict[[x]])) {
+                row = set_dict[[x]]
                 na_formulas[x] = paste0("ifelse(", x," == ", row$na_value,", NA,", x, ")")
             }
         }
         return(mutate_(coded_data, .dots = na_formulas))
     }
 
-    add_year = function(coded_data) { mutate(coded_data, DOB_YY = as.integer(year))}
+    add_year = function(coded_data) {
+        coded_data[,DOB_YY:=as.integer(year)]
+    }
+
+    filter_residents = function(coded_data) {
+        coded_data[!RESTATUS == 'Foreign residents']
+    }
 
     # Assemble a command to return the decompressed gz staging file
     gz_com = paste('zcat', file.path(data_folder, paste0('births', year ,'.csv.gz')))
 
-    sel = ydict %>% names
-    col = setNames(ydict[sel] %>%  sapply(function(x) x[['type']]) %>% as.character, sel)
+    sel = set_dict %>% names
+    col = setNames(set_dict[sel] %>%  sapply(function(x) x[['type']]) %>% as.character, sel)
 
-    dat = fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
-        recode_na() %>%
-        recode_ordered() %>%
-        recode_flags() %>%
-        add_year
-
-    # testthat::expect_equal(nrow(dat), original_records[as.character(year)])
-
-    dat = dat %>% filter(!RESTATUS == 'Foreign resident')
-    # testthat::expect_equal(nrow(dat), final_records[as.character(year)])
-
-    return(dat)
+    fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
+        recode_na %>%
+        recode_ordered %>%
+        recode_flags %>%
+        as.data.table(.) %>%
+        add_year %>%
+        filter_residents
 }
 
 
