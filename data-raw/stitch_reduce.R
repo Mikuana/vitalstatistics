@@ -3,7 +3,6 @@
  loss of information.'
 
 library(dplyr)
-library(data.table)
 
 # Call up config file attributes and cast them for R
 config = ini::read.ini(file.path('data-raw', 'config.ini'))
@@ -11,11 +10,14 @@ config$SAMPLING$enabled = config$SAMPLING$enabled == "True"
 config$SAMPLING$percentage = as.numeric(config$SAMPLING$percentage)
 
 
-staged_data = function(year, column_selection=NA) {
+staged_data = function(set_year, column_selection=NA) {
     data_folder = file.path('data-raw', 'data')
     if(is.na(column_selection)) { column_selection=TRUE }
-    set_dict = data_dictionary()[[as.character(year)]][column_selection]
+    set_dict = data_dictionary()[[as.character(set_year)]][column_selection]
 
+    #===============================================================================
+    # Data Dictionary Labelling and Transformations
+    #===============================================================================
     recode_ordered = function(coded_data) {
         'Read definitions from data from dictionary and apply it to dataset, and
          construct ordered factor mutate statements as strings.
@@ -60,32 +62,57 @@ staged_data = function(year, column_selection=NA) {
     }
 
     add_year = function(coded_data) {
-        coded_data[,DOB_YY:=as.integer(year)]
+        mutate(coded_data, DOB_YY=as.integer(set_year))
+
     }
 
+    #===============================================================================
+    # Data set filtering
+    #===============================================================================
     filter_residents = function(coded_data) {
-        coded_data[!RESTATUS == 'Foreign residents']
+        filter(coded_data, !RESTATUS == 'Foreign residents')
     }
+
+    #===============================================================================
+    # Transformations
+    #===============================================================================
+    cesarean_logical = function(labeled_data) {
+        'Indicate whether the case resolved with a cesarean section using a logical,
+         with unknown cases denoted by an NA'
+        if(all(c('UME_PRIMC', 'UME_REPEC') %in% names(labeled_data))) {
+            mutate(labeled_data,
+                cesarean_lg = 
+                    ifelse(UME_PRIMC == 'Yes' | UME_REPEC == 'Yes', TRUE,
+                    ifelse(UME_PRIMC == 'No' & UME_REPEC == 'No', FALSE,
+                        NA))
+                       
+            )
+            } else {return(labeled_data)}
+        }
+
+    #===============================================================================
+    # Function Execution
+    #===============================================================================
 
     # Assemble a command to return the decompressed gz staging file
-    gz_com = paste('zcat', file.path(data_folder, paste0('births', year ,'.csv.gz')))
+    gz_com = paste('zcat', file.path(data_folder, paste0('births', set_year ,'.csv.gz')))
 
     sel = set_dict %>% names
     col = setNames(set_dict[sel] %>%  sapply(function(x) x[['type']]) %>% as.character, sel)
 
-    fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
+    data.table::fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
         recode_na %>%
         recode_ordered %>%
         recode_flags %>%
-        as.data.table(.) %>%
+        filter_residents %>%
         add_year %>%
-        filter_residents
+        cesarean_logical
 }
 
 
 
-if(config$SAMPLING$enabled) {
-    births = mutate(births, cases = cases / config$SAMPLING$percentage)
-}
+# if(config$SAMPLING$enabled) {
+#     births = mutate(births, cases = cases / config$SAMPLING$percentage)
+# }
 
-devtools::use_data(births, overwrite=TRUE)
+# devtools::use_data(births, overwrite=TRUE)
