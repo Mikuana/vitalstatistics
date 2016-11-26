@@ -121,7 +121,7 @@ Which provides us with a seasonal adjustment factor that we can apply as another
 
 ```{r}
 births %>% 
-    mutate(cases_seas_adj = (cases * cmaw(month_date)) / seas$figure[DOB_MM]) %>%
+    mutate(cases_seas_adj = cases * (cmaw(month_date) / seas$figure[DOB_MM])) %>%
     group_by(month_date) %>%
     summarize(cases_seas_adj = sum(cases_seas_adj)) %>%
     ggplot(aes(month_date, cases_seas_adj)) +
