@@ -130,6 +130,13 @@ staged_data = function(set_year, column_selection=NA) {
         else {return(labeled_data)}
     }
 
+    remap_STATENAT = function(labeled_data) {
+        if(!'STATENAT' %in% names(labeled_data)) {
+            mutate(labeled_data, STATENAT = NA)
+        }
+        else{ return(labeled_data)}
+    }
+
     #===============================================================================
     # Record Tests
     #===============================================================================
@@ -189,7 +196,8 @@ staged_data = function(set_year, column_selection=NA) {
         # resident_record_test %>%
         add_year %>%
         cesarean_logical %>%
-        remap_BFACIL
+        remap_BFACIL %>%
+        remap_STATENAT
 }
 
 
@@ -203,7 +211,7 @@ births = lapply(data_dictionary()$years(), function(y) {
         group_by(
             DOB_YY,
             DOB_MM,
-            STATEFET,
+            STATENAT,
             BFACIL3,
             cesarean_lg
         ) %>%
