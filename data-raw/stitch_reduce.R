@@ -13,7 +13,8 @@ config$SAMPLING$percentage = as.numeric(config$SAMPLING$percentage)
 staged_data = function(set_year, column_selection=NA) {
     data_folder = file.path('data-raw', 'data')
     if(is.na(column_selection)) { column_selection=TRUE }
-    set_dict = data_dictionary()[[as.character(set_year)]][column_selection]
+    dict = data_dictionary()
+    set_dict = dict[[as.character(set_year)]][column_selection]
 
     #===============================================================================
     # Data Dictionary Labelling and Transformations
@@ -110,6 +111,42 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     #===============================================================================
+    # Record Tests
+    #===============================================================================
+    raw_record_test = function(coded_data) {
+        'Check the number of records against those listed by the CDC vital statistics
+         data dictionaries.'
+        expec = dict$checks[[as.character(set_year)]]$all_records
+
+        if(is.null(expec)) {
+            return(coded_data)
+        }
+
+        testthat::expect_equal(nrow(coded_data), expec,
+            info=paste("Missing raw records from data set", as.character(set_year)),
+            tolerance = 100, scale=1
+        )
+
+        return(coded_data)
+    }
+
+    resident_record_test = function(labeled_data) {
+        'Check the number of records of resident births against those liksted by
+         the CDC vital statistics data dictionaries.'
+        expec = dict$checks[[as.character(set_year)]]$resident_records
+        
+        if(is.null(expec)) {
+            return(labeled_data)
+        }
+
+        testthat::expect_equal(nrow(coded_data), expec,
+            info=paste("Missing resident records from data set", as.character(set_year)),
+            tolerance = 100, scale=1
+        )
+        return(labeled_data)
+    }
+
+    #===============================================================================
     # Function Execution
     #===============================================================================
 
@@ -120,10 +157,12 @@ staged_data = function(set_year, column_selection=NA) {
     col = setNames(set_dict[sel] %>%  sapply(function(x) x[['type']]) %>% as.character, sel)
 
     data.table::fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
+        raw_record_test %>%
         recode_na %>%
         recode_ordered %>%
         recode_flags %>%
         filter_residents %>%
+        resident_record_test %>%
         add_year %>%
         cesarean_logical %>%
         remap_BFACIL

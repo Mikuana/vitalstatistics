@@ -1,5 +1,16 @@
 {
-    "__overview__": {
+    "__checks__": {
+        "1968": {"all_records": null, "resident_records": null},
+        "1969": {"all_records": null, "resident_records": null},
+        "1970": {"all_records": null, "resident_records": null},
+        "1971": {"all_records": null, "resident_records": null},
+        "1972": {"all_records": null, "resident_records": null},
+        "1973": {"all_records": null, "resident_records": null},
+        "1974": {"all_records": null, "resident_records": null},
+        "1975": {"all_records": null, "resident_records": null},
+        "1976": {"all_records": null, "resident_records": null},
+        "1977": {"all_records": null, "resident_records": null},
+        "1978": {"all_records": null, "resident_records": null},
         "1979": {"all_records": 3499795, "resident_records": 3494398},
         "1980": {"all_records": 3617981, "resident_records": 3612258},
         "1981": {"all_records": 3635515, "resident_records": 3629238},

@@ -6,6 +6,7 @@
 data_dictionary = function() {
     tree = jsonlite::fromJSON(file.path('data', 'dictionary.json'))
     nodes = names(tree)
+
     nodes = nodes[!grepl('^__\\w+__$', nodes)]  # ignore non-field properties
 
     test_node = function(node) {
@@ -60,6 +61,9 @@ data_dictionary = function() {
             'Returns a vector of years that are included in the data dictionary'
             names(dict)[grep('\\d{4}', names(dict))]
         }
+
+        dict$checks = tree$`__checks__`
+
         return(dict)
     }
     materialize()
