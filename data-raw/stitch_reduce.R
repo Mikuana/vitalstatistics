@@ -77,6 +77,26 @@ staged_data = function(set_year, column_selection=NA) {
     #===============================================================================
     # Transformations
     #===============================================================================
+    record_weighting = function(coded_data) {
+        'Prior to 1985, much of the birth weight records represented 50% samples. For
+         our purposes this requires duplication of any record with a RECWT value
+         equal to 2. Prior to 1972, the the RECWT field did not exist, but all records
+         were 50%, so we impute the values'
+         if(set_year %in% 1968:1971) {
+            coded_data = mutate(coded_data, RECWT = 2)
+         }
+
+         if('RECWT' %in% names(coded_data)) {
+                list(
+                    coded_data,
+                    filter(coded_data, RECWT == 2)
+                ) %>% 
+                data.table::rbindlist(use.names=TRUE)
+         }
+         else {return(coded_data)}
+    }
+
+
     cesarean_logical = function(labeled_data) {
         'Indicate whether the case resolved with a cesarean section using a logical,
          with unknown cases denoted by an NA'
@@ -161,6 +181,7 @@ staged_data = function(set_year, column_selection=NA) {
 
     data.table::fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
         raw_record_test %>%
+        record_weighting %>%
         recode_na %>%
         recode_ordered %>%
         recode_flags %>%
@@ -182,6 +203,7 @@ births = lapply(data_dictionary()$years(), function(y) {
         group_by(
             DOB_YY,
             DOB_MM,
+            STATEFET,
             BFACIL3,
             cesarean_lg
         ) %>%
