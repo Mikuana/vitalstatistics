@@ -122,16 +122,19 @@ staged_data = function(set_year, column_selection=NA) {
             return(coded_data)
         }
 
-        testthat::expect_equal(nrow(coded_data), expec,
-            info=paste("Missing raw records from data set", as.character(set_year)),
-            tolerance = 100, scale=1
+        if(config$SAMPLING$enabled) {
+            expec = as.integer(expec * config$SAMPLING$percentage)
+        }
+
+        testthat::expect_equal(nrow(coded_data), expec, tolerance = 0, scale=1,
+            info=paste("Missing raw records from data set", as.character(set_year))
         )
 
         return(coded_data)
     }
 
     resident_record_test = function(labeled_data) {
-        'Check the number of records of resident births against those liksted by
+        'Check the number of records of resident births against those listed by
          the CDC vital statistics data dictionaries.'
         expec = dict$checks[[as.character(set_year)]]$resident_records
         
@@ -162,7 +165,7 @@ staged_data = function(set_year, column_selection=NA) {
         recode_ordered %>%
         recode_flags %>%
         filter_residents %>%
-        resident_record_test %>%
+        # resident_record_test %>%
         add_year %>%
         cesarean_logical %>%
         remap_BFACIL
