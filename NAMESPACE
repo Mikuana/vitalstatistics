@@ -2,3 +2,4 @@
 
 export(cmaw)
 export(data_dictionary)
+export(rate_lg)

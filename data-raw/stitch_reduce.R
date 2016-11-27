@@ -104,7 +104,7 @@ staged_data = function(set_year, column_selection=NA) {
                         )
                 ))
             }
-            else{return(mutate(labeled_data, BFACIL3 = 'Unknown or Not Stated')})
+            else{return(mutate(labeled_data, BFACIL3 = 'Unknown or Not Stated'))}
         }
         else {return(labeled_data)}
     }
@@ -144,7 +144,7 @@ births = lapply(data_dictionary()$years(), function(y) {
             cesarean_lg
         ) %>%
         summarize(cases = n())
-}) %>% rbindlist(use.names=TRUE)
+}) %>% data.table::rbindlist(use.names=TRUE)
 
 
 if(config$SAMPLING$enabled) {
