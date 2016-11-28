@@ -96,6 +96,13 @@ staged_data = function(set_year, column_selection=NA) {
          else {return(coded_data)}
     }
 
+    add_month_date = function(coded_data) {
+        'Convert DOB_YY and DOB_MM fields into pseudo-date, using the first day of
+         month for each combination. This simplifies the use of plotting with many
+         other tools and functions in R.'
+         mutate(coded_data, month_date = lubridate::ymd(paste(DOB_YY, DOB_MM, 1, sep='_')))
+    }
+
 
     cesarean_logical = function(labeled_data) {
         'Indicate whether the case resolved with a cesarean section using a logical,
@@ -131,10 +138,23 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     remap_STATENAT = function(labeled_data) {
-        if(!'STATENAT' %in% names(labeled_data)) {
-            mutate(labeled_data, STATENAT = NA)
+        fields = names(labeled_data)
+        if(!'STATENAT' %in% fields) {
+            if('OSTATE' %in% fields) {
+                # Use 2002 STATENAT definitions to remap OSTATE codes
+                lkp = setNames(
+                        data_dictionary()$`2002`$STATENAT$levels,
+                        data_dictionary()$`2002`$STATENAT$labels
+                    )
+                mutate(labeled_data,
+                    STATENAT = ordered(lkp[as.character(OSTATE)], levs, labs)
+                )
+            }
+            else { 
+                return( mutate(labeled_data, STATENAT = NA) ) 
+            }
         }
-        else{ return(labeled_data)}
+        else{ return(labeled_data) }
     }
 
     #===============================================================================
@@ -195,6 +215,7 @@ staged_data = function(set_year, column_selection=NA) {
         filter_residents %>%
         # resident_record_test %>%
         add_year %>%
+        add_month_date %>%
         cesarean_logical %>%
         remap_BFACIL %>%
         remap_STATENAT
@@ -213,7 +234,8 @@ births = lapply(data_dictionary()$years(), function(y) {
             DOB_MM,
             STATENAT,
             BFACIL3,
-            cesarean_lg
+            cesarean_lg,
+            month_date
         ) %>%
         summarize(cases = n())
 }) %>% data.table::rbindlist(use.names=TRUE)

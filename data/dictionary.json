@@ -113,6 +113,16 @@
         "2002": {"start": 16, "end": 17}
     },
 
+    "OSTATE": {
+        "default": {
+            "description": "Occurrence State",
+            "type": "character",
+            "levels": ["AK","AL","AR","AZ","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","VT","WA","WI","WV","WY","AS","GU","MP","PR","VI"],
+            "labels": ["Alaska","Alabama","Arkansas","Arizona","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Massachusetts","Maryland","Maine","Michigan","Minnesota","Missouri","Mississippi","Montana","North Carolina","North Dakota","Nebraska","New Hampshire","New Jersey","New Mexico","Nevada","New York","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Virginia","Vermont","Washington","Wisconsin","West Virginia","Wyoming","American Samoa","Guam","Northern Marianas","Puerto Rico","Virgin Islands"]
+        },
+        "2003": {"start": 30, "end": 31},
+        "2004": {"start": 30, "end": 31}
+    },
 
     "DOB_MM": {
         "default": {
