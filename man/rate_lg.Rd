@@ -23,7 +23,9 @@ the calculations for our reduced record data sets that are included in the packa
 }
 \details{
 This function returns a function, meant to be applied during a dplyr summarize
-statement, although it can be used in a broader context.
+statement, although it can be used in a broader context. Because the function
+returns a function, it is important to follow the parameters with parenthesis
+'()' in order to execute the function that is returned.
 }
 \examples{
  library(dplyr)
