@@ -28,6 +28,10 @@ ggplot(cs, aes(time, cesarean_rate)) +
     scale_y_continuous(label=scales::percent) +
     geom_line(data=cs_OR, aes(time, cesarean_rate), stat="identity", color="blue") +
     geom_line(data=CDC_cesarean_2013, aes(Year, TotalCesareanRate),
+                stat="identity", color="red", linetype=2, size=0.5, alpha=0.5) +
+    geom_line(data=HHS_cesarean_1989, aes(Year, AllAges),
+                stat="identity", color="red", linetype=2, size=0.5, alpha=0.5) +
+    geom_line(data=HHS_cesarean_1996, aes(Year, AllAges),
                 stat="identity", color="red", linetype=2, size=0.5, alpha=0.5)
 ```
 
@@ -40,3 +44,9 @@ ggplot(cs, aes(time, cesarean_rate)) +
 ```
 
 ![](CesareanTrends_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
+
+
+
+
+
+

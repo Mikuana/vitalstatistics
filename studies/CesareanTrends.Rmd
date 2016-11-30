@@ -35,6 +35,8 @@ ggplot(cs, aes(time, cesarean_rate)) +
     geom_line(data=CDC_cesarean_2013, aes(Year, TotalCesareanRate),
                 stat="identity", color="red", linetype=2, size=0.5, alpha=0.5) +
     geom_line(data=HHS_cesarean_1989, aes(Year, AllAges),
+                stat="identity", color="red", linetype=2, size=0.5, alpha=0.5) +
+    geom_line(data=HHS_cesarean_1996, aes(Year, AllAges),
                 stat="identity", color="red", linetype=2, size=0.5, alpha=0.5)
 ```
 

@@ -18,7 +18,7 @@ HHS_cesarean_1989
 }
 \description{
 A table of cesarean section rates between 1965 and 1986, with a breakdown by
-maternal age. These rates are calculated with data collected voa the National 
+maternal age. These rates are calculated with data collected via the National 
 Hospital Discharge Survey.
 }
 \examples{
