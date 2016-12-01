@@ -1,3 +1,12 @@
+# Studies
+
+ - [Cesarean Section Trends](CesareanTrends.md)
+
+ - [Seasonal Birth Volume Trends](SeasonalVolumes.md)
+
+
+---
+
 # Overview
 The purpose of this project is to use the tools of data science to better understand the way that deliveries in the United States (US) via cesarean section have changed over time. It is hoped that by better understanding these changes, patterns can be identified that will help to inform decision makers. The goal of this project is to provide objective, human-centric guidance (as opposed to machine learning algorithms) that can be used to inform policy at either the facility or system levels of health care, and ultimately reduce the rate of cesarean section in the US.
 
