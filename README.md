@@ -2,15 +2,22 @@
 
 # Overview
 
-The focus of this project is birth data in the United States (US), but this project could be described in a variety of different ways depending upon the intent of the user. Interpretations could include:
+The focus of this project is birth data in the United States, but this project could be described in a variety of different ways depending upon the intent of the user. Interpretations could include:
  
- 1. an R-Package, complete with data sets, documentation, and custom functions for analyzing these specific data sets
+ 1. a series of data driven studies which attempt to bring together public data sets on birth in a completely open, verifiable, and reproducible way
 
- 2. a collection of clean analytic data sets which are generally available in their raw form, but also generally difficult to work with due to size or non-machine friendly formatting
+ 2. an R-Package complete with data sets, documentation, and custom functions for analyzing these specific data sets
 
- 3. a series of data driven studies which attempt to bring together public data sets on birth in a completely open, verifiable, and reproducible way
+ 3. a collection of clean analytic data sets which are generally available in their raw form, but also generally difficult to work with due to size or non-machine friendly formatting
 
  4. a wiki-style body of work which allows the public to contribute to policy using data science
+
+
+# Studies
+
+This project takes advantage of the fact that GitHub renders markdown `.md` files in its repository browser, and that R has a rich standard `.Rmd` for generating markdown files. This allows us to write documents in the vein of [literate programming](https://en.wikipedia.org/wiki/Literate_programming). The result is a web-hosting platform which allows for the best of data science to be presented publicly, which complete transparency of code any authorship.
+
+All of these studies are included in this repository, and can explored by navigating to the [README](studies/README.md) in the studies folder of this project.
 
 
 # Package Installation
@@ -47,11 +54,7 @@ In addition to zipping files from _python_, a similar type of call is made from 
 
 Use of this data strictly prohibits any attempts to identify individuals. This is described in great detail on the CDC web page. I highly suggest you take this seriously, and don't try to identify individuals within this data set. _Even yourself_. Really.
 
-http://www.cdc.gov/nchs/data_access/vitalstatsonline.htm
-
-
-# Studies
-...
+http://www.cdc.gov/nchs/data_access/vitalstatsonline.htm 
 
 
 # Public Policy
