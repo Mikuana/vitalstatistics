@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Mikuana/vitalstatistics.svg?branch=master)](https://travis-ci.org/Mikuana/vitalstatistics)
+[![Build Status](https://travis-ci.org/Mikuana/vitalstatistics.svg?branch=master)](https://travis-ci.org/Mikuana/vitalstatistics) [![codecov](https://codecov.io/gh/Mikuana/vitalstatistics/branch/master/graph/badge.svg)](https://codecov.io/gh/Mikuana/vitalstatistics)
 
 # Overview
 
