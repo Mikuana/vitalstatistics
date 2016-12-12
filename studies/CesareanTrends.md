@@ -36,10 +36,8 @@ ggplot(cs, aes(time, cesarean_rate)) +
 ```
 
 ```
-## Warning: Removed 27 rows containing missing values (geom_path).
-```
+## Warning: Removed 21 rows containing missing values (geom_path).
 
-```
 ## Warning: Removed 21 rows containing missing values (geom_path).
 ```
 
