@@ -3,6 +3,7 @@
  loss of information.'
 
 library(dplyr)
+source(file.path('R', 'loaders.R'))
 
 # Call up config file attributes and cast them for R
 config = ini::read.ini(file.path('data-raw', 'config.ini'))
@@ -124,11 +125,10 @@ staged_data = function(set_year, column_selection=NA) {
         if(all(c('UME_PRIMC', 'UME_REPEC') %in% names(labeled_data))) {
             labeled_data = mutate(labeled_data,
                 cesarean_lg = 
-                    coalesce(
+                    coalesce(cesarean_lg,
                         ifelse(UME_PRIMC == 'Yes' | UME_REPEC == 'Yes', TRUE,
                         ifelse(UME_PRIMC == 'No' & UME_REPEC == 'No', FALSE,
-                            NA)),
-                        cesarean_lg
+                            NA))
                     )
             )
         } 
@@ -136,11 +136,10 @@ staged_data = function(set_year, column_selection=NA) {
         if('ME_ROUT' %in% names(labeled_data)) {
             labeled_data = mutate(labeled_data,
                 cesarean_lg =
-                    coalesce(
+                    coalesce(cesarean_lg,
                         ifelse(ME_ROUT == 'Cesarean', TRUE,
                         ifelse(ME_ROUT != 'Unknown or not stated', FALSE,
-                            NA)),
-                        cesarean_lg
+                            NA))
                     )
             )
         }

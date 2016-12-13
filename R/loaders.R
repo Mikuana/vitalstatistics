@@ -1,27 +1,26 @@
-get_tree = function() {
-    jsonlite::fromJSON(file.path('data', 'dictionary.json'))
-}
-
-
-get_nodes = function() {
-    nodes = names(get_tree())
-    property_node_pattern = '^__\\w+__$'
-
-    # ignore non-field 
-    list(
-        fields = nodes[!grepl(property_node_pattern, nodes)],
-        properties = nodes[grepl(property_node_pattern, nodes)]
-    )
-
-}
-
-
 #' Vital Statistics Data Dictionary
 #'
 #' @return A data dictionary of the attributes that are available from a reduction
 #' of the various years of data publised by the CDC is their vital statistics data sets.
 #' @export
 data_dictionary = function() {
+    get_tree = function() {
+        jsonlite::fromJSON(file.path('data', 'dictionary.json'))
+    }
+
+
+    get_nodes = function() {
+        nodes = names(get_tree())
+        property_node_pattern = '^__\\w+__$'
+
+        # ignore non-field 
+        list(
+            fields = nodes[!grepl(property_node_pattern, nodes)],
+            properties = nodes[grepl(property_node_pattern, nodes)]
+        )
+
+    }
+
     tree = get_tree()
     nodes = get_nodes()
 
