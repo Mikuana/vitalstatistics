@@ -112,6 +112,7 @@ staged_data = function(set_year, column_selection=NA) {
           
           1. check the UME cesarean fields which are present much earlier on birth records
           2. then check the ME_ROUT field which was introduced in 2004
+          3. then check the DMETH_REC field 
 
          There are a number of years where both 1 and 2 are present in birth records,
          so we use a coalesce function in attempt to combine results. In years where
@@ -139,6 +140,17 @@ staged_data = function(set_year, column_selection=NA) {
                     coalesce(cesarean_lg,
                         ifelse(ME_ROUT == 'Cesarean', TRUE,
                         ifelse(ME_ROUT != 'Unknown or not stated', FALSE,
+                            NA))
+                    )
+            )
+        }
+
+        if('DMETH_REC' %in% names(labeled_data)) {
+            labeled_data = mutate(labeled_data,
+                cesarean_lg =
+                    coalesce(cesarean_lg,
+                        ifelse(DMETH_REC == 'Cesarean', TRUE,
+                        ifelse(DMETH_REC == 'Vaginal', FALSE,
                             NA))
                     )
             )

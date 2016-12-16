@@ -17,7 +17,7 @@ The focus of this project is birth data in the United States, but this project c
 
 This project takes advantage of the fact that GitHub renders markdown `.md` files in its repository browser, and that R has a rich standard `.Rmd` for generating markdown files. This allows us to write documents in the vein of [literate programming](https://en.wikipedia.org/wiki/Literate_programming). The result is a web-hosting platform which allows for the best of data science to be presented publicly, with complete transparency and history of the code and documents.
 
-All of these studies are included in this repository, and can explored by navigating to the [README](studies/README.md) in the studies folder of this project.
+All of these studies are included in this repository, and can explored by navigating to the [README](studies/README.md) in the studies folder.
 
 
 # Package Installation
