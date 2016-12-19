@@ -29,9 +29,9 @@ It is crucial to recognize that the `births` data set in this package is a reduc
 
 # 2) Studies
 
-This project takes advantage of the fact that GitHub renders markdown `.md` files in its repository browser, and that R has a rich standard `.Rmd` for generating markdown files. This allows us to write documents in the vein of [literate programming](https://en.wikipedia.org/wiki/Literate_programming), store all changes in RCS, and then automatically have all versions of the content made public on a web-hosting platform. This means that work can be presented publicly, with complete transparency and history for the code and documents.
+To read the studies that are included in this repository, you can  the studies [readme overview](studies/README.md), or navigate to the studies folder and select the markdown `.md` files manually.
 
-All of these studies are included in this repository, and can explored by navigating to the [README](studies/README.md) in the studies folder.
+This project takes advantage of the fact that GitHub renders markdown `.md` files in its repository browser, and that R has a rich standard `.Rmd` for generating markdown files. This allows us to write documents in the vein of [literate programming](https://en.wikipedia.org/wiki/Literate_programming), store all changes in RCS, and then automatically have all versions of the content made public on a web-hosting platform. This means that work can be presented publicly, with complete transparency, attribution, and history for the code and documents.
 
 
 # 3) Analytic Data Processing

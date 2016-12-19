@@ -64,7 +64,7 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     add_year = function(coded_data) {
-        mutate(coded_data, DOB_YY=as.integer(set_year))
+        mutate(coded_data, birth_year=as.integer(set_year))
 
     }
 
@@ -91,28 +91,28 @@ staged_data = function(set_year, column_selection=NA) {
                 list(
                     coded_data,
                     filter(coded_data, RECWT == 2)
-                ) %>% 
+                ) %>%
                 data.table::rbindlist(use.names=TRUE)
          }
          else {return(coded_data)}
     }
 
     add_month_date = function(coded_data) {
-        'Convert DOB_YY and DOB_MM fields into pseudo-date, using the first day of
+        'Convert birth_year and birth_month fields into pseudo-date, using the first day of
          month for each combination. This simplifies the use of plotting with many
          other tools and functions in R.'
-         mutate(coded_data, month_date = lubridate::ymd(paste(DOB_YY, DOB_MM, 1, sep='_')))
+         mutate(coded_data, pseudo_birth_date = lubridate::ymd(paste(birth_year, DOB_MM, 1, sep='_')))
     }
 
 
-    cesarean_logical = function(labeled_data) {
+    add_cesarean_logical = function(labeled_data) {
         'Indicate whether the case resolved with a cesarean section using a logical,
          with unknown cases denoted by an NA. There is a specific strategy to which fields
          are used to determine if there was a cesarean section
-          
+
           1. check the UME cesarean fields which are present much earlier on birth records
           2. then check the ME_ROUT field which was introduced in 2004
-          3. then check the DMETH_REC field 
+          3. then check the DMETH_REC field
 
          There are a number of years where both 1 and 2 are present in birth records,
          so we use a coalesce function in attempt to combine results. In years where
@@ -121,23 +121,23 @@ staged_data = function(set_year, column_selection=NA) {
          whatever value has already been set in the field. In many cases this will
          include the logical interpretation of the UME fields.'
         # Start by creating the cesarean_lg field to prevent errors in mutate coalesce
-        labeled_data = mutate(labeled_data, cesarean_lg = NA)
+        labeled_data = mutate(labeled_data, cesarean = NA)
 
         if(all(c('UME_PRIMC', 'UME_REPEC') %in% names(labeled_data))) {
             labeled_data = mutate(labeled_data,
-                cesarean_lg = 
-                    coalesce(cesarean_lg,
+                cesarean =
+                    coalesce(cesarean,
                         ifelse(UME_PRIMC == 'Yes' | UME_REPEC == 'Yes', TRUE,
                         ifelse(UME_PRIMC == 'No' & UME_REPEC == 'No', FALSE,
                             NA))
                     )
             )
-        } 
+        }
 
         if('ME_ROUT' %in% names(labeled_data)) {
             labeled_data = mutate(labeled_data,
-                cesarean_lg =
-                    coalesce(cesarean_lg,
+                cesarean =
+                    coalesce(cesarean,
                         ifelse(ME_ROUT == 'Cesarean', TRUE,
                         ifelse(ME_ROUT != 'Unknown or not stated', FALSE,
                             NA))
@@ -147,8 +147,8 @@ staged_data = function(set_year, column_selection=NA) {
 
         if('DMETH_REC' %in% names(labeled_data)) {
             labeled_data = mutate(labeled_data,
-                cesarean_lg =
-                    coalesce(cesarean_lg,
+                cesarean =
+                    coalesce(cesarean,
                         ifelse(DMETH_REC == 'Cesarean', TRUE,
                         ifelse(DMETH_REC == 'Vaginal', FALSE,
                             NA))
@@ -165,10 +165,10 @@ staged_data = function(set_year, column_selection=NA) {
         if(!'BFACIL3' %in% fields){
             if('PODEL' %in% fields) {
                 return(mutate(labeled_data,
-                    BFACIL3 = 
+                    BFACIL3 =
                         ifelse(PODEL == 'Hospital Births', 'In Hospital',
-                        ifelse(PODEL %in% 
-                            c('Nonhospital Births', 'En route or born on arrival (BOA)'), 
+                        ifelse(PODEL %in%
+                            c('Nonhospital Births', 'En route or born on arrival (BOA)'),
                             'Not in Hospital', 'Unknown or Not Stated')
                         )
                 ))
@@ -178,7 +178,21 @@ staged_data = function(set_year, column_selection=NA) {
         else {return(labeled_data)}
     }
 
+    add_hospital_logical = function(labeled_data) {
+        'Convert place of birth field into a logical indicating whether the birth
+         occured in a hospital'
+        mutate(labeled_data,
+                birth_in_hospital = ifelse(BFACIL3=='In Hospital', TRUE,
+                                    ifelse(BFACIL3=='Not in Hospital', FALSE,
+                                        NA))
+            )
+    }
+
     remap_STATENAT = function(labeled_data) {
+        'Recode underlying levels of the OSTATE and STATENAT fields so that they
+         match one another. This is necessary because the OSTATE field uses two
+         character representations instead of integers.
+        '
         fields = names(labeled_data)
         if(!'STATENAT' %in% fields) {
             if('OSTATE' %in% fields) {
@@ -188,14 +202,24 @@ staged_data = function(set_year, column_selection=NA) {
                         data_dictionary()$`2002`$STATENAT$labels
                     )
                 mutate(labeled_data,
-                    STATENAT = ordered(lkp[as.character(OSTATE)], lkp, names(lkp))
+                    STATENAT = factor(lkp[as.character(OSTATE)], lkp, names(lkp))
                 )
             }
-            else { 
-                return( mutate(labeled_data, STATENAT = NA) ) 
+            else {
+                return( mutate(labeled_data, STATENAT = NA) )
             }
         }
         else{ return(labeled_data) }
+    }
+
+    #===============================================================================
+    # Column Renaming
+    #===============================================================================
+    field_renames = function(coded_data) {
+        rename(coded_data,
+                birth_month = DOB_MM,
+                birth_state = STATENAT
+            )
     }
 
     #===============================================================================
@@ -225,7 +249,7 @@ staged_data = function(set_year, column_selection=NA) {
         'Check the number of records of resident births against those listed by
          the CDC vital statistics data dictionaries.'
         expec = dict$checks[[as.character(set_year)]]$resident_records
-        
+
         if(is.null(expec)) {
             return(labeled_data)
         }
@@ -257,9 +281,11 @@ staged_data = function(set_year, column_selection=NA) {
         # resident_record_test %>%
         add_year %>%
         add_month_date %>%
-        cesarean_logical %>%
+        add_cesarean_logical %>%
         remap_BFACIL %>%
-        remap_STATENAT
+        add_hospital_logical %>%
+        remap_STATENAT %>%
+        field_renames
 }
 
 
@@ -271,15 +297,17 @@ staged_data = function(set_year, column_selection=NA) {
 births = lapply(data_dictionary()$years(), function(y) {
     staged_data(y) %>%
         group_by(
-            DOB_YY,
-            DOB_MM,
-            STATENAT,
-            BFACIL3,
-            cesarean_lg,
-            month_date
+            pseudo_birth_date,
+            birth_year,
+            birth_month,
+            birth_state,
+            birth_in_hospital,
+            cesarean
         ) %>%
         summarize(cases = n())
-}) %>% data.table::rbindlist(use.names=TRUE)
+}) %>% 
+    data.table::rbindlist(use.names=TRUE) %>%
+    mutate(birth_year=ordered(birth_year))
 
 
 if(config$SAMPLING$enabled) {
