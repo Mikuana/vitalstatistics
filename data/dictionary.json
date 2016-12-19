@@ -579,5 +579,23 @@
         "2012": {"start": 138, "end": 138},
         "2013": {"start": 138, "end": 138},
         "2014": {"start": 104, "end": 104}
+    },
+    "DMETH_REC" :{
+        "default": {
+            "description": "Delivery Method Recode",
+            "type": "integer",
+            "levels": [1,2,9],
+            "labels": ["Vaginal","Cesarean","Unknown"]
+        },
+        "2005": {"start": 403, "end": 403},
+        "2006": {"start": 403, "end": 403},
+        "2007": {"start": 403, "end": 403},
+        "2008": {"start": 403, "end": 403},
+        "2009": {"start": 403, "end": 403},
+        "2010": {"start": 403, "end": 403},
+        "2011": {"start": 403, "end": 403},
+        "2012": {"start": 403, "end": 403},
+        "2013": {"start": 403, "end": 403},
+        "2014": {"start": 408, "end": 408}
     }
 }

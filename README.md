@@ -1,26 +1,18 @@
-[![Build Status](https://travis-ci.org/Mikuana/vitalstatistics.svg?branch=master)](https://travis-ci.org/Mikuana/vitalstatistics)
+[![Build Status](https://travis-ci.org/Mikuana/vitalstatistics.svg?branch=master)](https://travis-ci.org/Mikuana/vitalstatistics) [![codecov](https://codecov.io/gh/Mikuana/vitalstatistics/branch/master/graph/badge.svg)](https://codecov.io/gh/Mikuana/vitalstatistics)
 
 # Overview
 
 The focus of this project is birth data in the United States, but this project could be described in a variety of different ways depending upon the intent of the user. Interpretations could include:
  
- 1. a series of data driven studies which attempt to bring together public data sets on birth in a completely open, verifiable, and reproducible way
+ 1. an R-Package complete with data sets, documentation, and custom functions for analyzing birth certificate records
 
- 2. an R-Package complete with data sets, documentation, and custom functions for analyzing these specific data sets
+ 2. a series of data driven studies which attempt to bring together public data sets on birth certificate records in a completely open, verifiable, and reproducible way
+
 
  3. a collection of clean analytic data sets which are generally available in their raw form, but also generally difficult to work with due to size or non-machine friendly formatting
 
- 4. a wiki-style body of work which allows the public to contribute to policy using data science
 
-
-# Studies
-
-This project takes advantage of the fact that GitHub renders markdown `.md` files in its repository browser, and that R has a rich standard `.Rmd` for generating markdown files. This allows us to write documents in the vein of [literate programming](https://en.wikipedia.org/wiki/Literate_programming). The result is a web-hosting platform which allows for the best of data science to be presented publicly, with complete transparency and history of the code and documents.
-
-All of these studies are included in this repository, and can explored by navigating to the [README](studies/README.md) in the studies folder of this project.
-
-
-# Package Installation
+# 1) Package Installation
 
 This package isn't currently hosted by CRAN, but can be easily installed in R using the `devtools:install_github` function.
 
@@ -32,13 +24,31 @@ install.packages("devtools")
 devtools::install_github("Mikuana/vitalstatistics", dependencies=TRUE)
 ```
 
-# Analytic Data Processing
+It is crucial to recognize that the `births` data set in this package is a reduced from hundreds of millions of records using a simple dimensional case count strategy.
 
-A key aspect of this project is processing US Vital Statistics birth records into analytic data sets that are more suitable for data science. This project includes processing scripts that help to download, decompress, remap, and read data into R, including labels where applicable.
 
-The data sets from 1968 to 2014 amount to over 5 GB when _compressed_. Simultaneous decompression of this data is problematic on the typical workstation, and even after aggressive pruning of columns, loading hundreds of  millions of records directly into memory (a requirement of analysis in R) for will overflow most workstations.
+# 2) Studies
 
-These issues are solved via a multi-step data processing pipeline that incrementally decompresses the raw birth record data, prunes columns, and then reduces rows after equivalent values are mapped across years. The result is a data set which can easily be shared, but still rich enough to perform meaningful analysis.
+This project takes advantage of the fact that GitHub renders markdown `.md` files in its repository browser, and that R has a rich standard `.Rmd` for generating markdown files. This allows us to write documents in the vein of [literate programming](https://en.wikipedia.org/wiki/Literate_programming), store all changes in RCS, and then automatically have all versions of the content made public on a web-hosting platform. This means that work can be presented publicly, with complete transparency and history for the code and documents.
+
+All of these studies are included in this repository, and can explored by navigating to the [README](studies/README.md) in the studies folder.
+
+
+# 3) Analytic Data Processing
+
+A key feature of this project is the ability to process birth certificate records into analytic data sets that are more suitable for data science. This 
+
+## Definition Challenges
+
+The birth certificate records that we're working with span decades, and have gone through numerous changes throughout that time. Some information that used to be available is no longer included in the public data sets (e.g. state of occurence), some new information has been added (e.g delivery method), and many of the fields have undergone transformations over time (e.g. place of delivery used to include "En route or born on arrival (BOA)", but this value was dropped from the records in 1988). None of this is terribly problematic when analysis is performed on only one or two years of records, but spanning the entire length of these public records requires complex solutions.
+
+...
+
+## Technical Challenges
+
+The birth certificate data sets from 1968 to 2014 amount to over 5 GB when _compressed_. Simultaneous decompression of this data is problematic on the typical workstation, and even after aggressive pruning of columns, loading hundreds of  millions of records directly into memory (a requirement for analysis in R) will overflow most workstations.
+
+This issue is solved via a multi-step data processing pipeline that incrementally decompresses the raw birth record data, prunes columns, and then reduces rows after equivalent values are mapped across years. The result is a data set which can easily be shared, but still rich enough to perform meaningful analysis.
 
 The scripts that handle this processing pipeline are entirely contained within the `data-raw` folder. The pipeline is not executed during the R-package build, but needs to be executed separately as a precursor step to generate the data sets that are used in the package. This can take many hours to complete, and relies python 3, along with several linux based tool utilities.
 
@@ -46,16 +56,11 @@ If you wish to make changes to the `births` data that are generated by this proc
 
 ## Linux Utilities
 
-Due to propriety file compression reasons, the native `zipfile` package in _python_ is not able to unzip all of the data sets provided by the CDC. Instead, the `subprocess` package is used to make an external call to the _linux_ `unzip` utility. If your environment doesn't support this, you'll need to do some monkey work to decompress all of the files yourself, or modify the scripts to use your local decompression tool.
+Due to propriety file compression reasons, the native `zipfile` package in _python_ is not able to unzip all of the data sets provided by the CDC. Instead, the `subprocess` package is used to make an external call to the _linux_ `unzip` utility. If your environment doesn't support this, you'll need to do some monkey work to decompress all of the files yourself, or modify the scripts to use your local decompression tool. In addition to zipping files from _python_, a linux call is made from _R_ to unzip and read files directly into memory with the `zcat` utility.
 
-In addition to zipping files from _python_, a similar type of call is made from _R_ to unzip and read files directly into memory with the `zcat` utility.
 
-## Disclaimer
+# Disclaimer
 
 Use of this data strictly prohibits any attempts to identify individuals. This is described in great detail on the CDC web page. I highly suggest you take this seriously, and don't try to identify individuals within this data set. _Even yourself_. Really.
 
 http://www.cdc.gov/nchs/data_access/vitalstatsonline.htm 
-
-
-# Public Policy
-...

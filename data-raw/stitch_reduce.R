@@ -3,6 +3,7 @@
  loss of information.'
 
 library(dplyr)
+source(file.path('R', 'loaders.R'))
 
 # Call up config file attributes and cast them for R
 config = ini::read.ini(file.path('data-raw', 'config.ini'))
@@ -106,16 +107,56 @@ staged_data = function(set_year, column_selection=NA) {
 
     cesarean_logical = function(labeled_data) {
         'Indicate whether the case resolved with a cesarean section using a logical,
-         with unknown cases denoted by an NA'
+         with unknown cases denoted by an NA. There is a specific strategy to which fields
+         are used to determine if there was a cesarean section
+          
+          1. check the UME cesarean fields which are present much earlier on birth records
+          2. then check the ME_ROUT field which was introduced in 2004
+          3. then check the DMETH_REC field 
+
+         There are a number of years where both 1 and 2 are present in birth records,
+         so we use a coalesce function in attempt to combine results. In years where
+         ME_ROUT is present, available values are proritized by this field. However,
+         if the field is NA or otherwise unknown, then the function falls back to
+         whatever value has already been set in the field. In many cases this will
+         include the logical interpretation of the UME fields.'
+        # Start by creating the cesarean_lg field to prevent errors in mutate coalesce
+        labeled_data = mutate(labeled_data, cesarean_lg = NA)
+
         if(all(c('UME_PRIMC', 'UME_REPEC') %in% names(labeled_data))) {
-            mutate(labeled_data,
+            labeled_data = mutate(labeled_data,
                 cesarean_lg = 
-                    ifelse(UME_PRIMC == 'Yes' | UME_REPEC == 'Yes', TRUE,
-                    ifelse(UME_PRIMC == 'No' & UME_REPEC == 'No', FALSE,
-                        NA))
-                       
+                    coalesce(cesarean_lg,
+                        ifelse(UME_PRIMC == 'Yes' | UME_REPEC == 'Yes', TRUE,
+                        ifelse(UME_PRIMC == 'No' & UME_REPEC == 'No', FALSE,
+                            NA))
+                    )
             )
-        } else {mutate(labeled_data, cesarean_lg = NA)}
+        } 
+
+        if('ME_ROUT' %in% names(labeled_data)) {
+            labeled_data = mutate(labeled_data,
+                cesarean_lg =
+                    coalesce(cesarean_lg,
+                        ifelse(ME_ROUT == 'Cesarean', TRUE,
+                        ifelse(ME_ROUT != 'Unknown or not stated', FALSE,
+                            NA))
+                    )
+            )
+        }
+
+        if('DMETH_REC' %in% names(labeled_data)) {
+            labeled_data = mutate(labeled_data,
+                cesarean_lg =
+                    coalesce(cesarean_lg,
+                        ifelse(DMETH_REC == 'Cesarean', TRUE,
+                        ifelse(DMETH_REC == 'Vaginal', FALSE,
+                            NA))
+                    )
+            )
+        }
+
+        return(labeled_data)
     }
 
     remap_BFACIL = function(labeled_data) {
@@ -147,7 +188,7 @@ staged_data = function(set_year, column_selection=NA) {
                         data_dictionary()$`2002`$STATENAT$labels
                     )
                 mutate(labeled_data,
-                    STATENAT = ordered(lkp[as.character(OSTATE)], levs, labs)
+                    STATENAT = ordered(lkp[as.character(OSTATE)], lkp, names(lkp))
                 )
             }
             else { 

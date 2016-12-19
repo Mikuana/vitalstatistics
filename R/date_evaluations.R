@@ -25,11 +25,14 @@
 #' @export
 cmaw = function(month_date) {
     if(!lubridate::is.Date(month_date)) {
-        stop("You did not pass a value that lubridate recognizes as a date")
+        stop("You did not pass a value that lubridate recognizes as a date") # nocov
     }
-
-    (1/12) / 
-        (lubridate::days_in_month(month_date) / ifelse(lubridate::leap_year(month_date), 366, 365))
+    x = (1/12) / 
+        (lubridate::days_in_month(month_date) / 
+            ifelse(lubridate::leap_year(month_date), 366, 365)
+        )
+    # return just the value, instead of a named list value
+    x[[1]]
 }
 
 
