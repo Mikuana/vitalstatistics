@@ -1,3 +1,5 @@
+library(dplyr)
+
 CDC_cesarean_2013 =
     file.path('data-raw', 'CDC_cesarean_2013.txt') %>%
     read.table(header=TRUE, sep="|", skip=5) %>%
