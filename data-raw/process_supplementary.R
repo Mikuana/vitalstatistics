@@ -1,7 +1,7 @@
 library(dplyr)
 
 CDC_cesarean_2013 =
-    file.path('data-raw', 'CDC_cesarean_2013.txt') %>%
+    file.path('CDC_cesarean_2013.txt') %>%
     read.table(header=TRUE, sep="|", skip=5) %>%
     mutate(
         TotalCesareanRate = TotalCesareanRate / 100,
@@ -9,12 +9,12 @@ CDC_cesarean_2013 =
     )
 
 HHS_cesarean_1989 =
-    file.path('data-raw', 'HHS_cesarean_1989.txt') %>%
+    file.path('HHS_cesarean_1989.txt') %>%
     read.table(header=TRUE, sep="|", skip=5) %>%
     mutate_at(vars(AllAges:AgesOver34), funs( . / 100 ))
 
 HHS_cesarean_1996 =
-    file.path('data-raw', 'HHS_cesarean_1996.txt') %>%
+    file.path('HHS_cesarean_1996.txt') %>%
     read.table(header=TRUE, sep="|", skip=5) %>%
     mutate_at(vars(AllAges:AgesOver34), funs( . / 100 ))
 
