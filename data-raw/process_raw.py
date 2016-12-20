@@ -2,15 +2,6 @@
 Use the dictionary provided in this project to run a loop process where values are 
 extracted from the fixed width files provided by the CDC FTP server, and converted
 into a friendlier comma delimited format that can be read more easily.
-
-This module is meant to be executed from the root of the R package so that it can
-locate the appropriate references. When calling this module, your command should
-look like:
-
-```sh
-python3 data-raw/stage.py
-```
-
 """
 import os
 import shutil
