@@ -39,6 +39,8 @@ cesarean section. In cases where the method of birth is unknown, the record is
 represented with an NA. Birth method is not reported in records prior to 1989,
 so all earlier records are represented as NA.
 
+\strong{child_sex}: a factor representation of the sex of the infant
+
 \strong{cases}: an integer representing the number of birth records that are
 represented by the combination of dimensions that are present in a particular
 record of the births data set. All math that is performed on this data set should

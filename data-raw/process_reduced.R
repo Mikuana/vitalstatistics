@@ -261,13 +261,38 @@ staged_data = function(set_year, column_selection=NA) {
         else{ return(labeled_data) }
     }
 
+    remap_CSEX = function(labeled_data) {
+        'Recode underlying levels of the SEX and CSEX fields so that they
+         match one another. This is necessary because the SEX field uses
+         character representations instead of integers.
+        '
+        fields = names(labeled_data)
+        if(!'CSEX' %in% fields) {
+            if('SEX' %in% fields) {
+                # Use 2002 CSEX definitions to remap SEX codes
+                lkp = setNames(
+                        data_dictionary()$`2002`$CSEX$levels,
+                        data_dictionary()$`2002`$CSEX$labels
+                    )
+                mutate(labeled_data,
+                    CSEX = factor(lkp[as.character(SEX)], lkp, names(lkp))
+                )
+            }
+            else {
+                return( mutate(labeled_data, CSEX = NA) )
+            }
+        }
+        else{ return(labeled_data) }
+    }
+
     #===============================================================================
     # Column Renaming
     #===============================================================================
     field_renames = function(coded_data) {
         rename(coded_data,
                 birth_month = DOB_MM,
-                birth_state = STATENAT
+                birth_state = STATENAT,
+                child_sex = CSEX
             )
     }
 
@@ -294,6 +319,7 @@ staged_data = function(set_year, column_selection=NA) {
         return(coded_data)
     }
 
+    # TODO: fix resident record checks
     resident_record_test = function(labeled_data) {
         'Check the number of records of resident births against those listed by
          the CDC vital statistics data dictionaries.'
@@ -305,7 +331,7 @@ staged_data = function(set_year, column_selection=NA) {
 
         testthat::expect_equal(nrow(coded_data), expec,
             info=paste("Missing resident records from data set", as.character(set_year)),
-            tolerance = 100, scale=1
+            tolerance = 0, scale=1
         )
         return(labeled_data)
     }
@@ -334,6 +360,7 @@ staged_data = function(set_year, column_selection=NA) {
         remap_BFACIL %>%
         add_hospital_logical %>%
         remap_STATENAT %>%
+        remap_CSEX %>%
         field_renames
 }
 
@@ -351,7 +378,8 @@ births = lapply(data_dictionary()$years(), function(y) {
             birth_month,
             birth_state,
             birth_in_hospital,
-            cesarean
+            cesarean,
+            child_sex
         ) %>%
         summarize(cases = n())
 }) %>% 
