@@ -69,7 +69,7 @@ staged_data = function(set_year, column_selection=NA) {
     #===============================================================================
     # Data Dictionary Labelling and Transformations
     #===============================================================================
-    recode_ordered = function(coded_data) {
+    recode_factors = function(coded_data) {
         'Read definitions from data from dictionary and apply it to dataset, and
          construct ordered factor mutate statements as strings.
         '
@@ -83,7 +83,8 @@ staged_data = function(set_year, column_selection=NA) {
                     levels = paste0('"', set_dict[[i]]$levels, '"', collapse=",")
                 }
                 labels = paste0('"', set_dict[[i]]$labels, '"' , collapse=",")
-                fms[[i]] = paste0("ordered(",i,", levels=c(",levels,"), labels=c(",labels,"))")
+                cast_type = ifelse(set_dict[[i]]$ordered=='True', 'ordered', 'factor')
+                fms[[i]] = paste0(cast_type,"(",i,", levels=c(",levels,"), labels=c(",labels,"))")
             }
         }
         return(mutate_(coded_data, .dots = fms))
@@ -350,7 +351,7 @@ staged_data = function(set_year, column_selection=NA) {
         raw_record_test %>%
         record_weighting %>%
         recode_na %>%
-        recode_ordered %>%
+        recode_factors %>%
         recode_flags %>%
         filter_residents %>%
         # resident_record_test %>%
