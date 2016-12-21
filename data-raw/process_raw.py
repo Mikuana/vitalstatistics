@@ -133,7 +133,6 @@ def stage(dd, stage_file_path, raw_file_path, year, sample=False):
         'integer': lambda x: '' if x[0] == ' ' else str(int(x)),
         'logical': lambda x: '' if x == ' ' else str(x),
         'character': lambda x: '' if x[0] == ' ' else '"{}"'.format(x),
-        'factor': lambda x: '' if x[0] == ' ' else '"{}"'.format(x),
         'numeric': lambda x: '' if x[0] == ' ' else str(round(float(x), ndigits=1)),
         'na': lambda x: '',
     }
