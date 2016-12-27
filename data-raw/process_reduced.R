@@ -347,22 +347,28 @@ staged_data = function(set_year, column_selection=NA) {
     sel = set_dict %>% names
     col = setNames(set_dict[sel] %>%  sapply(function(x) x[['type']]) %>% as.character, sel)
 
-    data.table::fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
-        raw_record_test %>%
-        record_weighting %>%
-        recode_na %>%
-        recode_factors %>%
-        recode_flags %>%
-        filter_residents %>%
-        # resident_record_test %>%
-        add_year %>%
-        add_month_date %>%
-        add_cesarean_logical %>%
-        remap_BFACIL %>%
-        add_hospital_logical %>%
-        remap_STATENAT %>%
-        remap_CSEX %>%
-        field_renames
+
+    tryCatch({
+        data.table::fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
+            raw_record_test %>%
+            record_weighting %>%
+            recode_na %>%
+            recode_factors %>%
+            recode_flags %>%
+            filter_residents %>%
+            # resident_record_test %>%
+            add_year %>%
+            add_month_date %>%
+            add_cesarean_logical %>%
+            remap_BFACIL %>%
+            add_hospital_logical %>%
+            remap_STATENAT %>%
+            remap_CSEX %>%
+            field_renames
+    }, error = function(e) {
+        print(paste("Error with", set_year, "data set."))
+        print(e)
+    })
 }
 
 
