@@ -17,15 +17,41 @@ is the result of the raw data processing that is applied to birth certificate
 data sets provided by the CDC.
 }
 \details{
-\strong{pseudo_birth_date}: a date field which represents the year and month
+We include a description of each field in this data set, since they are the result
+of a quite complicated process which blends data from over 40 years of distinct
+data sets with different field values and usages.
+
+Concepts
+
+Each field is named with a conceptual prefix in order to make it more clear. This
+is useful to delineate fields that might be confusing, such as date of birth.
+If we were to simply use "date_of_birth" as our field name, it leaves some question
+as to whether this is the mothers date of birth or the childs. To prevent this,
+we prefix the field as "child_date_of_birth".
+
+\strong{birth}: fields prefixed with "birth_" describe values relative to the
+delivery event. For example, the "birth_hour" is intended to be the time when
+the delivery was completed, and "birth_in_hospital" refers to whether the
+final moment of the delivery occured in the hospital, regardless of the length
+of time that might have been spent in labor outside the hospital.
+
+\strong{mother}: the mother is the primary subject addressed by this data set.
+Unless otherwise stated in the field definition, all dependent attributes of the
+mother should be considered in the context of the birth. For example, the age
+of the mother calculated at the time of the birth, her state of residence
+at the time of the birth, and so forth.
+
+\strong{child}: the child (i.e. newly born infant) is the secondary subject addressed
+by this data set.
+
+Fields
+
+\strong{birth_date}: a date field which represents the year and month
 of birth, with the day of the month fixed to the first day of the month. This
 is due to the fact that we cannot be any more precise with this public data set.
-We include this along with factor representations of the birth year and month
-as separate fields, since it can be useful to have an actual date field value.
 
-\strong{birth_year}: an ordered factor representing the year of birth.
-
-\strong{birth_month}: an ordered factor representing the month of the birth.
+\strong(birth_date_actual): a date field which represents the actual date when
+the birth occured, when it is possible to report.
 
 \strong{birth_state}: a factor representing the state where the birth occured.
 This dimension stopped being reported by the CDC after 2004 due to privacy concerns,
@@ -34,9 +60,9 @@ and all records after that point are marked as NA.
 \strong{birth_in_hospital}: a logical representation of whether the birth occured
 in a hospital. Missing records are represented by NA.
 
-\strong{cesarean}: a logical representation of whether the birth occured via
-cesarean section. In cases where the method of birth is unknown, the record is
-represented with an NA. Birth method is not reported in records prior to 1989,
+\strong{birth_by_cesarean}: a logical representation of whether the birth occured
+via cesarean section. In cases where the method of birth is unknown, the record 
+is represented with an NA. Birth method is not reported in records prior to 1989,
 so all earlier records are represented as NA.
 
 \strong{child_sex}: a factor representation of the sex of the infant
