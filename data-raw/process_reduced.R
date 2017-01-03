@@ -147,13 +147,31 @@ staged_data = function(set_year, column_selection=NA) {
          else {return(coded_data)}
     }
 
-    add_month_date = function(coded_data) {
-        'Convert birth_year and birth_month fields into pseudo-date, using the first day of
-         month for each combination. This simplifies the use of plotting with many
-         other tools and functions in R.'
-         mutate(coded_data, pseudo_birth_date = lubridate::ymd(paste(birth_year, DOB_MM, 1, sep='_')))
+    add_birth_date = function(coded_data) {
+        'Convert birth year, month, and day into a date.'
+        if('DOB_MD' %in% names(coded_data)) {
+            mutate(coded_data,
+                birth_date = lubridate::ymd(paste0(birth_year, DOB_MM, DOB_MD))
+            )
+        } else {
+            mutate(coded_data, birth_date = NA)
+        }
     }
 
+    # add_birth_weekday_date = function(coded_data) {
+    #     if('DOB_WK' %in% names(coded_data)) {
+    #         mutate(coded_data,
+    #             birth_weekday_date = lubridate::ymd(paste0(birth_year, DOB_MM, DOB_MD))
+    #         )
+    #     } else {
+    #         mutate(coded_data, birth_weekday_date = NA)
+    #     }
+
+    # }
+
+    add_birth_month_date = function(coded_data) {
+        mutate(coded_data, birth_month_date = lubridate::ymd(paste0(birth_year, DOB_MM, 1)))
+    }
 
     add_cesarean_logical = function(labeled_data) {
         'Indicate whether the case resolved with a cesarean section using a logical,
@@ -358,7 +376,9 @@ staged_data = function(set_year, column_selection=NA) {
             filter_residents %>%
             # resident_record_test %>%
             add_year %>%
-            add_month_date %>%
+            add_birth_date %>%
+            # add_birth_weekday_date %>%
+            add_birth_month_date %>%
             add_cesarean_logical %>%
             remap_BFACIL %>%
             add_hospital_logical %>%
@@ -380,7 +400,9 @@ staged_data = function(set_year, column_selection=NA) {
 births = lapply(data_dictionary()$years(), function(y) {
     staged_data(y) %>%
         group_by(
-            pseudo_birth_date,
+            birth_date,
+            # birth_weekday_date,
+            birth_month_date,
             birth_year,
             birth_month,
             birth_state,
