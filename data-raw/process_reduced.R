@@ -208,12 +208,12 @@ staged_data = function(set_year, column_selection=NA) {
          whatever value has already been set in the field. In many cases this will
          include the logical interpretation of the UME fields.'
         # Start by creating the cesarean_lg field to prevent errors in mutate coalesce
-        labeled_data = mutate(labeled_data, cesarean = NA)
+        labeled_data = mutate(labeled_data, birth_via_cesarean = NA)
 
         if(all(c('UME_PRIMC', 'UME_REPEC') %in% names(labeled_data))) {
             labeled_data = mutate(labeled_data,
-                cesarean =
-                    coalesce(cesarean,
+                birth_via_cesarean =
+                    coalesce(birth_via_cesarean,
                         ifelse(UME_PRIMC == 'Yes' | UME_REPEC == 'Yes', TRUE,
                         ifelse(UME_PRIMC == 'No' & UME_REPEC == 'No', FALSE,
                             NA))
@@ -223,8 +223,8 @@ staged_data = function(set_year, column_selection=NA) {
 
         if('ME_ROUT' %in% names(labeled_data)) {
             labeled_data = mutate(labeled_data,
-                cesarean =
-                    coalesce(cesarean,
+                birth_via_cesarean =
+                    coalesce(birth_via_cesarean,
                         ifelse(ME_ROUT == 'Cesarean', TRUE,
                         ifelse(ME_ROUT != 'Unknown or not stated', FALSE,
                             NA))
@@ -234,8 +234,8 @@ staged_data = function(set_year, column_selection=NA) {
 
         if('DMETH_REC' %in% names(labeled_data)) {
             labeled_data = mutate(labeled_data,
-                cesarean =
-                    coalesce(cesarean,
+                birth_via_cesarean =
+                    coalesce(birth_via_cesarean,
                         ifelse(DMETH_REC == 'Cesarean', TRUE,
                         ifelse(DMETH_REC == 'Vaginal', FALSE,
                             NA))
@@ -424,7 +424,7 @@ births = lapply(data_dictionary()$years(), function(y) {
             birth_weekday_date,
             birth_state,
             birth_in_hospital,
-            cesarean,
+            birth_via_cesarean,
             child_sex
         ) %>%
         summarize(cases = n())
