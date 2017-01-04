@@ -165,9 +165,31 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     add_birth_month_date = function(coded_data) {
+        'Add a field which maps the birth date to the first day of the month. Since
+         we always at least know the year and month when a birth occured. By converting
+         this to an actual date value, it makes manipulation of records simpler.'
         mutate(coded_data,
             birth_month_date = lubridate::ymd(paste0(birth_year, DOB_MM, '01'))
         )
+    }
+
+    add_birth_weekday_date = function(coded_data) {
+        'Add a field which maps the year, month, and weekday of the birth to a weekday
+         date. This is similar to the birth_month_date, but instead of fixing all
+         values to the first day of the month, the dates are converted to the corresponding
+         weekday of the first full week in the month.'
+        coded_data = mutate(coded_data,
+            birth_weekday_date = birth_month_date - lubridate::wday(birth_month_date) + 7
+        )
+        if('DOB_WK' %in% names(coded_data)) {
+            mutate(coded_data,
+                birth_weekday_date = birth_weekday_date + as.integer(DOB_WK)
+            )
+        } else {
+            mutate(coded_data, 
+                birth_weekday_date = birth_weekday_date + lubridate::wday(birth_date)
+            )
+        }
     }
 
     add_cesarean_logical = function(labeled_data) {
@@ -374,8 +396,8 @@ staged_data = function(set_year, column_selection=NA) {
             # resident_record_test %>%
             add_year %>%
             add_birth_date %>%
-            # add_birth_weekday_date %>%
             add_birth_month_date %>%
+            add_birth_weekday_date %>%
             add_cesarean_logical %>%
             remap_BFACIL %>%
             add_hospital_logical %>%
@@ -399,8 +421,7 @@ births = lapply(data_dictionary()$years(), function(y) {
         group_by(
             birth_date,
             birth_month_date,
-            birth_year,
-            birth_month,
+            birth_weekday_date,
             birth_state,
             birth_in_hospital,
             cesarean,
@@ -408,9 +429,7 @@ births = lapply(data_dictionary()$years(), function(y) {
         ) %>%
         summarize(cases = n())
 }) %>%
-    data.table::rbindlist(use.names=TRUE) %>%
-    mutate(birth_year=ordered(birth_year))
-
+    data.table::rbindlist(use.names=TRUE)
 
 if(config$SAMPLING$enabled) {
     births = mutate(births, cases = cases / config$SAMPLING$percentage)
