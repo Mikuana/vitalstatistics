@@ -14,7 +14,7 @@ data_dictionary = function() {
         nodes = names(get_tree())
         property_node_pattern = '^__\\w+__$'
 
-        # ignore non-field 
+        # ignore non-field
         list(
             fields = nodes[!grepl(property_node_pattern, nodes)],
             properties = nodes[grepl(property_node_pattern, nodes)]
@@ -151,26 +151,23 @@ staged_data = function(set_year, column_selection=NA) {
         'Convert birth year, month, and day into a date.'
         if('DOB_MD' %in% names(coded_data)) {
             mutate(coded_data,
-                birth_date = lubridate::ymd(paste0(birth_year, DOB_MM, DOB_MD))
+                birth_date =
+                    lubridate::ymd(paste0(
+                            birth_year,
+                            formatC(DOB_MM, width = 2, format = "d", flag = "0"),
+                            formatC(DOB_MD, width = 2, format = "d", flag = "0")
+                        )
+                    )
             )
         } else {
-            mutate(coded_data, birth_date = NA)
+            return( mutate(coded_data, birth_date = as.Date(NA) ))
         }
     }
 
-    # add_birth_weekday_date = function(coded_data) {
-    #     if('DOB_WK' %in% names(coded_data)) {
-    #         mutate(coded_data,
-    #             birth_weekday_date = lubridate::ymd(paste0(birth_year, DOB_MM, DOB_MD))
-    #         )
-    #     } else {
-    #         mutate(coded_data, birth_weekday_date = NA)
-    #     }
-
-    # }
-
     add_birth_month_date = function(coded_data) {
-        mutate(coded_data, birth_month_date = lubridate::ymd(paste0(birth_year, DOB_MM, 1)))
+        mutate(coded_data,
+            birth_month_date = lubridate::ymd(paste0(birth_year, DOB_MM, '01'))
+        )
     }
 
     add_cesarean_logical = function(labeled_data) {
@@ -401,7 +398,6 @@ births = lapply(data_dictionary()$years(), function(y) {
     staged_data(y) %>%
         group_by(
             birth_date,
-            # birth_weekday_date,
             birth_month_date,
             birth_year,
             birth_month,
@@ -411,7 +407,7 @@ births = lapply(data_dictionary()$years(), function(y) {
             child_sex
         ) %>%
         summarize(cases = n())
-}) %>% 
+}) %>%
     data.table::rbindlist(use.names=TRUE) %>%
     mutate(birth_year=ordered(birth_year))
 
