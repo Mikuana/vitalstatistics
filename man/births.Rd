@@ -21,13 +21,14 @@ We include a description of each field in this data set, since they are the resu
 of a quite complicated process which blends data from over 40 years of distinct
 data sets with different field values and usages.
 
-Concepts
+Conceptual Prefixes
 
 Each field is named with a conceptual prefix in order to make it more clear. This
 is useful to delineate fields that might be confusing, such as date of birth.
-If we were to simply use "date_of_birth" as our field name, it leaves some question
-as to whether this is the mothers date of birth or the childs. To prevent this,
-we prefix the field as "child_date_of_birth".
+If we were to simply use "date" as our field name, it leaves some question
+as to whether this is the date of birth, date of conception, date of reporting,
+etc. Instead, we use one of a defined set of words as the first word in every
+field to make the meaning clear.
 
 \strong{birth}: fields prefixed with "birth_" describe values relative to the
 delivery event. For example, the "birth_hour" is intended to be the time when
@@ -46,12 +47,27 @@ by this data set.
 
 Fields
 
-\strong{birth_date}: a date field which represents the year and month
-of birth, with the day of the month fixed to the first day of the month. This
-is due to the fact that we cannot be any more precise with this public data set.
+\strong{birth_date}: a date type field which represents the specific date when
+the birth (i.e. the final delivery of the child) occurred, according to the birth
+certificate. This field is poulated from 1969 to 1988, but is left blank after
+that since specific day of month reporting of births was halted due to privacy
+concerns.
 
-\strong(birth_date_actual): a date field which represents the actual date when
-the birth occured, when it is possible to report.
+\strong(birth_month_date): a date type field which represents the specific month
+and year when the birth occurred. Every value is set to the first day of the
+month, regardless of whether the actual birth date is know.
+
+\strong{birth_weekday_date}: a date type field which represents the specific
+month, year, and day of the week that the birth occurred. This field is useful
+because it can be used as a date value directly, while still representing the
+correct year, month, and day of the week that the birth occurred.
+In contrast to the birth_month_date field, this field constructs date values
+as day of the month that corresponds to the day of the week in the first full week in that month.
+For example, if a birth occurred in January of 2014 on a Tuesday (which is the most
+detailed date information that we can get with records after 1988) we can determine
+that the first full week of January starts on the 5th (i.e. Sunday, January 5th),
+and that the Tuesday of that week is 2014-01-07. Accordingly the birth_weekday_date
+value would be set to 2014-01-07.
 
 \strong{birth_state}: a factor representing the state where the birth occured.
 This dimension stopped being reported by the CDC after 2004 due to privacy concerns,
@@ -60,7 +76,7 @@ and all records after that point are marked as NA.
 \strong{birth_in_hospital}: a logical representation of whether the birth occured
 in a hospital. Missing records are represented by NA.
 
-\strong{birth_by_cesarean}: a logical representation of whether the birth occured
+\strong{birth_via_cesarean}: a logical representation of whether the birth occured
 via cesarean section. In cases where the method of birth is unknown, the record 
 is represented with an NA. Birth method is not reported in records prior to 1989,
 so all earlier records are represented as NA.
