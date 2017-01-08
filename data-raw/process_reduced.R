@@ -192,6 +192,48 @@ staged_data = function(set_year, column_selection=NA) {
         }
     }
 
+    add_maternal_age = function(coded_data) {
+        'Age of mother at time of delivery. This function maps single years of
+        age into the factors that are report in more recent data sets, where 10-12
+        and 50-54 are reported as a single group.'
+        coded_data = mutate(
+            coded_data, mother_age = ordered(
+                    NA,
+                    levels = data_dictionary()[['2004']][['MAGER']][['levels']],
+                    labels = data_dictionary()[['2004']][['MAGER']][['labels']]
+                )
+        )
+
+        if('UMAGERPT' %in% names(coded_data)) {
+            'Recode individual years 10-12 and 50-54 to 12 and 50. These values
+             get mapped to factors which represent these ranges.'
+            coded_data = mutate(coded_data,
+                UMAGERPT = 
+                    ifelse(UMAGERPT %in% 10:12, 12,
+                    ifelse(UMAGERPT %in% 50:54, 50,
+                    ifelse(UMAGERPT %in% 13:49, UMAGERPT,
+                        NA))),
+                mother_age = ordered(
+                    UMAGERPT,
+                    levels = data_dictionary()[['2004']][['MAGER']][['levels']],
+                    labels = data_dictionary()[['2004']][['MAGER']][['labels']]
+                )
+            )
+        }
+
+        if('MAGER' %in% names(coded_data)) {
+            coded_data = mutate(coded_data,
+                mother_age = ordered(
+                    MAGER,
+                    levels = data_dictionary()[['2004']][['MAGER']][['levels']],
+                    labels = data_dictionary()[['2004']][['MAGER']][['labels']]
+                )
+            )
+        }
+
+        return(coded_data)
+    }
+
     add_cesarean_logical = function(labeled_data) {
         'Indicate whether the case resolved with a cesarean section using a logical,
          with unknown cases denoted by an NA. There is a specific strategy to which fields
@@ -399,6 +441,7 @@ staged_data = function(set_year, column_selection=NA) {
             add_birth_month_date %>%
             add_birth_weekday_date %>%
             add_cesarean_logical %>%
+            add_maternal_age %>%
             remap_BFACIL %>%
             add_hospital_logical %>%
             remap_STATENAT %>%
@@ -425,6 +468,7 @@ births = lapply(data_dictionary()$years(), function(y) {
             birth_state,
             birth_in_hospital,
             birth_via_cesarean,
+            mother_age,
             child_sex
         ) %>%
         summarize(cases = n())
