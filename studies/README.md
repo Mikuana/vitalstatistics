@@ -1,5 +1,7 @@
 # Studies
 
+# Exploratory Analysis
+ - [Day of Week](ExploreDoW.md)
 
 ---
 
