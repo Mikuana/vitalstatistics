@@ -1,9 +1,5 @@
 # Studies
 
- - [Cesarean Section Trends](CesareanTrends.md)
-
- - [Seasonal Birth Volume Trends](SeasonalVolumes.md)
-
 
 ---
 
