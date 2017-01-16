@@ -34,19 +34,3 @@ cmaw = function(month_date) {
     # return just the value, instead of a named list value
     x[[1]]
 }
-
-
-# #' Birth Volume Seasonal Adjustment
-# #' @export
-# seas_birth_adj = function(month_date) {
-#     if(!lubridate::is.Date(month_date)) {
-#         stop("You did not pass a value that lubridate recognizes as a date")
-#     }
-    
-    
-#     `__seas__` <<- births dplyr::%>% 
-#         dplyr::group_by dplyr::%>%
-#         dplyr::transmute(cases = cases * cmaw(month_date)) dplyr::%>%
-#         stats::ts(frequency=12, start=1968) %>%
-#         stats::decompose(type="multiplicative")
-# }

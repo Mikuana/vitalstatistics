@@ -2,15 +2,6 @@
 Use the dictionary provided in this project to run a loop process where values are 
 extracted from the fixed width files provided by the CDC FTP server, and converted
 into a friendlier comma delimited format that can be read more easily.
-
-This module is meant to be executed from the root of the R package so that it can
-locate the appropriate references. When calling this module, your command should
-look like:
-
-```sh
-python3 data-raw/stage.py
-```
-
 """
 import os
 import shutil
@@ -194,11 +185,10 @@ class PathFinder(object):
         zip_file_template = 'Nat{}{}.zip'
         stage_file_template = 'births{}.csv'
         stage_gz_template = 'births{}.csv.gz'
-        data_path = os.path.join('data')
-        data_raw_path = os.path.join('data-raw')
+        data_raw_path = os.path.join('.')
 
         self.config = os.path.join(data_raw_path, 'config.ini')
-        self.dictionary = os.path.join(data_path, 'dictionary.json')
+        self.dictionary = os.path.join(data_raw_path, 'dictionary.json')
         self.zip_name = zip_file_template.format(y, '' if year < 1994 else 'us')
         self.zip = os.path.join(data_raw_path, 'data', self.zip_name)
         self.uz_folder = os.path.join(data_raw_path, 'data', y)
@@ -215,7 +205,7 @@ class PathFinder(object):
 
 
 config = ConfigParser()
-config.read(os.path.join('data-raw', 'config.ini'))
+config.read(os.path.join('.', 'config.ini'))
 
 
 if __name__ == '__main__':
