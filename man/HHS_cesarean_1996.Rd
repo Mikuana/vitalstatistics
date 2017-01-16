@@ -6,8 +6,7 @@
 \title{Cesarean rates by age: United States, 1988-92}
 \format{An object of class \code{\link{data.frame}}}
 \source{
-\href{http://www.cdc.gov/nchs/data/series/sr_13/sr13_124.pdf}{Trends
-in Hospital Utilization: United States, 1988–92}
+\href{http://www.cdc.gov/nchs/data/series/sr_13/sr13_124.pdf}{Trends in Hospital Utilization: United States, 1988–92}
 
 Table 26. Vital and Health Statistics, Series 13, Number 124, June 1996
 
@@ -17,9 +16,7 @@ Gillum BS, Graves EJ, Kozak LJ. National Center for Health Statistics.
 HHS_cesarean_1996
 }
 \description{
-A table of cesarean section rates between 1980 and 1992, with a breakdown by
-maternal age. These rates are calculated with data collected via the National 
-Hospital Discharge Survey.
+A table of cesarean section rates between 1980 and 1992, with a breakdown by maternal age. These rates are calculated with data collected via the National  Hospital Discharge Survey.
 }
 \examples{
 # Load data directly from the vitalstatistics namespace
