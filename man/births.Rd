@@ -38,6 +38,8 @@ For example, if a birth occurred in January of 2014 on a Tuesday, we determine t
 
 This field is useful because it can be used as a date value directly, while still representing the correct year, month, and day of the week that the birth occurred. It is important to note that this field does not represent the actual date of birth; day of month was reported until 1988, but was omitted from records after that time for privacy reasons.
 
+\strong{birth_month_date}:a date type field which represents the specific month and year that the birth occurred. This date value is always set to the first day of the month, and serves as a substitute for the birth_weekday_date for records where the day of the week is not known.
+
 \strong{birth_state}: a factor representing the state where the birth occured. This dimension stopped being reported by the CDC after 2004 due to privacy concerns, and all records after that point are marked as NA.
 
 \strong{birth_in_hospital}: a logical representation of whether the birth occurred in a hospital. Missing records are represented by NA.

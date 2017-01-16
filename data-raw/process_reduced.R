@@ -148,7 +148,8 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     add_birth_date = function(coded_data) {
-        'Convert birth year, month, and day into a date.'
+        'Convert birth year, month, and day into a date. This is not retained in
+         the final output, but is necessary in some cases to calculate the birth_weekday_date'
         if('DOB_MD' %in% names(coded_data)) {
             mutate(coded_data,
                 birth_date =
@@ -477,8 +478,7 @@ staged_data = function(set_year, column_selection=NA) {
 births = lapply(data_dictionary()$years(), function(y) {
     staged_data(y) %>%
         group_by(
-            # birth_date,
-            # birth_month_date,
+            birth_month_date,
             birth_weekday_date,
             birth_state,
             birth_in_hospital,
