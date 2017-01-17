@@ -32,26 +32,26 @@ b.dow %>%
     select(
         `Birth Year` = birth_year,
         `Live Births` = cases,
-        `# Missing Day of Week` = misses,
-        `% Missing` = rate_format
+        `Records Missing Day of Week` = misses,
+        `Percent Missing` = rate_format
     ) %>%
-    knitr::kable(.)
+    knitr::kable(., format="markdown", align = "r")
 ```
 
 
 
- Birth Year   Live Births   # Missing Day of Week  % Missing 
------------  ------------  ----------------------  ----------
-       1968       3501400                 3501400  100%      
-       1969       3600200                    2200  0.061%    
-       1970       3737800                    3600  0.096%    
-       1971       3563400                     600  0.017%    
-       1972       3260500                     200  0.006%    
-       1973       3139700                     400  0.013%    
-       1974       3190500                     200  0.006%    
-       1975       3159600                     100  0.003%    
-       1976       3180000                     200  0.006%    
-       1982       3688700                     400  0.011%    
+| Birth Year| Live Births| Records Missing Day of Week| Percent Missing|
+|----------:|-----------:|---------------------------:|---------------:|
+|       1968|     3501400|                     3501400|            100%|
+|       1969|     3600200|                        2200|          0.061%|
+|       1970|     3737800|                        3600|          0.096%|
+|       1971|     3563400|                         600|          0.017%|
+|       1972|     3260500|                         200|          0.006%|
+|       1973|     3139700|                         400|          0.013%|
+|       1974|     3190500|                         200|          0.006%|
+|       1975|     3159600|                         100|          0.003%|
+|       1976|     3180000|                         200|          0.006%|
+|       1982|     3688700|                         400|          0.011%|
 
 We can see that 1968 is completely lacking day of week data, which is expected since birth records from that year included neither day of month or day of week data. However, after 1968 there is less than 1/10th of a percent of records missing from any year, with the worst years being 1969 and 1970, and missing data halting entirely after 1982. Overall, this is very complete data if we note that 1968 is missing in its entirety.
 

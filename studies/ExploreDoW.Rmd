@@ -36,10 +36,10 @@ b.dow %>%
     select(
         `Birth Year` = birth_year,
         `Live Births` = cases,
-        `# Missing Day of Week` = misses,
-        `% Missing` = rate_format
+        `Records Missing Day of Week` = misses,
+        `Percent Missing` = rate_format
     ) %>%
-    knitr::kable(.)
+    knitr::kable(., format="markdown", align = "r")
 ```
 
 We can see that 1968 is completely lacking day of week data, which is expected since birth records from that year included neither day of month or day of week data. However, after 1968 there is less than 1/10th of a percent of records missing from any year, with the worst years being 1969 and 1970, and missing data halting entirely after 1982. Overall, this is very complete data if we note that 1968 is missing in its entirety.
