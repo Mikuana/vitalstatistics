@@ -1,6 +1,12 @@
 # Day of Week Exploration
 [Back to Study Directory](README.md)
 
+# Summary
+
+This document shows that births tend to occur much more frequently on weekdays, and in the middle of the week in particular. This effect was less prevalent in the 70's, but has become more pronounced over time.
+
+# Analysis
+
 
 
 
@@ -97,7 +103,7 @@ b.dow %>%
 
 Our graph includes a line at 14.3%, which is where the weekly share of births would fall for each day if there was no bias toward any particular day. However, the graph reveals that births are not evenly distributed, with births much more heavily weighted towards weekdays than weekends. Sunday in particular falls well below the 14.3% non-bias level. 
 
-To dive a little deeper into this question while still remaining at the "exploratory" level of analysis, we look at how this distribution has changed over time. We will make a nearly identical graph, but we will facet by decades so that we can see if there is a difference in the shape of the distribution over time. We are limiting to decades instead of individual years in order to reduce the number of facets that appear in our graph.
+To dive a little deeper into this question while still remaining at the "exploratory" level of analysis, we look at how this distribution has changed over time. We will recast this graphic with a facet for each weekday, track the decade on the y-axis, and plot our outcomes as a line instead of a bar. This will allow us to much more easily discern how frequently births occur on certain days over time. Again, we include a red line to indicate the point which each day would fall if there were no bias towards particular days of the week for birth.
 
 
 ```r
@@ -107,16 +113,6 @@ b.dow.decades = b.dow %>%
     group_by(birth_decade) %>%  # group again on summarized data for denominator calculation
     mutate(weekly_share = live_births / sum(live_births))
 
-b.dow.decades %>%
-    dow.plot(.) + facet_grid(birth_decade ~ .)
-```
-
-![](ExploreDoW_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
-
-Although this produces a very busy graphic, with careful study we can see that the bias towards weekdays does exist throughout the decades in our data set, and appears to be more extreme in more recent decades. We will recast this graphic with a facet for each weekday, and track the decade on the y-axis.
-
-
-```r
 b.dow.decades %>%
     ggplot(aes(birth_decade, weekly_share, group=birth_weekday)) + 
         facet_grid(. ~ birth_weekday) +
@@ -129,11 +125,11 @@ b.dow.decades %>%
         ylab("Distribution of Births in Week (%)")
 ```
 
-![](ExploreDoW_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](ExploreDoW_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
-With this final graphic, it becomes extremely clear that (1) births a much more heavily biased towards weekdays, (2) towards the middle of the week in particular, and (3) this trend has become more extreme over time. 
+With this final graphic, it becomes extremely clear that (1) births are much more heavily biased towards weekdays, (2) births are biased towards the middle of the week in particular, and (3) this trend has become more extreme over time. 
 
-But what does this mean in plain language? We'll propose a theoretical week in which 7000 births occurred. If there was no bias on which day they were born and they occurred completely randomly, then ~1000 births would occur on each day. However, as of the 2010s, the week would probably look like this:
+But what does this mean in plain language? We'll propose a theoretical week in which 7000 births occurr. If there was no bias on which day they were born and births occurred completely randomly, then ~1000 births would occur on each day. However, as of the 2010s, the week would probably look like this:
 
 
 ```r
@@ -145,21 +141,21 @@ b.dow.decades %>%
         Weekday = birth_weekday,
         `Estimated Births` = est
     ) %>%
-    knitr::kable(.)
+    knitr::kable(., format="markdown", align = "r")
 ```
 
 
 
-Weekday    Estimated Births
---------  -----------------
-Sun                     656
-Mon                    1068
-Tues                   1162
-Wed                    1134
-Thurs                  1130
-Fri                    1107
-Sat                     743
+| Weekday| Estimated Births|
+|-------:|----------------:|
+|     Sun|              656|
+|     Mon|             1068|
+|    Tues|             1162|
+|     Wed|             1134|
+|   Thurs|             1130|
+|     Fri|             1107|
+|     Sat|              743|
 
-If historical trends hold, the bias of midweek births will continue to increase, with fewer births occurring on the weekend.
+If historical trends hold, the bias of midweek births will continue to increase and fewer births will occur on the weekend.
 
 [Back to Study Directory](README.md)
