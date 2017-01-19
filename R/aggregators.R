@@ -29,3 +29,35 @@ rate_lg = function(field, cases=1) {
         sum(f * c, na.rm=TRUE) / sum((!is.na(f)) * c)
     }
 }
+
+#' Numeric Value Summary of Weighted Records
+#'
+#' Because the \code{\link{vitalstatistics::births}} data set uses a weighted record strategy (i.e. you have to multiply everything by the cases field), the typical summary function won't return meaningful results. In order to provide some basic descriptive statistics for a numeric column in the data set, this function can be used instead.
+#' 
+#' It makes use of the dplyr format for summarizing results, and therefore integrates nicely with a chain of dplyr functions. Under the hood, it is using \code{\link{dplyr::summarize_}} and pasting strings together for evaluation, with the actual statistics being handled by the \code{\link{matrixStats}} package, based upon your input.
+#' 
+#' @param data - a data frame, presumably the births data set or a derivative
+#' @param column - the numeric column that you want to perform summary statistics on
+#' @param weight - the column in the data.frame that contains the weighting value
+#' @param na.rm - whether to pass a TRUE or FALSE value to the na.rm argument for each underlying aggregation function.
+#' @return A formula that can be executed in a dplyr summarize statement
+#' @examples
+#'  library(dplyr)
+#'  library(vitalstatistics)
+#'  births %>% numeric_summary('mother_age_int', na.rm=TRUE)
+#' 
+#' @export
+numeric_summary = function (data, column, weight='cases', na.rm=FALSE) {
+    dplyr::summarize_(
+        data,
+        `Mean`    = paste('matrixStats::weightedMean(',column,',',weight,', na.rm=',na.rm,')'),
+        `SD`      = paste('matrixStats::weightedSd(',column,',',weight,', na.rm=',na.rm,')'),
+        `Min.`    = paste('base::min(',column,', na.rm=',na.rm,')'),
+        `1st Qu.` = 'stats::qnorm(0.25) * SD + Mean',
+        `Median`  = paste('matrixStats::weightedMedian(',column,',',weight,', na.rm=',na.rm,')'),
+        `3rd Qu.` = 'stats::qnorm(0.75) * SD + Mean',
+        `Max.`    = paste('base::max(',column,', na.rm=',na.rm,')'),
+        `Count`   = paste('base::sum(base::ifelse(base::is.na(',column,'),0,',weight,'))'),
+        `NA`      = paste('base::sum(base::ifelse(base::is.na(',column,'),',weight,',0))')
+    )
+}

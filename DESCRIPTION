@@ -11,8 +11,8 @@ RoxygenNote: 5.0.1
 Imports:
     lubridate,
     dplyr,
-    data.table,
-    jsonlite
-Suggests: knitr,
-    rmarkdown
+    ggplot2,
+    knitr,
+    rmarkdown,
+    matrixStats
 VignetteBuilder: knitr
