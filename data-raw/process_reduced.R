@@ -445,9 +445,9 @@ staged_data = function(set_year, column_selection=NA) {
     tryCatch({
         data.table::fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
             raw_record_test %>%
+            recode_na %>%
             add_maternal_age_int %>%
             record_weighting %>%
-            recode_na %>%
             recode_factors %>%
             recode_flags %>%
             filter_residents %>%
