@@ -96,7 +96,7 @@ wtd_NA_count = function(column, weight_column='cases') {
 #'
 #' @export
 numeric_summary = function (data, numeric_column, weight_column='cases', na.rm=FALSE) {
-    summarize_(data,
+    dplyr::summarize_(data,
        `Mean`    = wtd_mean(numeric_column=numeric_column, na.rm=na.rm),
        `SD`      = wtd_SD(numeric_column=numeric_column, na.rm=na.rm),
        `Min.`    = paste('base::min(',numeric_column,', na.rm=',na.rm,')'),

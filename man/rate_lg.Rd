@@ -16,16 +16,7 @@ a number of records with this result.}
 A formula that can be executed in a dplyr summarize statement
 }
 \description{
-Calculate a rate using a logical field, with TRUE as the numerator, and TRUE/FALSE
-as the denominator. This excludes NA values. When provided, the results of each
-are multiplied by the cases parameter, which allows us to appropriately scale
-the calculations for our reduced record data sets that are included in the package'
-}
-\details{
-This function returns a function, meant to be applied during a dplyr summarize
-statement, although it can be used in a broader context. Because the function
-returns a function, it is important to follow the parameters with parenthesis
-'()' in order to execute the function that is returned.
+Calculate a rate using a logical field, with TRUE as the numerator, and TRUE/FALSE as the denominator. This excludes NA values. When provided, the results of each are multiplied by the cases parameter, which allows us to appropriately scale the calculations for our reduced record data sets that are included in the package'
 }
 \examples{
  library(dplyr)
