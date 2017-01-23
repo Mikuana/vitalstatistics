@@ -7,6 +7,7 @@
 \alias{wtd_mean}
 \alias{wtd_median}
 \alias{wtd_quantile}
+\alias{wtd_rate}
 \title{Weighted Aggregate Strings}
 \usage{
 wtd_mean(numeric_column, weight_column = "cases", na.rm = FALSE)
@@ -21,6 +22,8 @@ wtd_quantile(numeric_column, q, weight_column = "cases", na.rm = FALSE,
 wtd_count(column, weight_column = "cases")
 
 wtd_NA_count(column, weight_column = "cases")
+
+wtd_rate(logical_column, weight_column = "cases", na.rm = FALSE)
 }
 \arguments{
 \item{numeric_column}{in the case of numeric aggregation functions (mean, SD), this is the column that is used to aggregate}

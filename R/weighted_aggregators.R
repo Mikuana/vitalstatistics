@@ -1,25 +1,24 @@
-#' Logical Field Rate Calculation
+#' Weighted Logical Rate Calculation
 #'
 #' Calculate a rate using a logical field, with TRUE as the numerator, and TRUE/FALSE as the denominator. This excludes NA values. When provided, the results of each are multiplied by the cases parameter, which allows us to appropriately scale the calculations for our reduced record data sets that are included in the package'
 #'
-#' @param field - A name of a logical table field name that will be aggregated
-#' @param cases - A value that should be applied to the result in order to simulate
+#' @param field a name of a logical table field name that will be aggregated
+#' @param cases a value that should be applied to the result in order to simulate
 #' a number of records with this result.
-#' @return A formula that can be executed in a dplyr summarize statement
+#' @return a formula that can be executed in a dplyr summarize statement
 #' @examples
-#'  library(dplyr)
-#'  births %>%
-#'      filter(DOB_YY >= 1989) %>%
-#'      group_by(DOB_YY) %>%
-#'      summarize(
-#'          cesarean_rate = lg_rate(cesarean_lg, cases)()
-#'      ) %>%
-#'      plot
+#' births %>%
+#'    group_by(lubridate::year(birth_month_date)) %>%
+#'    summarize_(
+#'        cesarean_rate = wtd_lg_rate('birth_via_cesarean', na.rm=TRUE)
+#'    ) %>%
+#'    plot
 #' @export
-rate_lg = function(field, cases=1) {
-    function(f=field, c=cases) {
-        sum(f * c, na.rm=TRUE) / sum((!is.na(f)) * c)
-    }
+wtd_lg_rate = function(logical_column, weight_column='cases', na.rm=FALSE) {
+    paste0(
+        'base::sum(', logical_column,' * ', weight_column, ', na.rm=', na.rm, ')',
+        ' / base::sum((!base::is.na(', logical_column,')) * ', weight_column,', na.rm=', na.rm,')'
+    )
 }
 
 #' Weighted Aggregate Strings
@@ -78,6 +77,15 @@ wtd_NA_count = function(column, weight_column='cases') {
     paste('base::sum(base::ifelse(base::is.na(',column,'),',weight_column,',0))')
 }
 
+#' @rdname wtd_mean
+#' @export
+wtd_rate = function(logical_column, weight_column='cases', na.rm=FALSE) {
+    paste(
+        'sum(', logical_column, ' * ', weight_column, ', na.rm=',na.rm, ')
+          / sum((!is.na(', logical_column, ')) * ', weight_column, ')'
+    )
+}
+
 #' Numeric Value Summary of Weighted Records
 #'
 #' Because the \code{\link{vitalstatistics::births}} data set uses a weighted record strategy (i.e. you have to multiply everything by the cases field), the typical summary function won't return meaningful results. In order to provide some basic descriptive statistics for a numeric column in the data set, this function can be used instead.
@@ -96,7 +104,7 @@ wtd_NA_count = function(column, weight_column='cases') {
 #'
 #' @export
 numeric_summary = function (data, numeric_column, weight_column='cases', na.rm=FALSE) {
-    dplyr::summarize_(data,
+    summarize_(data,
        `Mean`    = wtd_mean(numeric_column=numeric_column, na.rm=na.rm),
        `SD`      = wtd_SD(numeric_column=numeric_column, na.rm=na.rm),
        `Min.`    = paste('base::min(',numeric_column,', na.rm=',na.rm,')'),

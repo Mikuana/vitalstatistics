@@ -2,10 +2,11 @@
 
 export(cmaw)
 export(numeric_summary)
-export(rate_lg)
 export(wtd_NA_count)
 export(wtd_SD)
 export(wtd_count)
+export(wtd_lg_rate)
 export(wtd_mean)
 export(wtd_median)
 export(wtd_quantile)
+export(wtd_rate)
