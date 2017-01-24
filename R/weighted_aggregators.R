@@ -77,15 +77,6 @@ wtd_NA_count = function(column, weight_column='cases') {
     paste('base::sum(base::ifelse(base::is.na(',column,'),',weight_column,',0))')
 }
 
-#' @rdname wtd_mean
-#' @export
-wtd_rate = function(logical_column, weight_column='cases', na.rm=FALSE) {
-    paste(
-        'sum(', logical_column, ' * ', weight_column, ', na.rm=',na.rm, ')
-          / sum((!is.na(', logical_column, ')) * ', weight_column, ')'
-    )
-}
-
 #' Numeric Value Summary of Weighted Records
 #'
 #' Because the \code{\link{vitalstatistics::births}} data set uses a weighted record strategy (i.e. you have to multiply everything by the cases field), the typical summary function won't return meaningful results. In order to provide some basic descriptive statistics for a numeric column in the data set, this function can be used instead.
