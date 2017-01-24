@@ -69,12 +69,11 @@ We start our exploratory analysis by preparing a copy of the data set with attri
 ```r
 b.dow = b.dow %>%
     filter(!is.na(birth_weekday_date)) %>%  # remove missing records
-    mutate(
-        birth_year = year(birth_weekday_date),  # add birth year
-        birth_decade = ordered(paste0(floor((birth_year) / 10) * 10, "s")),  # add a decade label
-        birth_decade = recode(birth_decade, '1960s' = '1969'),  # label 60's as 1969
-        birth_weekday = wday(birth_weekday_date, label=TRUE)  # calculate and label day of week
-    ) %>%
+    ext_birth_weekday %>%
+    ext_birth_year %>% 
+    ext_birth_decade %>%
+    # label 60's as 1969 since that is the only year that's included for this analysis
+    mutate(birth_decade = recode(birth_decade, '1960s' = '1969')) %>%
     group_by(birth_weekday)  # add a default grouping for weekday for convenience
 ```
 
