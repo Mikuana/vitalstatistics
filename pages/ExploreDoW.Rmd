@@ -1,9 +1,19 @@
 ---
 title: "Day of Week Exploration"
-output: 
-    html_document:
-        keep_md: true
+author: "Christopher Boyd"
+date: "`r Sys.Date()`"
+output:
+  tufte::tufte_html: default
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+bibliography: skeleton.bib
+link-citations: yes
 ---
+
 [Back to Study Directory](README.md)
 
 # Summary
@@ -13,7 +23,7 @@ This document shows that births tend to occur much more frequently on weekdays, 
 # Analysis
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 
 ```{r libraries, message=FALSE}

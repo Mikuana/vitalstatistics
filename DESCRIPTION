@@ -14,9 +14,10 @@ Imports:
     magrittr,
     dplyr,
     ggplot2,
-    knitr,
-    rmarkdown,
     matrixStats
 Suggests:
-    testthat
+    testthat,
+    knitr,
+    tufte,
+    rmarkdown
 VignetteBuilder: knitr

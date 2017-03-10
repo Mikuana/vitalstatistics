@@ -9,5 +9,6 @@
 inst/doc
 
 
-# Ignore Study (Rmarkdown) HTML files
-studies/*.html
+# Ignore Pages cache files
+pages/*_cache/
+pages/*_files/
