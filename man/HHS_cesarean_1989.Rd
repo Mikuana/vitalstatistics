@@ -18,14 +18,4 @@ HHS_cesarean_1989
 \description{
 A table of cesarean section rates between 1965 and 1986, with a breakdown by maternal age. These rates are calculated with data collected via the National  Hospital Discharge Survey.
 }
-\examples{
-# Load data directly from the vitalstatistics namespace
-vitalstatistics::HHS_cesarean_1989
-
-# Or first load the entire package
-library(vitalstatistics)
-HHS_cesarean_1989
-
-}
 \keyword{datasets}
-

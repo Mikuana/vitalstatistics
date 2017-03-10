@@ -10,17 +10,6 @@
 #' 
 #' @param month_date - A date that represents the month which a value is aggregated to
 #' @return A weighting value which can be used to smooth the noise caused by the Julian calendar
-#' @examples
-#'  # determine the appropriate weighting for volumes in February 2016
-#' 
-#'  x = cmaw(as.Date('2016-02-01')
-#'  print(x)
-#'  1.048851
-#' 
-#'  # then apply this weighting to volume values to get a scaled value
-#' 
-#'  32000 * x
-#'  33563.22
 #' 
 #' @export
 cmaw = function(month_date) {

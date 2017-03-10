@@ -54,14 +54,5 @@ This field is useful because it can be used as a date value directly, while stil
 
 \strong{cases}: an integer representing the number of birth records that are represented by the combination of dimensions that are present in a particular record of the births data set. All math that is performed on this data set should be weighted by this value.
 }
-\examples{
-# Load data directly from the vitalstatistics namespace
-vitalstatistics::births
 
-# Or first load the entire package
-library(vitalstatistics)
-births
-
-}
 \keyword{datasets}
-

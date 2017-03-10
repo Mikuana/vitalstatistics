@@ -47,19 +47,10 @@
 #' @keywords datasets
 #'
 #' @source CDC and this package
-#' 
-#' @examples
-#' # Load data directly from the vitalstatistics namespace
-#' vitalstatistics::births
-#' 
-#' # Or first load the entire package
-#' library(vitalstatistics)
-#' births
-#'
 "births"
 
 
-#' Cesarean rates by risk: United States, 1990–2012 and preliminary 2013
+#' Cesarean rates by risk: United States, 1990-2012 and preliminary 2013
 #'
 #' A table of cesarean section counts and rates between 1990 and 2013 using birth
 #' certificate records.
@@ -73,21 +64,13 @@
 #' @keywords datasets
 #'
 #' @source \href{http://www.cdc.gov/nchs/data/nvsr/nvsr63/nvsr63_06.pdf}{Trends in 
-#' Low-risk Cesarean Delivery in the United States, 1990–2013}
+#' Low-risk Cesarean Delivery in the United States, 1990-2013}
 #' 
 #' Table A, National Vital Statistics Reports Volume 63, Number 6 November 5, 2014
 #' 
 #' by Michelle J.K. Osterman, M.H.S.; and Joyce A. Martin, M.P.H., Division of Vital 
 #' Statistics
 #' 
-#' @examples
-#' # Load data directly from the vitalstatistics namespace
-#' vitalstatistics::CDC_cesarean_2013
-#' 
-#' # Or first load the entire package
-#' library(vitalstatistics)
-#' CDC_cesarean_2013
-#'
 "CDC_cesarean_2013"
 
 
@@ -108,14 +91,6 @@
 #' Table 16. Vital and Health Statistics, Series 13, Number 101, September 1989
 #'
 #' Pokras R, Kozak LJ, McCarthy E, Graves EJ. National Center for Health Statistics.
-#' 
-#' @examples
-#' # Load data directly from the vitalstatistics namespace
-#' vitalstatistics::HHS_cesarean_1989
-#' 
-#' # Or first load the entire package
-#' library(vitalstatistics)
-#' HHS_cesarean_1989
 #'
 "HHS_cesarean_1989"
 
@@ -132,18 +107,10 @@
 #'
 #' @keywords datasets
 #'
-#' @source \href{http://www.cdc.gov/nchs/data/series/sr_13/sr13_124.pdf}{Trends in Hospital Utilization: United States, 1988–92}
+#' @source \href{http://www.cdc.gov/nchs/data/series/sr_13/sr13_124.pdf}{Trends in Hospital Utilization: United States, 1988-92}
 #' 
 #' Table 26. Vital and Health Statistics, Series 13, Number 124, June 1996
 #'
 #' Gillum BS, Graves EJ, Kozak LJ. National Center for Health Statistics.
-#' 
-#' @examples
-#' # Load data directly from the vitalstatistics namespace
-#' vitalstatistics::HHS_cesarean_1996
-#' 
-#' # Or first load the entire package
-#' library(vitalstatistics)
-#' HHS_cesarean_1996
 #'
 "HHS_cesarean_1996"

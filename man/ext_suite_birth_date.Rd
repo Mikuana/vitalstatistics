@@ -15,8 +15,3 @@ a data frame with the newly applied calculated fields
 \description{
 As an additional convenience to the calculated column field extender formulas, this package includes formulas to wrap certain collections of these formulas into a suite which can be applied in a single call.
 }
-\examples{
-ext_suite_birth_date(births)
-
-}
-
