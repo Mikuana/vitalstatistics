@@ -22,17 +22,3 @@ Divide the equal interval month value (1/12) by the actual share of the month in
 The month and year for this calculation are obtained by the provided date variable. 
 This calculation accounts for leap (366 day) years when they occur.
 }
-\examples{
- # determine the appropriate weighting for volumes in February 2016
-
- x = cmaw(as.Date('2016-02-01')
- print(x)
- 1.048851
-
- # then apply this weighting to volume values to get a scaled value
-
- 32000 * x
- 33563.22
-
-}
-

@@ -6,8 +6,6 @@
 #'
 #' @param births_data this raw births data set, or a transformation of it (but be aware that any changes may alter the results of these calculations)
 #' @return a data frame with the newly applied calculated field
-#' @examples
-#' ext_birth_weekday(births)
 #'
 #' @export
 ext_birth_weekday = function(births_data) {
@@ -46,9 +44,7 @@ ext_birth_decade = function(births_data) {
 #'
 #' @param births_data this raw births data set, or a transformation of it (but be aware that any changes may alter the results of these calculations)
 #' @return a data frame with the newly applied calculated fields
-#' @examples
-#' ext_suite_birth_date(births)
-#'
+#' 
 #' @export
 ext_suite_birth_date = function(births_data) {
     births_data %>%

@@ -3,11 +3,11 @@
 \docType{data}
 \name{CDC_cesarean_2013}
 \alias{CDC_cesarean_2013}
-\title{Cesarean rates by risk: United States, 1990–2012 and preliminary 2013}
+\title{Cesarean rates by risk: United States, 1990-2012 and preliminary 2013}
 \format{An object of class \code{\link{data.frame}}}
 \source{
 \href{http://www.cdc.gov/nchs/data/nvsr/nvsr63/nvsr63_06.pdf}{Trends in 
-Low-risk Cesarean Delivery in the United States, 1990–2013}
+Low-risk Cesarean Delivery in the United States, 1990-2013}
 
 Table A, National Vital Statistics Reports Volume 63, Number 6 November 5, 2014
 
@@ -21,14 +21,4 @@ CDC_cesarean_2013
 A table of cesarean section counts and rates between 1990 and 2013 using birth
 certificate records.
 }
-\examples{
-# Load data directly from the vitalstatistics namespace
-vitalstatistics::CDC_cesarean_2013
-
-# Or first load the entire package
-library(vitalstatistics)
-CDC_cesarean_2013
-
-}
 \keyword{datasets}
-

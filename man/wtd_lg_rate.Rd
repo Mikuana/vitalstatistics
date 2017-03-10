@@ -7,9 +7,11 @@
 wtd_lg_rate(logical_column, weight_column = "cases", na.rm = FALSE)
 }
 \arguments{
-\item{field}{a name of a logical table field name that will be aggregated}
+\item{logical_column}{a name of a logical table field name that will be aggregated}
 
-\item{cases}{a value that should be applied to the result in order to simulate
+\item{weight_column}{a value that should be applied to the result in order to simulate}
+
+\item{na.rm}{a logical indicator of whether NA values should be removed prior to aggregation
 a number of records with this result.}
 }
 \value{
@@ -18,12 +20,3 @@ a formula that can be executed in a dplyr summarize statement
 \description{
 Calculate a rate using a logical field, with TRUE as the numerator, and TRUE/FALSE as the denominator. This excludes NA values. When provided, the results of each are multiplied by the cases parameter, which allows us to appropriately scale the calculations for our reduced record data sets that are included in the package'
 }
-\examples{
-births \%>\%
-   group_by(lubridate::year(birth_month_date)) \%>\%
-   summarize_(
-       cesarean_rate = wtd_lg_rate('birth_via_cesarean', na.rm=TRUE)
-   ) \%>\%
-   plot
-}
-
