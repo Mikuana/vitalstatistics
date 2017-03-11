@@ -13,12 +13,15 @@ cmaw(month_date)
 A weighting value which can be used to smooth the noise caused by the Julian calendar
 }
 \description{
-The purpose of this function is to provide a weight which can be used to adjust values that are
-aggregated at the monthly level so that the noise caused by unequal intervals (i.e varying number
-of days in each month) is muted.
+The purpose of this function is to provide a weight which can be used to adjust
+values that are aggregated at the monthly level so that the noise caused by unequal
+intervals (i.e varying number of days in each month) is muted.
 }
 \details{
-Divide the equal interval month value (1/12) by the actual share of the month in the year that
-The month and year for this calculation are obtained by the provided date variable. 
-This calculation accounts for leap (366 day) years when they occur.
+Divide the equal interval month value (1/12) by the actual share of the month
+in the year that The month and year for this calculation are obtained by the
+provided date variable. This calculation accounts for leap (366 day) years when
+they occur.
+
+This function is vectorized on the \code{month_date} parameter.
 }
