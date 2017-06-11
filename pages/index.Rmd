@@ -1,8 +1,7 @@
 ---
-title: "Vital Statistics"
-subtitle: "Index of curated studies"
-author: "Christopher Boyd"
-date: "`r Sys.Date()`"
+title: "Vital Statistics Investigation"
+subtitle: "a data driven approach to understanding birth in the US"
+author: "Christopher Boyd, MPA"
 output:
   tufte::tufte_html: default
   tufte::tufte_handout:
@@ -14,9 +13,13 @@ output:
 bibliography: skeleton.bib
 link-citations: yes
 ---
+
+```{r, include=FALSE}
+library(tufte)
+```
+
 # Directory
 
-This is a directory of all the analysis performed on US birth certificate data that is included as part of this R package. Each page in the directory below is completely reproducible using this package.
+This page acts as a directory for the various studies that have been performed on the _births_ data set included in the `vitalstatistics` package maintained by this author. Every page included in this directory is generated using the data and tools included in thie _R_ package, and therefore is entirely open source and reproducible.
 
-## Exploratory Analysis
- - [Day of Week](ExploreDoW): what impact does day of the week have on birth?
+ - [Day of Week](ExploreDoW): what impact does the day of week on births?
