@@ -1,6 +1,6 @@
-'This script "stitches" together the various years of data that are mapped by the
- data dictionary, and reduces records across dimensions as much as possible without
- loss of information.'
+# This script "stitches" together the various years of data that are mapped by the
+# data dictionary, and reduces records across dimensions as much as possible without
+# loss of information.
 
 library(dplyr)
 
@@ -26,9 +26,9 @@ data_dictionary = function() {
     nodes = get_nodes()
 
     materialize = function() {
-        "Materialize full property definitions for each year node by adding in default values if
-         the year doesn't define them already. This also swaps the node order from code (field)
-         coming before year, to year coming before field."
+        # Materialize full property definitions for each year node by adding in default values if
+        # the year doesn't define them already. This also swaps the node order from code (field)
+        # coming before year, to year coming before field.
         dict = list()
         for(node in nodes$fields) {
             defs = tree[[node]][['default']]
@@ -42,7 +42,7 @@ data_dictionary = function() {
         }
 
         dict$years = function() {
-            'Returns a vector of years that are included in the data dictionary'
+            # Returns a vector of years that are included in the data dictionary
             names(dict)[grep('\\d{4}', names(dict))]
         }
 
@@ -70,9 +70,8 @@ staged_data = function(set_year, column_selection=NA) {
     # Data Dictionary Labelling and Transformations
     #===============================================================================
     recode_factors = function(coded_data) {
-        'Read definitions from data from dictionary and apply it to dataset, and
-         construct ordered factor mutate statements as strings.
-        '
+        # Read definitions from data from dictionary and apply it to dataset, and
+        # construct ordered factor mutate statements as strings.
         fms = list()
         for(i in names(set_dict)) {
             if(all(c('levels', 'labels') %in% names(set_dict[[i]]))) {
@@ -129,10 +128,10 @@ staged_data = function(set_year, column_selection=NA) {
     # Transformations
     #===============================================================================
     record_weighting = function(coded_data) {
-        'Prior to 1985, much of the birth weight records represented 50% samples. For
-         our purposes this requires duplication of any record with a RECWT value
-         equal to 2. Prior to 1972, the the RECWT field did not exist, but all records
-         were 50%, so we impute the values'
+        # Prior to 1985, much of the birth weight records represented 50% samples. For
+        # our purposes this requires duplication of any record with a RECWT value
+        # equal to 2. Prior to 1972, the the RECWT field did not exist, but all records
+        # were 50%, so we impute the values
          if(set_year %in% 1968:1971) {
             coded_data = mutate(coded_data, RECWT = 2)
          }
@@ -148,8 +147,8 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     add_birth_date = function(coded_data) {
-        'Convert birth year, month, and day into a date. This is not retained in
-         the final output, but is necessary in some cases to calculate the birth_weekday_date'
+        # Convert birth year, month, and day into a date. This is not retained in
+        # the final output, but is necessary in some cases to calculate the birth_weekday_date
         if('DOB_MD' %in% names(coded_data)) {
             mutate(coded_data,
                 birth_date =
@@ -166,19 +165,19 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     add_birth_month_date = function(coded_data) {
-        'Add a field which maps the birth date to the first day of the month. Since
-         we always at least know the year and month when a birth occured. By converting
-         this to an actual date value, it makes manipulation of records simpler.'
+        # Add a field which maps the birth date to the first day of the month. Since
+        # we always at least know the year and month when a birth occured. By converting
+        # this to an actual date value, it makes manipulation of records simpler.
         mutate(coded_data,
             birth_month_date = lubridate::ymd(paste0(birth_year, DOB_MM, '01'))
         )
     }
 
     add_birth_weekday_date = function(coded_data) {
-        'Add a field which maps the year, month, and weekday of the birth to a weekday
-         date. This is similar to the birth_month_date, but instead of fixing all
-         values to the first day of the month, the dates are converted to the corresponding
-         weekday of the first full week in the month.'
+        # Add a field which maps the year, month, and weekday of the birth to a weekday
+        # date. This is similar to the birth_month_date, but instead of fixing all
+        # values to the first day of the month, the dates are converted to the corresponding
+        # weekday of the first full week in the month.
         coded_data = mutate(coded_data,
             birth_weekday_date = birth_month_date - lubridate::wday(birth_month_date) + 7
         )
@@ -187,14 +186,14 @@ staged_data = function(set_year, column_selection=NA) {
                 birth_weekday_date = birth_weekday_date + as.integer(DOB_WK)
             )
         } else {
-            mutate(coded_data, 
+            mutate(coded_data,
                 birth_weekday_date = birth_weekday_date + lubridate::wday(birth_date)
             )
         }
     }
 
     add_maternal_age_int = function(coded_data) {
-        'Age of mother at time of delivery. This function maps single years.'
+        # Age of mother at time of delivery. This function maps single years.
         coded_data = mutate(coded_data,  mother_age_int = as.integer(NA))
 
         if('UMAGERPT' %in% names(coded_data)) {
@@ -209,10 +208,10 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     add_maternal_age_label = function(labeled_data) {
-        'Age of mother at time of delivery. This function maps single years of
-        age into the factors that are report in more recent data sets, where 10-12
-        and 50-54 are reported as a single group.'
-        labeled_data = mutate(labeled_data, 
+        # Age of mother at time of delivery. This function maps single years of
+        # age into the factors that are report in more recent data sets, where 10-12
+        # and 50-54 are reported as a single group.
+        labeled_data = mutate(labeled_data,
                 mother_age = ordered(
                     NA,
                     levels = data_dictionary()[['2004']][['MAGER']][['levels']],
@@ -221,10 +220,10 @@ staged_data = function(set_year, column_selection=NA) {
         )
 
         if('UMAGERPT' %in% names(labeled_data)) {
-            'Recode individual years 10-12 and 50-54 to 12 and 50. These values
-             get mapped to factors which represent these ranges.'
+            # Recode individual years 10-12 and 50-54 to 12 and 50. These values
+            # get mapped to factors which represent these ranges.
             labeled_data = mutate(labeled_data,
-                UMAGERPT = 
+                UMAGERPT =
                     ifelse(UMAGERPT %in% 10:12, 12,
                     ifelse(UMAGERPT %in% 50:54, 50,
                     ifelse(UMAGERPT %in% 13:49, UMAGERPT,
@@ -250,20 +249,21 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     add_cesarean_logical = function(labeled_data) {
-        'Indicate whether the case resolved with a cesarean section using a logical,
-         with unknown cases denoted by an NA. There is a specific strategy to which fields
-         are used to determine if there was a cesarean section
+        # Indicate whether the case resolved with a cesarean section using a logical,
+        # with unknown cases denoted by an NA. There is a specific strategy to which fields
+        # are used to determine if there was a cesarean section
 
-          1. check the UME cesarean fields which are present much earlier on birth records
-          2. then check the ME_ROUT field which was introduced in 2004
-          3. then check the DMETH_REC field
+        #  1. check the UME cesarean fields which are present much earlier on birth records
+        #  2. then check the ME_ROUT field which was introduced in 2004
+        #  3. then check the DMETH_REC field
 
-         There are a number of years where both 1 and 2 are present in birth records,
-         so we use a coalesce function in attempt to combine results. In years where
-         ME_ROUT is present, available values are proritized by this field. However,
-         if the field is NA or otherwise unknown, then the function falls back to
-         whatever value has already been set in the field. In many cases this will
-         include the logical interpretation of the UME fields.'
+        # There are a number of years where both 1 and 2 are present in birth records,
+        # so we use a coalesce function in attempt to combine results. In years where
+        # ME_ROUT is present, available values are proritized by this field. However,
+        # if the field is NA or otherwise unknown, then the function falls back to
+        # whatever value has already been set in the field. In many cases this will
+        # include the logical interpretation of the UME fields.'
+
         # Start by creating the cesarean_lg field to prevent errors in mutate coalesce
         labeled_data = mutate(labeled_data, birth_via_cesarean = NA)
 
@@ -304,7 +304,7 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     remap_BFACIL = function(labeled_data) {
-        'Remap pre-1989 place of birth records to conform with the BFACIL3 field'
+        # Remap pre-1989 place of birth records to conform with the BFACIL3 field
         fields = names(labeled_data)
         if(!'BFACIL3' %in% fields){
             if('PODEL' %in% fields) {
@@ -323,8 +323,8 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     add_hospital_logical = function(labeled_data) {
-        'Convert place of birth field into a logical indicating whether the birth
-         occured in a hospital'
+        # Convert place of birth field into a logical indicating whether the birth
+        # occured in a hospital
         mutate(labeled_data,
                 birth_in_hospital = ifelse(BFACIL3=='In Hospital', TRUE,
                                     ifelse(BFACIL3=='Not in Hospital', FALSE,
@@ -333,10 +333,9 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     remap_STATENAT = function(labeled_data) {
-        'Recode underlying levels of the OSTATE and STATENAT fields so that they
-         match one another. This is necessary because the OSTATE field uses two
-         character representations instead of integers.
-        '
+        # Recode underlying levels of the OSTATE and STATENAT fields so that they
+        # match one another. This is necessary because the OSTATE field uses two
+        # character representations instead of integers.
         fields = names(labeled_data)
         if(!'STATENAT' %in% fields) {
             if('OSTATE' %in% fields) {
@@ -357,10 +356,9 @@ staged_data = function(set_year, column_selection=NA) {
     }
 
     remap_CSEX = function(labeled_data) {
-        'Recode underlying levels of the SEX and CSEX fields so that they
-         match one another. This is necessary because the SEX field uses
-         character representations instead of integers.
-        '
+        # Recode underlying levels of the SEX and CSEX fields so that they
+        # match one another. This is necessary because the SEX field uses
+        # character representations instead of integers.
         fields = names(labeled_data)
         if(!'CSEX' %in% fields) {
             if('SEX' %in% fields) {
@@ -395,8 +393,8 @@ staged_data = function(set_year, column_selection=NA) {
     # Record Tests
     #===============================================================================
     raw_record_test = function(coded_data) {
-        'Check the number of records against those listed by the CDC vital statistics
-         data dictionaries.'
+        # Check the number of records against those listed by the CDC vital statistics
+        # data dictionaries.
         expec = dict$checks[[as.character(set_year)]]$all_records
 
         if(is.null(expec)) {
@@ -416,8 +414,8 @@ staged_data = function(set_year, column_selection=NA) {
 
     # TODO: fix resident record checks
     resident_record_test = function(labeled_data) {
-        'Check the number of records of resident births against those listed by
-         the CDC vital statistics data dictionaries.'
+        # Check the number of records of resident births against those listed by
+        # the CDC vital statistics data dictionaries.
         expec = dict$checks[[as.character(set_year)]]$resident_records
 
         if(is.null(expec)) {
