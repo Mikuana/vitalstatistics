@@ -23,5 +23,5 @@ in the year that The month and year for this calculation are obtained by the
 provided date variable. This calculation accounts for leap (366 day) years when
 they occur.
 
-This function is vectorized on the \code{month_date} parameter.
+This function is vectorized.
 }

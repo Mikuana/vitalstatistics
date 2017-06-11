@@ -6,12 +6,12 @@
 \title{Cesarean rates by risk: United States, 1990-2012 and preliminary 2013}
 \format{An object of class \code{\link{data.frame}}}
 \source{
-\href{http://www.cdc.gov/nchs/data/nvsr/nvsr63/nvsr63_06.pdf}{Trends in 
+\href{http://www.cdc.gov/nchs/data/nvsr/nvsr63/nvsr63_06.pdf}{Trends in
 Low-risk Cesarean Delivery in the United States, 1990-2013}
 
 Table A, National Vital Statistics Reports Volume 63, Number 6 November 5, 2014
 
-by Michelle J.K. Osterman, M.H.S.; and Joyce A. Martin, M.P.H., Division of Vital 
+by Michelle J.K. Osterman, M.H.S.; and Joyce A. Martin, M.P.H., Division of Vital
 Statistics
 }
 \usage{

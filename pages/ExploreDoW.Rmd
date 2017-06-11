@@ -3,15 +3,26 @@ title: "Day of Week Exploration"
 author: "Christopher Boyd"
 output:
   tufte::tufte_html: default
-  tufte::tufte_handout:
-    citation_package: natbib
-    latex_engine: xelatex
-  tufte::tufte_book:
-    citation_package: natbib
-    latex_engine: xelatex
 bibliography: skeleton.bib
 link-citations: yes
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo=FALSE,
+  include=TRUE
+)
+```
+
+```{r libraries, include=FALSE}
+library(tufte)
+library(vitalstatistics)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(tufte)
+```
+
 
 [Directory](index)
 
@@ -20,18 +31,6 @@ link-citations: yes
 This document shows that births tend to occur much more frequently on weekdays, and in the middle of the week in particular. This effect was less prevalent in the 70's, but has become more pronounced in recent years.
 
 # Analysis
-
-```{r libraries, include=FALSE}
-library(vitalstatistics)
-library(ggplot2)
-library(dplyr)
-library(lubridate)
-library(tufte)
-```
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=FALSE, cache=TRUE, include=TRUE)
-```
 
 ```{r data-prep}
 b.dow = births  # using a shorthand name for modified data set
@@ -117,7 +116,7 @@ b.dow.decades %>%
 
 With this final graphic, it becomes extremely clear that (1) births are much more heavily biased towards weekdays, (2) births are biased towards the middle of the week in particular, and (3) this trend has become more extreme over time. 
 
-But what does this mean in plain language? We'll propose a theoretical week in which 7000 births occurr. If there was no bias on which day they were born and births occurred completely randomly, then ~1000 births would occur on each day. However, as of the 2010s, the week would probably look like this:
+But what does this mean in plain language? We'll propose a theoretical week in which 7000 births occur. If there was no bias on which day they were born and births occurred completely randomly, then ~1000 births would occur on each day. However, as of the 2010s, the week would probably look like this:
 
 ```{r}
 b.dow.decades %>%
@@ -130,7 +129,5 @@ b.dow.decades %>%
     ) %>%
     knitr::kable(., format="markdown", align = "r")
 ```
-
-If historical trends hold, the bias of midweek births will continue to increase and fewer births will occur on the weekend.
 
 [Directory](index)

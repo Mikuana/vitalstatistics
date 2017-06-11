@@ -46,7 +46,7 @@ def manage(year, remove_zip=False, remove_raw=True, remove_stage=True, sample=Fa
 def uz(stage_file, uz_folder):
     """ Unzip CDC file """
     print("Unpacking {}".format(stage_file))
-    subprocess.check_output(['unzip', stage_file, '-d', uz_folder])
+    subprocess.check_output(['7z', 'x', stage_file, '-o' + uz_folder])
 
 
 def mz(stage_file):
@@ -204,9 +204,18 @@ class PathFinder(object):
         return os.path.join(self.uz_folder, sizes[0][1])
 
 
+# Read configuration file
 config = ConfigParser()
 config.read(os.path.join('.', 'config.ini'))
 
 
+loop(
+    sample=config['SAMPLING']['enabled'] == 'True',
+    start=int(config['RAWDATA']['start']),
+    end=int(config['RAWDATA']['end']),
+    remove_zip=config['RAWDATA']['remove_zip'] == 'True',
+    remove_raw=config['RAWDATA']['remove_raw'] == 'True',
+    remove_stage=config['RAWDATA']['remove_stage'] == 'True'
+)
 if __name__ == '__main__':
-    loop(sample=config['SAMPLING']['enabled'] == 'True')
+    pass

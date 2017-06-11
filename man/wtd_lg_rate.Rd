@@ -11,12 +11,15 @@ wtd_lg_rate(logical_column, weight_column = "cases", na.rm = FALSE)
 
 \item{weight_column}{a value that should be applied to the result in order to simulate}
 
-\item{na.rm}{a logical indicator of whether NA values should be removed prior to aggregation
-a number of records with this result.}
+\item{na.rm}{a logical indicator of whether NA values should be removed prior to aggregation a
+number of records with this result.}
 }
 \value{
 a formula that can be executed in a dplyr summarize statement
 }
 \description{
-Calculate a rate using a logical field, with TRUE as the numerator, and TRUE/FALSE as the denominator. This excludes NA values. When provided, the results of each are multiplied by the cases parameter, which allows us to appropriately scale the calculations for our reduced record data sets that are included in the package'
+Calculate a rate using a logical field, with TRUE as the numerator, and TRUE/FALSE as the
+denominator. This excludes NA values. When provided, the results of each are multiplied by the
+cases parameter, which allows us to appropriately scale the calculations for our reduced record
+data sets that are included in the package'
 }

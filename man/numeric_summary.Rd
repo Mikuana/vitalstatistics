@@ -14,14 +14,21 @@ numeric_summary(data, numeric_column, weight_column = "cases",
 
 \item{weight_column}{the column in the data.frame that contains the weighting value}
 
-\item{na.rm}{whether to pass a TRUE or FALSE value to the na.rm argument for each underlying aggregation function.}
+\item{na.rm}{whether to pass a TRUE or FALSE value to the na.rm argument for each underlying
+aggregation function.}
 }
 \value{
 A formula that can be executed in a \code{\link{dplyr}} summarize statement
 }
 \description{
-Because the \code{\link{births}} data set uses a weighted record strategy (i.e. you have to multiply everything by the cases field), the typical summary function won't return meaningful results. In order to provide some basic descriptive statistics for a numeric column in the data set, this function can be used instead.
+Because the \code{\link{births}} data set uses a weighted record strategy (i.e. you have to
+multiply everything by the cases field), the typical summary function won't return meaningful
+results. In order to provide some basic descriptive statistics for a numeric column in the data
+set, this function can be used instead.
 }
 \details{
-It makes use of the dplyr format for summarizing results, and therefore integrates nicely with a chain of dplyr functions. Under the hood, it is using \code{\link[dplyr]{summarize_}} and pasting strings together for evaluation, with the actual statistics being handled by the \code{\link{matrixStats}} package, based upon your input.
+It makes use of the dplyr format for summarizing results, and therefore integrates nicely with a
+chain of dplyr functions. Under the hood, it is using \code{\link[dplyr]{summarize_}} and pasting
+strings together for evaluation, with the actual statistics being handled by the
+\code{\link{matrixStats}} package, based upon your input.
 }

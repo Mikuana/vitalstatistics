@@ -4,13 +4,6 @@ subtitle: "a data driven approach to understanding birth in the US"
 author: "Christopher Boyd, MPA"
 output:
   tufte::tufte_html: default
-  tufte::tufte_handout:
-    citation_package: natbib
-    latex_engine: xelatex
-  tufte::tufte_book:
-    citation_package: natbib
-    latex_engine: xelatex
-bibliography: skeleton.bib
 link-citations: yes
 ---
 
@@ -20,6 +13,8 @@ library(tufte)
 
 # Directory
 
-This page acts as a directory for the various studies that have been performed on the _births_ data set included in the `vitalstatistics` package maintained by this author. Every page included in this directory is generated using the data and tools included in thie _R_ package, and therefore is entirely open source and reproducible.
+This page acts as a directory for the various studies that have been performed on the _births_ data set included in the `vitalstatistics` package maintained by this author. Every page included in this directory is generated using the data and tools included in this _R_ package, and therefore is entirely open source and reproducible.
+
+You can see the full source code used to generate these documents on [GitHub](https://github.com/Mikuana/vitalstatistics).
 
  - [Day of Week](ExploreDoW): what impact does the day of week on births?

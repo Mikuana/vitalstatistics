@@ -1,10 +1,15 @@
 #' Birth Data Field Extender
 #'
-#' The births data set has numerous useful attributes that can be derived from the data that is included in the binary. However, because this data set is already very large, in the name of saving storage space for the package, and memory when loading this data set for analysis, only the bare minimum of information that is necessary to derive other useful columns is included.
+#' The births data set has numerous useful attributes that can be derived from the data that is
+#' included in the binary. However, because this data set is already very large, in the name of
+#' saving storage space for the package, and memory when loading this data set for analysis, only
+#' the bare minimum of information that is necessary to derive other useful columns is included.
 #'
-#' As a convenience for accessing these columns, the package includes formulas to derive them. These formulas only take one argument, as they are not meant to be customized to any degree.
+#' As a convenience for accessing these columns, the package includes formulas to derive them. These
+#' formulas only take one argument, as they are not meant to be customized to any degree.
 #'
-#' @param births_data this raw births data set, or a transformation of it (but be aware that any changes may alter the results of these calculations)
+#' @param births_data this raw births data set, or a transformation of it (but be aware that any
+#'   changes may alter the results of these calculations)
 #' @return a data frame with the newly applied calculated field
 #'
 #' @export
@@ -40,11 +45,14 @@ ext_birth_decade = function(births_data) {
 
 #' Birth Data Field Extender Suites
 #'
-#' As an additional convenience to the calculated column field extender formulas, this package includes formulas to wrap certain collections of these formulas into a suite which can be applied in a single call.
+#' As an additional convenience to the calculated column field extender formulas, this package
+#' includes formulas to wrap certain collections of these formulas into a suite which can be applied
+#' in a single call.
 #'
-#' @param births_data this raw births data set, or a transformation of it (but be aware that any changes may alter the results of these calculations)
+#' @param births_data this raw births data set, or a transformation of it (but be aware that any
+#'   changes may alter the results of these calculations)
 #' @return a data frame with the newly applied calculated fields
-#' 
+#'
 #' @export
 ext_suite_birth_date = function(births_data) {
     births_data %>%

@@ -7,11 +7,14 @@
 ext_suite_birth_date(births_data)
 }
 \arguments{
-\item{births_data}{this raw births data set, or a transformation of it (but be aware that any changes may alter the results of these calculations)}
+\item{births_data}{this raw births data set, or a transformation of it (but be aware that any
+changes may alter the results of these calculations)}
 }
 \value{
 a data frame with the newly applied calculated fields
 }
 \description{
-As an additional convenience to the calculated column field extender formulas, this package includes formulas to wrap certain collections of these formulas into a suite which can be applied in a single call.
+As an additional convenience to the calculated column field extender formulas, this package
+includes formulas to wrap certain collections of these formulas into a suite which can be applied
+in a single call.
 }

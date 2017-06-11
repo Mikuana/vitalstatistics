@@ -23,7 +23,8 @@ wtd_count(column, weight_column = "cases")
 wtd_NA_count(column, weight_column = "cases")
 }
 \arguments{
-\item{numeric_column}{in the case of numeric aggregation functions (mean, SD), this is the column that is used to aggregate}
+\item{numeric_column}{in the case of numeric aggregation functions (mean, SD), this is the column
+that is used to aggregate}
 
 \item{weight_column}{the value that each value is weighted by in calculation of the aggregate}
 
@@ -31,13 +32,20 @@ wtd_NA_count(column, weight_column = "cases")
 
 \item{q}{the quantile value that you desire}
 
-\item{.summ}{a logical control for whether to use already calculated values for Mean and SD in the data.frame. This is intended for use in a summary function, where quantile values are calculated alongside a Mean and SD value. This prevents the quantile function from recalculating the Mean and SD multiple times.}
+\item{.summ}{a logical control for whether to use already calculated values for Mean and SD in
+the data.frame. This is intended for use in a summary function, where quantile values are
+calculated alongside a Mean and SD value. This prevents the quantile function from
+recalculating the Mean and SD multiple times.}
 
-\item{column}{in the case of aggregates which function on non-numeric columns, this is the column that is used}
+\item{column}{in the case of aggregates which function on non-numeric columns, this is the column
+that is used}
 }
 \value{
 a formula string that can be executed in a dplyr summarize_ statement
 }
 \description{
-A set of functions that act as a convenience wrapper to generate a formulas for calculating aggregates of a data frame which requires weighting. This formula is intended to be used in a dplyr summarize_ or mutate_ formula. The defaults are intended for use with the births data set, using the 'cases' field as the default weighting value.
+A set of functions that act as a convenience wrapper to generate a formulas for calculating
+aggregates of a data frame which requires weighting. This formula is intended to be used in a
+dplyr summarize_ or mutate_ formula. The defaults are intended for use with the births data set,
+using the 'cases' field as the default weighting value.
 }
