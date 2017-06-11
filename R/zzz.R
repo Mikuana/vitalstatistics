@@ -4,5 +4,8 @@
 #' @name vitalstatistics
 NULL
 
-#' @importFrom magrittr %>%
+#' @import magrittr
+NULL
+
+#' @import data.table
 NULL
