@@ -16,14 +16,19 @@ ext_birth_year(births_data)
 ext_birth_decade(births_data)
 }
 \arguments{
-\item{births_data}{this raw births data set, or a transformation of it (but be aware that any changes may alter the results of these calculations)}
+\item{births_data}{this raw births data set, or a transformation of it (but be aware that any
+changes may alter the results of these calculations)}
 }
 \value{
 a data frame with the newly applied calculated field
 }
 \description{
-The births data set has numerous useful attributes that can be derived from the data that is included in the binary. However, because this data set is already very large, in the name of saving storage space for the package, and memory when loading this data set for analysis, only the bare minimum of information that is necessary to derive other useful columns is included.
+The births data set has numerous useful attributes that can be derived from the data that is
+included in the binary. However, because this data set is already very large, in the name of
+saving storage space for the package, and memory when loading this data set for analysis, only
+the bare minimum of information that is necessary to derive other useful columns is included.
 }
 \details{
-As a convenience for accessing these columns, the package includes formulas to derive them. These formulas only take one argument, as they are not meant to be customized to any degree.
+As a convenience for accessing these columns, the package includes formulas to derive them. These
+formulas only take one argument, as they are not meant to be customized to any degree.
 }
