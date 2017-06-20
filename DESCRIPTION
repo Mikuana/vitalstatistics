@@ -1,10 +1,11 @@
 Package: vitalstatistics
 Type: Package
 Title: CDC Vital Statistics Analysis Tools
-Version: 0.0.1.9001
+Version: 0.0.1.9002
 Author: Christopher Boyd
 Maintainer: Christopher Boyd <mikuana@gmail.com>
-Description: This package provides tools to better understand the nuances of birth in the United States.
+Description: 
+  This package provides tools to better understand the nuances of birth in the United States.
 License: MIT + file LICENSE
 LazyData: true
 RoxygenNote: 6.0.1
