@@ -7,13 +7,6 @@ bibliography: skeleton.bib
 link-citations: yes
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo=FALSE,
-  include=TRUE
-)
-```
-
 ```{r libraries, include=FALSE}
 library(tufte)
 library(vitalstatistics)
@@ -22,6 +15,17 @@ library(dplyr)
 library(lubridate)
 library(tufte)
 ```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo=FALSE,
+  include=TRUE
+)
+
+# Set plot backgrounds to match Tufte document background
+theme_update(plot.background = element_rect(fill = "#fffff8"))
+```
+
 
 
 [Directory](index)
