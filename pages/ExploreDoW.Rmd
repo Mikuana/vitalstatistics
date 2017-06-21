@@ -37,7 +37,7 @@ This document shows that births tend to occur much more frequently on weekdays, 
 # Analysis
 
 ```{r data-prep}
-b.dow = births  # using a shorthand name for modified data set
+b.dow = copy(births)  # using a shorthand name for modified data set
 ```
 
 One of the attributes that we have a nearly complete record for is day of the week. We'll start our analysis by comparing the distribution of live births throughout the week using the complete data set. A check for completeness of the data show that of the `r scales::comma(b.dow %>% summarize(sum(cases)))` records of live birth in our data set, we have `r scales::comma(b.dow %>% filter(is.na(birth_weekday_date)) %>% summarize(sum(cases)))` missing values for the `birth_weekday_date` that are missing data for day of week. We'll look at a breakdown of years where these values are missing (using the `birth_month_date`, which should be 100% complete).
@@ -67,14 +67,8 @@ We can see that 1968 is completely lacking day of week data, which is expected s
 ## Exploration
 
 ```{r dow-prep}
-b.dow = b.dow %>%
-    filter(!is.na(birth_weekday_date)) %>%  # remove missing records
-    ext_birth_weekday %>%
-    ext_birth_year %>% 
-    ext_birth_decade %>%
-    # label 60's as 1969 since that is the only year that's included for this analysis
-    mutate(birth_decade = recode(birth_decade, '1960s' = '1969')) %>%
-    group_by(birth_weekday)  # add a default grouping for weekday for convenience
+b.dow = b.dow[!is.na(birth_weekday_date)]
+ext_suite.birth_date(b.dow)
 ```
 
 Our exploration of this attribute is primarily interested in the distribution of births the week. Our assumption here is that there should be no _biological_ reason why births favor any particular weekday `r margin_note('Those who have worked with date calculations and data in date form understand that calendards do no correspond well to the regular schedules maintained by human beings.')`. We graph this distribution as a percentage, with a line at 14.3% (i.e. `1/7`), which is where the weekly share of births would fall for each day if there was no bias toward any particular day. 
@@ -92,16 +86,17 @@ dow.plot = function(dat) {  # create ggplot function for multiple use
 }
 
 b.dow %>%
-    summarise(live_births = sum(cases)) %>%
-    mutate(weekly_share = live_births / sum(live_births)) %>%
-    dow.plot(.) + geom_label(aes(1, 1/7, label=scales::percent(1/7)))
+  group_by(birth_weekday) %>%
+  summarise(live_births = sum(cases)) %>%
+  mutate(weekly_share = live_births / sum(live_births)) %>%
+  dow.plot(.) + geom_label(aes(1, 1/7, label=scales::percent(1/7)))
 ```
 
 However, the graph reveals that births are not evenly distributed, with births much more heavily weighted towards weekdays than weekends. Sunday in particular falls well below the 14.3% non-bias level. To dive a little deeper into this question while still remaining at the "exploratory" level of analysis, we look at how this distribution has changed over time. We will recast this graphic with a facet for each weekday, track the decade on the y-axis, and plot our outcomes as a line instead of a bar. This will allow us to much more easily discern how frequently births occur on certain days over time. Again, we include a red line to indicate the point which each day would fall if there were no bias towards particular days of the week for birth.
 
 ```{r}
 b.dow.decades = b.dow %>%
-    group_by(birth_decade, add=TRUE) %>%
+    group_by(birth_weekday, birth_decade) %>%
     summarise(live_births = sum(cases)) %>%
     group_by(birth_decade) %>%  # group again on summarized data for denominator calculation
     mutate(weekly_share = live_births / sum(live_births))
