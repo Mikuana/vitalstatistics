@@ -9,3 +9,8 @@ NULL
 
 #' @import data.table
 NULL
+
+globalVariables(c(
+  "birth_month_date",
+  "birth_weekday_date"
+))
