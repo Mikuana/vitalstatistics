@@ -1,0 +1,81 @@
+---
+title: "Maternal Age Exploration"
+author: "Christopher Boyd"
+output:
+  tufte::tufte_html: default
+bibliography: skeleton.bib
+link-citations: yes
+---
+
+```{r libraries, include=FALSE}
+library(tufte)
+library(vitalstatistics)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(tufte)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo=FALSE,
+  include=TRUE
+)
+
+# Set plot backgrounds to match Tufte document background
+theme_update(plot.background = element_rect(fill = "#fffff8"))
+```
+
+[Directory](index)
+
+# Summary
+
+...
+
+```{r}
+b = copy(births)
+```
+
+
+```{r}
+b %>%
+  filter(mother_age_int %in% 12:50) %>%
+  group_by(
+    birth_year = year(birth_month_date),
+    mother_age_int
+  ) %>%
+  summarize(cases = sum(cases)) %>%
+  group_by(birth_year) %>%
+  mutate(annual_share = cases / sum(cases)) %>%
+  ggplot(aes(mother_age_int, birth_year, fill=annual_share)) +
+    geom_raster() +
+    scale_fill_gradientn(colours=c("#0000FFFF","#FFFFFFFF","#FF0000FF"))
+```
+
+```{r}
+ext.birth_decade(b)
+```
+
+
+```{r, fig.height=8}
+b %>%
+  filter(!is.na(birth_state)) %>%
+  group_by(birth_state) %>%
+  mutate(state_size = sum(cases)) %>%
+  group_by(
+    birth_decade,
+    birth_state,
+    child_sex
+  ) %>%
+  summarize(cases = sum(cases)) %>%
+  group_by(
+    birth_state,
+    birth_decade
+  ) %>%
+  mutate(male_share = cases / sum(cases)) %>%
+  filter(child_sex=='Male') %>%
+  ggplot(aes(male_share, birth_state)) +
+    geom_point(stat = "identity") +
+    geom_vline(xintercept = 0.5, color='pink') +
+    facet_grid(. ~ birth_decade)
+```

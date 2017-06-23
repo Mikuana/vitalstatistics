@@ -6,41 +6,43 @@
 #' the bare minimum of information that is necessary to derive other useful columns is included.
 #'
 #' As a convenience for accessing these columns, the package includes formulas to derive them. These
-#' formulas only take one argument, as they are not meant to be customized to any degree.
+#' formulas only take one argument, as they are not meant to be customized to any degree. One
+#' important thing to note is that these extensions will only work if you've created a copy of the
+#' births dataset. This is best done using the \code{\link[data.table]{copy}} function on the births
+#' table.
 #'
 #' @param births_data this raw births data set, or a transformation of it (but be aware that any
 #'   changes may alter the results of these calculations)
-#' @return a data frame with the newly applied calculated field
+#' @return a data.table with the newly applied calculated field
+#'
+#' @examples
+#' dt = data.table::copy(births)
+#' ext.birth_weekday(dt)
+#' dt
 #'
 #' @export
-ext_birth_weekday = function(births_data) {
-    dplyr::mutate_(births_data,
-        birth_weekday = 'lubridate::wday(birth_weekday_date, label=TRUE)'
-    )
+ext.birth_weekday = function(births_data) {
+  births_data[,`:=`(birth_weekday = lubridate::wday(birth_weekday_date, label=TRUE))]
 }
 
-#' @rdname ext_birth_weekday
+#' @rdname ext.birth_weekday
 #' @export
-ext_birth_month = function(births_data) {
-    dplyr::mutate_(births_data,
-        birth_month = 'lubridate::month(birth_month_date, label=TRUE)'
-    )
+ext.birth_month = function(births_data) {
+  births_data[,`:=`(birth_month = lubridate::month(birth_month_date, label=TRUE))]
 }
 
-#' @rdname ext_birth_weekday
+#' @rdname ext.birth_weekday
 #' @export
-ext_birth_year = function(births_data) {
-    dplyr::mutate_(births_data,
-        birth_year = 'lubridate::year(birth_month_date)'
-    )
+ext.birth_year = function(births_data) {
+  births_data[,`:=`(birth_year = lubridate::year(birth_month_date))]
 }
 
-#' @rdname ext_birth_weekday
+#' @rdname ext.birth_weekday
 #' @export
-ext_birth_decade = function(births_data) {
-    dplyr::mutate_(births_data,
-        birth_decade = 'ordered(paste0(floor((lubridate::year(birth_month_date)) / 10) * 10, "s"))'
-    )
+ext.birth_decade = function(births_data) {
+  births_data[,`:=`(
+    birth_decade = ordered(paste0(floor((lubridate::year(birth_month_date)) / 10) * 10, "s"))
+  )][,`:=`(birth_decade = recode(birth_decade, '1960s' = '1968/9'))]
 }
 
 #' Birth Data Field Extender Suites
@@ -54,10 +56,9 @@ ext_birth_decade = function(births_data) {
 #' @return a data frame with the newly applied calculated fields
 #'
 #' @export
-ext_suite_birth_date = function(births_data) {
-    births_data %>%
-        ext_birth_decade %>%
-        ext_birth_year %>%
-        ext_birth_month %>%
-        ext_birth_weekday
+ext_suite.birth_date = function(births_data) {
+  ext.birth_decade(births_data)
+  ext.birth_year(births_data)
+  ext.birth_month(births_data)
+  ext.birth_weekday(births_data)
 }
