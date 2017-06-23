@@ -1,6 +1,6 @@
 ---
-title: "Vital Statistics Investigation"
-subtitle: "a data driven approach to understanding birth in the US"
+title: "Trends and Patterns of Birth"
+subtitle: "a data science approach to understanding the societal changes of a universal event in the United States"
 author: "Christopher Boyd, MPA"
 output:
   tufte::tufte_html: default
@@ -11,10 +11,14 @@ link-citations: yes
 library(tufte)
 ```
 
-# Directory
+Birth is a topic that is critically in need of informed decision making. It is an important topic financially, emotionally, and societally. Our understanding of birth is subject to rapid change with the advancement of technology, the development of grand political strategies, and shifts in family paradigms. It is a topic that is subject to fiercely competing definitions at the most fundamental level. Is it a problem, or a process; is it medical, or natural; is it a right, or a privilege; is it a choice, or an obligation.
 
-This page acts as a directory for the various studies that have been performed on the _births_ data set included in the `vitalstatistics` package maintained by this author. Every page included in this directory is generated using the data and tools included in this _R_ package, and therefore is entirely open source and reproducible.
+Birth also happens to be a subject which is ripe for the tools of data science. Various governments in the United States have collected certificates of live birth for decades, and much of that data is made publicly available as far back as 1968. These data sets allow us to perform a longitudinal study of many different aspects of the birth for nearly every person born in the US over the course of 50 years.
 
-You can see the full source code used to generate these documents on [GitHub](https://github.com/Mikuana/vitalstatistics).
+This project uses birth certificate data to understand what is really happening, with 100% programmatically reproproducible research, which is publicly available for anyone to inspect, refute, refine, or add to. The code to obtain and process the final data are entirely contained within the [`vitalstatistics`](https://github.com/Mikuana/vitalstatistics), along with the source code to generate the documents and figures that we use to make our arguments.
 
- - [Day of Week](ExploreDoW): what impact does the day of week on births?
+# Attribute Exploration
+
+As a necessary component of more complex analysis, this project will develop a number of brief _exploratory_ analysis of the various attributes available in the data, one attribute at a time. Links and references to these will serve as shorthand to reduce length and complexity in more comprehensive analysis.
+
+ - [Day of Week](ExploreDoW): what impact does day of the week have on the number of births?
