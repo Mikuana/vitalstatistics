@@ -1,5 +1,3 @@
-data_dictionary()$years()
-
 # This script "stitches" together the various years of data that are mapped by the
 # data dictionary, and reduces records across dimensions as much as possible without
 # loss of information.
