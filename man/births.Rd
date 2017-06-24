@@ -4,12 +4,15 @@
 \name{births}
 \alias{births}
 \title{US Birth Certificate}
-\format{An object of class \code{\link{data.frame}}}
+\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 7457083 rows and 9 columns.}
 \source{
 CDC and this package
 }
 \usage{
 births
+}
+\value{
+an object of class \code{\link[data.table]{data.table}}
 }
 \description{
 The primary analytic data set that is included in this package. This data frame is the result of
@@ -46,24 +49,6 @@ data set.
 \section{Fields}{
 
 
-  \strong{birth_weekday_date}: a date type field which represents the specific month, year, and
-  day of the week that the birth occurred. This is accomplished by setting the date value equal
-  to the corresponding day of the week in the first full week of the month when the birth
-  occured.
-
-  For example, if a birth occurred in January of 2014 on a Tuesday, we determine that the first
-  full week of January starts on the 5th (i.e. Sunday, January 5th), and that the Tuesday of that
-  week is 2014-01-07. Accordingly the birth_weekday_date value would be set to 2014-01-07.
-
-  This field is useful because it can be used as a date value directly, while still representing
-  the correct year, month, and day of the week that the birth occurred. It is important to note
-  that this field does not represent the actual date of birth; day of month was reported until
-  1988, but was omitted from records after that time for privacy reasons.
-
-  \strong{birth_month_date}:a date type field which represents the specific month and year that
-  the birth occurred. This date value is always set to the first day of the month, and serves as
-  a substitute for the birth_weekday_date for records where the day of the week is not known.
-
   \strong{birth_state}: a factor representing the state where the birth occured. This dimension
   stopped being reported by the CDC after 2004 due to privacy concerns, and all records after
   that point are marked as NA.
@@ -91,4 +76,8 @@ data set.
   math that is performed on this data set should be weighted by this value.
 }
 
+\seealso{
+Other births-data: \code{\link{births.birth_month_date}},
+  \code{\link{births.birth_weekday_date}}
+}
 \keyword{datasets}
