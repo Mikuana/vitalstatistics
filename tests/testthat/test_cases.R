@@ -1,4 +1,4 @@
-context("DQ birth_month_date")
+context("DQ cases")
 
 test_that("case values are always a positive integer", {
   expect_type(births[,cases], 'integer')

@@ -37,7 +37,8 @@ test_that("Exactly 7 days represented in each month", {
 })
 
 test_that("records exist for every month in expected time frame", {
-  expected_dates = seq.Date(lubridate::ymd(19680101), lubridate::ymd(20151231), by='month')
+  # no weekday dates in 1968, so we start in 1969 instead
+  expected_dates = seq.Date(lubridate::ymd(19690101), lubridate::ymd(20151231), by='month')
   represented_dates = births[!is.na(birth_weekday_date),
          .(u=unique(birth_weekday_date))][,
             .(x = lubridate::ymd(paste(
@@ -46,7 +47,7 @@ test_that("records exist for every month in expected time frame", {
               '01'
             ))
             )
-        ][, unique(x)]
+        ][, sort(unique(x))]
 
   comparison = all.equal(expected_dates, represented_dates)
   expect_true(comparison, comparison)
