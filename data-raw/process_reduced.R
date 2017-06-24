@@ -42,8 +42,8 @@ data_dictionary = function() {
         }
 
         dict$years = function() {
-            # Returns a vector of years that are included in the data dictionary
-            names(dict)[grep('\\d{4}', names(dict))]
+          # Returns a vector of years that are included in the data dictionary
+          names(tree$`__checks__`)
         }
 
         dict$checks = tree$`__checks__`
