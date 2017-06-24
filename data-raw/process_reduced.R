@@ -1,3 +1,5 @@
+data_dictionary()$years()
+
 # This script "stitches" together the various years of data that are mapped by the
 # data dictionary, and reduces records across dimensions as much as possible without
 # loss of information.
@@ -42,8 +44,8 @@ data_dictionary = function() {
         }
 
         dict$years = function() {
-            # Returns a vector of years that are included in the data dictionary
-            names(dict)[grep('\\d{4}', names(dict))]
+          # Returns a vector of years that are included in the data dictionary
+          names(tree$`__checks__`)
         }
 
         dict$checks = tree$`__checks__`
