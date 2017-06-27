@@ -11,10 +11,10 @@ A date type field which represents the specific month and year that the birth oc
 }
 \details{
 This date value is always set to the first day of the month. This is one of the fundamental
-attributes of the data set, and is 100% complete. The actual date is not provided directly in the
-data set, but is instead calculated using the year and month fields and the 1st day of the month.
-What this means is that the day value for this column should \emph{never} be used; it is simply
-an arbitrary - but consistent - placeholder meant to simplify time based analysis.
+attributes of the data set, and has no missing values. The actual date is not provided directly
+in the data set, but is instead calculated using the year and month fields and the 1st day of the
+month. What this means is that the day value for this column should \emph{never} be used; it is
+simply an arbitrary - but consistent - placeholder meant to simplify time based analysis.
 }
 \section{Data Quality Tests}{
 
