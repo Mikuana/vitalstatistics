@@ -77,7 +77,7 @@ data set.
 }
 
 \seealso{
-Other births-data: \code{\link{births.birth_month_date}},
-  \code{\link{births.birth_weekday_date}}
+Other births-data: \code{\link{birth_month_date}},
+  \code{\link{birth_weekday_date}}
 }
 \keyword{datasets}

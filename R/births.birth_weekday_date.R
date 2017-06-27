@@ -18,7 +18,7 @@
 #' until 1988, but was omitted from records after that time for privacy reasons.
 #'
 #' This field is entirely blank for births during the year of 1968, as no data were provided in that
-#' data set. However, you can still make use of the \code{\link{births.birth_month_date}} field to
+#' data set. However, you can still make use of the \code{\link{birth_month_date}} field to
 #' access year and month of birth.
 #'
 #' @section Data Quality Tests:
@@ -31,9 +31,9 @@
 #'   \item at least one record exists for each month in every year
 #' }
 #'
-#' @seealso \code{\link{births.birth_month_date}}
+#' @seealso \code{\link{birth_month_date}}
 #'
 #' @return a \code{\link{Date}} column
 #' @family births-data
-#' @name births.birth_weekday_date
+#' @name birth_weekday_date
 NULL
