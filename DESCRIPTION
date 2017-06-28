@@ -1,7 +1,7 @@
 Package: vitalstatistics
 Type: Package
 Title: CDC Vital Statistics Analysis Tools
-Version: 0.0.1.9004
+Version: 0.0.1.9005
 Author: Christopher Boyd
 Maintainer: Christopher Boyd <mikuana@gmail.com>
 Description: 
@@ -14,11 +14,11 @@ Depends:
     data.table,
     magrittr
 Imports:
-    lubridate,
     dplyr,
-    ggplot2,
+    lubridate,
     matrixStats
 Suggests:
+    ggplot2,
     testthat,
     knitr,
     tufte,

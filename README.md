@@ -27,16 +27,14 @@ devtools::install_github("Mikuana/vitalstatistics", dependencies=TRUE)
 It is crucial to recognize that the `births` data set in this package is reduced from hundreds of millions of records using a simple dimensional record count strategy. This makes the table somewhat similar to a [OLAP Cube](https://en.wikipedia.org/wiki/OLAP_cube), and accordingly you cannot perform simple arithmetic but instead must always account for the `cases` field to obtain the correct result.
 
 
-# 2) Studies
+# 2) Pages
 
-To read the studies that are included in this project you can navigate to the [readme overview](studies/README.md), or navigate to the studies folder and select the markdown `.md` files manually.
-
-This project takes advantage of the fact that GitHub renders markdown `.md` files in its repository browser, and that R has a rich standard (`.Rmd`) for generating markdown. This allows us to write documents in the vein of [literate programming](https://en.wikipedia.org/wiki/Literate_programming), store all changes in RCS, and then automatically have all versions of the content made public on a web-hosting platform. This means that work can be presented publicly, with complete transparency, attribution, and history for both the code and documents that are associated.
+To read the studies that are included in this project you can navigate to the [GitHub hosted static webpages](https://mikuana.github.io/vitalstatistics/pages/). These pages are generated using Rmarkdown, and both the source and rendered files are included in this repository.
 
 
 # 3) Raw Data Processing
 
-A key feature of this project is the ability to process the raw Birth Data files into analytic data sets that are more suitable for data science. This is achieved prior to the R package build, and therefore is unncessary to understand if the `births` data set is adequate for your purposes. However, if you need more you can get more, but it will require you to step outside of R and use several different tools.
+A key feature of this project is the ability to process the raw Birth Data files into analytic data sets that are more suitable for data science. This is achieved prior to the R package build, and therefore is unncessary to understand if the `births` data set is adequate for your purposes. However, if you need more you can get more, but it will require you to step outside of R and use several different tools. You can get started by looking at the [raw data readme](data-raw/README.md).
 
 # Disclaimer
 
