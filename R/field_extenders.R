@@ -42,7 +42,7 @@ ext.birth_year = function(births_data) {
 ext.birth_decade = function(births_data) {
   births_data[,`:=`(
     birth_decade = ordered(paste0(floor((lubridate::year(birth_month_date)) / 10) * 10, "s"))
-  )][,`:=`(birth_decade = recode(birth_decade, '1960s' = '1968/9'))]
+  )][,`:=`(birth_decade = dplyr::recode(birth_decade, '1960s' = '1968/9'))]
 }
 
 #' Birth Data Field Extender Suites
