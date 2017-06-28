@@ -17,9 +17,8 @@
 #'   \item at least one record exists for each month in every year
 #' }
 #'
-#' @seealso \code{\link{birth_weekday_date}}
-#'
 #' @return a \code{\link{Date}} column
-#' @family births-data
+#' @seealso \code{\link{birth_weekday_date}} \code{\link{births}}
+#' @family births-column
 #' @name birth_month_date
 NULL

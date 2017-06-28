@@ -1,7 +1,8 @@
 #' US Birth Certificate
 #'
-#' The primary analytic data set that is included in this package. This data frame is the result of
-#' the raw data processing that is applied to birth certificate data sets provided by the CDC.
+#' This is the primary analytic data set that included and used by this package. This data frame is
+#' the result of the raw data processing that is applied to birth certificate data sets provided by
+#' the CDC.
 #'
 #' We include a description of each field in this data set, since they are the result of a quite
 #' complicated process which blends data from over 40 years of distinct data sets with different
@@ -29,10 +30,6 @@
 #' data set.
 #'
 #' @section Fields:
-#'
-#'   \strong{birth_state}: a factor representing the state where the birth occured. This dimension
-#'   stopped being reported by the CDC after 2004 due to privacy concerns, and all records after
-#'   that point are marked as NA.
 #'
 #'   \strong{birth_in_hospital}: a logical representation of whether the birth occurred in a
 #'   hospital. Missing records are represented by NA.

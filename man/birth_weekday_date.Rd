@@ -34,7 +34,7 @@ access year and month of birth.
 
 This column is tested for the following quality assumptions prior to packaging:
 \enumerate{
-  \item less than 0.1% data missing (after 1968, which had no data for day of week)
+  \item less than 0.1 percent data missing (after 1968, which had no data for day of week)
   \item year and month dateparts match birth_month_date (when not NA)
   \item exactly 7 days are represented in each month
   \item at least one record exists for each month in every year
@@ -42,8 +42,8 @@ This column is tested for the following quality assumptions prior to packaging:
 }
 
 \seealso{
-\code{\link{birth_month_date}}
+\code{\link{birth_month_date}} \code{\link{births}}
 
-Other births-data: \code{\link{birth_month_date}},
-  \code{\link{births}}
+Other births-column: \code{\link{birth_month_date}},
+  \code{\link{birth_state}}
 }

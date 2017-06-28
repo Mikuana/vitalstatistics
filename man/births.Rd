@@ -15,8 +15,9 @@ births
 an object of class \code{\link[data.table]{data.table}}
 }
 \description{
-The primary analytic data set that is included in this package. This data frame is the result of
-the raw data processing that is applied to birth certificate data sets provided by the CDC.
+This is the primary analytic data set that included and used by this package. This data frame is
+the result of the raw data processing that is applied to birth certificate data sets provided by
+the CDC.
 }
 \details{
 We include a description of each field in this data set, since they are the result of a quite
@@ -49,10 +50,6 @@ data set.
 \section{Fields}{
 
 
-  \strong{birth_state}: a factor representing the state where the birth occured. This dimension
-  stopped being reported by the CDC after 2004 due to privacy concerns, and all records after
-  that point are marked as NA.
-
   \strong{birth_in_hospital}: a logical representation of whether the birth occurred in a
   hospital. Missing records are represented by NA.
 
@@ -76,8 +73,4 @@ data set.
   math that is performed on this data set should be weighted by this value.
 }
 
-\seealso{
-Other births-data: \code{\link{birth_month_date}},
-  \code{\link{birth_weekday_date}}
-}
 \keyword{datasets}
