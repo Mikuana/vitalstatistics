@@ -317,7 +317,32 @@ staged_data = function(set_year, column_selection=NA) {
                         )
                 ))
             }
-            else{return(mutate(labeled_data, BFACIL3 = 'Unknown or Not Stated'))}
+
+            if('PODEL1975' %in% fields) {
+                return(mutate(labeled_data,
+                    BFACIL3 =
+                        ifelse(PODEL1975 == 'Hospital or Institution', 'In Hospital',
+                        ifelse(PODEL1975 %in%
+                            c("Clinic, Center, or a Home","Names places (Dr's. Offices)",
+                                "Street Address"),
+                            'Not in Hospital', 'Unknown or Not Stated')
+                        )
+                ))
+            }
+
+            if('ATTEND_AT_BIRTH' %in% fields) {
+              return(mutate(labeled_data,
+                BFACIL3 =
+                ifelse(ATTEND_AT_BIRTH=='Births in hospitals or institutions','In Hospital',
+                ifelse(ATTEND_AT_BIRTH %in%
+                  c("Births not in hospitals; Attended by physician",
+                    "Births not in hospitals; Attended by midwife"),
+                  'Not in Hospital', 'Unknown or Not Stated')
+                )
+              ))
+            }
+
+            return(mutate(labeled_data, BFACIL3 = 'Unknown or Not Stated'))
         }
         else {return(labeled_data)}
     }
