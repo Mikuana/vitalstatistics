@@ -249,6 +249,25 @@
         "2014": {"start": 23, "end": 23},
         "2015": {"start": 23, "end": 23}
     },
+    "ATTEND_AT_BIRTH": {
+        "default": {
+            "description": "Place of Delivery",
+            "type": "integer",
+            "levels": [1,2,3,4],
+            "ordered": "True",
+            "labels": ["Births in hospitals or institutions", "Births not in hospitals; Attended by physician", "Births not in hospitals; Attended by midwife", "Other and not specified"]
+        },
+        "1968": {"start": 58, "end": 58},
+        "1969": {"start": 36, "end": 36},
+        "1970": {"start": 36, "end": 36},
+        "1971": {"start": 36, "end": 36},
+        "1972": {"start": 36, "end": 36},
+        "1973": {"start": 36, "end": 36},
+        "1974": {"start": 36, "end": 36},
+        "1975": {"start": 36, "end": 36},
+        "1976": {"start": 36, "end": 36},
+        "1977": {"start": 36, "end": 36}
+    },
     "PODEL1975": {
         "default": {
             "description": "Place of Delivery",
