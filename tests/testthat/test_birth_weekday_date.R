@@ -1,5 +1,9 @@
 context("DQ birth_weekday_date")
 
+test_that("column is a Date type", {
+  expect_is(births[, birth_weekday_date], "Date")
+})
+
 test_that("less than 0.1% data missing (after 1968)", {
   nas = births[,.(y = lubridate::year(birth_month_date), mis = is.na(birth_weekday_date), cases)][,
     .(num = sum(cases * mis), den = sum(cases)), by=.(y)

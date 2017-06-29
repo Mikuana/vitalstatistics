@@ -1,5 +1,9 @@
 context("DQ birth_month_date")
 
+test_that("column is a Date type", {
+  expect_is(births[, birth_month_date], "Date")
+})
+
 test_that("all records are on first of month in expected years", {
   expect_true(all(births[,!is.na(birth_month_date)]))  # no nulls
   expect_true(all(births[,lubridate::day(birth_month_date)] == 1))  # first of month

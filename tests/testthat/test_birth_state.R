@@ -1,5 +1,9 @@
 context("DQ birth_state")
 
+test_that("field is a factor type", {
+  expect_is(births[, birth_state], "factor")
+})
+
 test_that("51 states are represented in each expected year", {
   expect_true(all(
     births[,.(y=lubridate::year(birth_month_date), birth_state)
