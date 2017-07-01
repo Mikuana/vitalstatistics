@@ -30,6 +30,7 @@ This column is tested for the following quality assumptions prior to packaging:
 \seealso{
 \code{\link{birth_weekday_date}} \code{\link{births}}
 
-Other births-column: \code{\link{birth_state}},
+Other births-column: \code{\link{birth_in_hospital}},
+  \code{\link{birth_state}},
   \code{\link{birth_weekday_date}}
 }
