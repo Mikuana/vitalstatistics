@@ -4,7 +4,7 @@
 \name{births}
 \alias{births}
 \title{US Birth Certificate}
-\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 7457083 rows and 9 columns.}
+\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 7818974 rows and 9 columns.}
 \source{
 CDC and this package
 }

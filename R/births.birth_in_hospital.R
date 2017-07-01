@@ -8,7 +8,7 @@
 #'
 #' This column is tested for the following quality assumptions prior to packaging:
 #' \enumerate{
-#'   \item NA
+#'   \item non-NA values exist in each expected year
 #' }
 #'
 #' @return a \code{\link{logical}} column
