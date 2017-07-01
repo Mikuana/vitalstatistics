@@ -306,45 +306,54 @@ staged_data = function(set_year, column_selection=NA) {
   remap_BFACIL = function(labeled_data) {
     # Remap pre-1989 place of birth records to conform with the BFACIL3 field
     fields = names(labeled_data)
-    if(!'BFACIL3' %in% fields){
-      if('PODEL' %in% fields) {
-        return(mutate(labeled_data,
-          BFACIL3 =
-            ifelse(PODEL == 'Hospital Births', 'In Hospital',
-            ifelse(PODEL %in%
-              c('Nonhospital Births', 'En route or born on arrival (BOA)'),
-              'Not in Hospital', 'Unknown or Not Stated')
-            )
-        ))
-      }
-
-      if('PODEL1975' %in% fields) {
-        return(mutate(labeled_data,
-          BFACIL3 =
-            ifelse(PODEL1975 == 'Hospital or Institution', 'In Hospital',
-            ifelse(PODEL1975 %in%
-              c("Clinic, Center, or a Home","Names places (Dr's. Offices)",
-                "Street Address"),
-              'Not in Hospital', 'Unknown or Not Stated')
-            )
-        ))
-      }
-
-      if('ATTEND_AT_BIRTH' %in% fields) {
-        return(mutate(labeled_data,
-        BFACIL3 =
-        ifelse(ATTEND_AT_BIRTH=='Births in hospitals or institutions','In Hospital',
-        ifelse(ATTEND_AT_BIRTH %in%
-          c("Births not in hospitals; Attended by physician",
-          "Births not in hospitals; Attended by midwife"),
-          'Not in Hospital', 'Unknown or Not Stated')
-        )
-        ))
-      }
-
-      return(mutate(labeled_data, BFACIL3 = 'Unknown or Not Stated'))
+    if('BFACIL3' %in% fields){
+      return(labeled_data)
     }
-    else {return(labeled_data)}
+
+    if('PODEL' %in% fields) {
+      return(
+        mutate(labeled_data,
+          BFACIL3 =
+            recode(PODEL,
+              `Hospital Births` = 'In Hospital',
+              `Nonhospital Births` = 'Not in Hospital',
+              `En route or born on arrival (BOA)` = 'Not in Hospital',
+              .default = 'Unknown or Not Stated'
+            )
+        )
+      )
+    }
+
+    if('PODEL1975' %in% fields) {
+      return(
+        mutate(labeled_data,
+          BFACIL3 =
+            recode(PODEL,
+              `Hospital or Institution` = 'In Hospital',
+              `Clinic, Center, or a Home` = 'Not in Hospital',
+              `Names places (Dr's. Offices)` = 'Not in Hospital',
+              `Street Address` = 'Not in Hospital',
+              .default = 'Unknown or Not Stated'
+            )
+        )
+      )
+    }
+
+    if('ATTEND_AT_BIRTH' %in% fields) {
+      return(
+        mutate(labeled_data,
+          BFACIL3 =
+            recode(PODEL,
+              `Births in hospitals or institutions` = 'In Hospital',
+              `Births not in hospitals; Attended by physician` = 'Not in Hospital',
+              `Births not in hospitals; Attended by midwife` = 'Not in Hospital',
+              .default = 'Unknown or Not Stated'
+            )
+        )
+      )
+    }
+
+    return(labeled_data)
   }
 
   add_hospital_logical = function(labeled_data) {
