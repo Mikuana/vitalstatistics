@@ -332,7 +332,7 @@ staged_data = function(set_year, column_selection=NA) {
       return(
         mutate(labeled_data,
           BFACIL3 =
-            recode(PODEL,
+            recode(PODEL1975,
               `Hospital or Institution` = 'In Hospital',
               `Clinic, Center, or a Home` = 'Not in Hospital',
               `Names places (Dr's. Offices)` = 'Not in Hospital',
@@ -347,7 +347,7 @@ staged_data = function(set_year, column_selection=NA) {
       return(
         mutate(labeled_data,
           BFACIL3 =
-            recode(PODEL,
+            recode(ATTEND_AT_BIRTH,
               `Births in hospitals or institutions` = 'In Hospital',
               `Births not in hospitals; Attended by physician` = 'Not in Hospital',
               `Births not in hospitals; Attended by midwife` = 'Not in Hospital',
