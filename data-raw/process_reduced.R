@@ -196,13 +196,17 @@ staged_data = function(set_year, column_selection=NA) {
     # Age of mother at time of delivery. This function maps single years.
     coded_data = mutate(coded_data,  mother_age_int = as.integer(NA))
 
-    if('UMAGERPT' %in% names(coded_data)) {
-      coded_data = mutate(coded_data, mother_age_int = UMAGERPT)
+    if('DMAGE' %in% names(coded_data)) {
+      coded_data = mutate(coded_data, mother_age_int = coalesce(mother_age_int, DMAGE))
     }
 
-    if('MAGER' %in% names(coded_data)) {
-      coded_data = mutate(coded_data, mother_age_int = ifelse(MAGER %in% 13:49, MAGER, NA))
+    if('UMAGERPT' %in% names(coded_data)) {
+      coded_data = mutate(coded_data, mother_age_int = coalesce(mother_age_int, UMAGERPT))
     }
+
+    # if('MAGER' %in% names(coded_data)) {
+    #   coded_data = mutate(coded_data, mother_age_int = ifelse(MAGER %in% 13:49, MAGER, NA))
+    # }
 
     return(coded_data)
   }
