@@ -197,16 +197,28 @@ staged_data = function(set_year, column_selection=NA) {
     coded_data = mutate(coded_data,  mother_age_int = as.integer(NA))
 
     if('DMAGE' %in% names(coded_data)) {
-      coded_data = mutate(coded_data, mother_age_int = coalesce(mother_age_int, DMAGE))
+      coded_data = mutate(
+        coded_data,
+        mother_age_int = coalesce(mother_age_int, DMAGE)
+      )
     }
 
     if('UMAGERPT' %in% names(coded_data)) {
-      coded_data = mutate(coded_data, mother_age_int = coalesce(mother_age_int, UMAGERPT))
+      coded_data = mutate(
+        coded_data,
+        mother_age_int = coalesce(mother_age_int, UMAGERPT)
+      )
     }
 
-    # if('MAGER' %in% names(coded_data)) {
-    #   coded_data = mutate(coded_data, mother_age_int = ifelse(MAGER %in% 13:49, MAGER, NA))
-    # }
+    if('MAGER' %in% names(coded_data)) {
+      coded_data = mutate(
+        coded_data,
+        mother_age_int = coalesce(
+          mother_age_int,
+          ifelse(MAGER %in% 13:49, MAGER, NA)
+        )
+      )
+    }
 
     return(coded_data)
   }
