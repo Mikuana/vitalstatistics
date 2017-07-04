@@ -5,16 +5,16 @@
 #' the CDC.
 #'
 #' We include a description of each field in this data set, since they are the result of a quite
-#' complicated process which blends data from over 40 years of distinct data sets with different
-#' field values and usages.
+#' complicated process which blends data from 50 years of distinct data sets with different
+#' field values and usages throughout that time.
 #'
 #' @section Conceptual Prefixes:
 #'
-#' Each field is named with a conceptual prefix in order to make it more clear. This is useful to
-#' delineate fields that might be confusing, such as date of birth. If we were to simply use "date"
-#' as our field name, it leaves some question as to whether this is the date of birth, date of
-#' conception, date of reporting, etc. Instead, we use one of a defined set of words as the first
-#' word in every field to make the meaning clear.
+#' Each field is named with a conceptual prefix in order to make its meaning more clear intuitive.
+#' This is useful to delineate fields that might be confusing, such as date of birth. If we were to
+#' simply use "date" as our field name, it leaves some question as to whether this is the date of
+#' birth, date of conception, date of reporting, etc. Instead, we use one of a defined set of words
+#' as the first word in every field to make the meaning clear.
 #'
 #' \strong{birth}: fields prefixed with "birth_" describe values relative to the delivery event. For
 #' example, the "birth_hour" is intended to be the time when the delivery was completed, and
@@ -30,22 +30,6 @@
 #' data set.
 #'
 #' @section Fields:
-#'
-#'   \strong{birth_in_hospital}: a logical representation of whether the birth occurred in a
-#'   hospital. Missing records are represented by NA.
-#'
-#'   \strong{birth_via_cesarean}: a logical representation of whether the birth occured via cesarean
-#'   section. In cases where the method of birth is unknown, the record  is represented with an NA.
-#'   Birth method is not reported in records prior to 1989, so all earlier records are represented
-#'   as NA.
-#'
-#'   \strong{mother_age_int}: an integer value which represents the age (in years) of the mother at
-#'   the time of delivery.
-#'
-#'   \strong{mother_age}: a factor representation of the age (in years) of the mother at the time of
-#'   delivery. This field differs from mother_age_int in that it uses banded values for ages 10-12
-#'   and 50-54. The tradeoff for the loss of precision is that this field is slightly better
-#'   populated than mother_age_int.
 #'
 #'   \strong{child_sex}: a factor representation of the sex of the infant.
 #'

@@ -231,47 +231,6 @@ staged_data = function(set_year, column_selection=NA) {
     return(coded_data)
   }
 
-  add_maternal_age_label = function(labeled_data) {
-    # Age of mother at time of delivery. This function maps single years of
-    # age into the factors that are report in more recent data sets, where 10-12
-    # and 50-54 are reported as a single group.
-    labeled_data = mutate(labeled_data,
-        mother_age = ordered(
-          NA,
-          levels = data_dictionary()[['2004']][['MAGER']][['levels']],
-          labels = data_dictionary()[['2004']][['MAGER']][['labels']]
-        )
-    )
-
-    if('UMAGERPT' %in% names(labeled_data)) {
-      # Recode individual years 10-12 and 50-54 to 12 and 50. These values
-      # get mapped to factors which represent these ranges.
-      labeled_data = mutate(labeled_data,
-        UMAGERPT =
-          ifelse(UMAGERPT %in% 10:12, 12,
-          ifelse(UMAGERPT %in% 50:54, 50,
-          ifelse(UMAGERPT %in% 13:49, UMAGERPT,
-            NA))),
-        mother_age = ordered(
-          UMAGERPT,
-          levels = data_dictionary()[['2004']][['MAGER']][['levels']],
-          labels = data_dictionary()[['2004']][['MAGER']][['labels']]
-        )
-      )
-    }
-
-    if('MAGER' %in% names(labeled_data)) {
-      labeled_data = mutate(labeled_data,
-        mother_age = ordered(
-          MAGER,
-          levels = data_dictionary()[['2004']][['MAGER']][['levels']],
-          labels = data_dictionary()[['2004']][['MAGER']][['labels']]
-        )
-      )
-    }
-    return(labeled_data)
-  }
-
   add_cesarean_logical = function(labeled_data) {
     # Indicate whether the case resolved with a cesarean section using a logical,
     # with unknown cases denoted by an NA. There is a specific strategy to which fields
@@ -513,7 +472,6 @@ staged_data = function(set_year, column_selection=NA) {
       add_birth_month_date %>%
       add_birth_weekday_date %>%
       add_cesarean_logical %>%
-      add_maternal_age_label %>%
       remap_BFACIL %>%
       add_hospital_logical %>%
       remap_STATENAT %>%
