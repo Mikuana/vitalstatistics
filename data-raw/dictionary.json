@@ -274,7 +274,7 @@
       "type": "integer",
       "levels": [1,2,3,4,9],
       "ordered": "True",
-      "labels": ["Hospital or Institution", "Clinic, Center, or a Home", "Names places (Dr's. Offices)", "Street Address", "Not classifiable"]
+      "labels": ["Hospital or Institution", "Clinic, Center, or a Home", "Names places (Drs. Offices)", "Street Address", "Not classifiable"]
     },
     "1975": {"start": 80, "end": 80},
     "1976": {"start": 80, "end": 80},

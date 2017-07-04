@@ -335,7 +335,7 @@ staged_data = function(set_year, column_selection=NA) {
             recode(PODEL1975,
               `Hospital or Institution` = 'In Hospital',
               `Clinic, Center, or a Home` = 'Not in Hospital',
-              `Names places (Dr's. Offices)` = 'Not in Hospital',
+              `Names places (Drs. Offices)` = 'Not in Hospital',
               `Street Address` = 'Not in Hospital',
               .default = 'Unknown or Not Stated'
             )
