@@ -214,8 +214,16 @@ staged_data = function(set_year, column_selection=NA) {
       coded_data = mutate(
         coded_data,
         mother_age_int = coalesce(
-          mother_age_int,
-          ifelse(MAGER %in% 13:49, MAGER, NA)
+          mother_age_int, ifelse(MAGER %in% 13:49, MAGER, NA)
+        )
+      )
+    }
+
+    if('MAGER41' %in% names(coded_data)) {
+      coded_data = mutate(
+        coded_data,
+        mother_age_int = coalesce(
+          mother_age_int, ifelse(MAGER41 %in% 2:37, MAGER + 13, NA)
         )
       )
     }
