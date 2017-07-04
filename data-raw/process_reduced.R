@@ -192,29 +192,29 @@ staged_data = function(set_year, column_selection=NA) {
     }
   }
 
-  add_maternal_age_int = function(coded_data) {
+  add_maternal_age = function(coded_data) {
     # Age of mother at time of delivery. This function maps single years.
-    coded_data = mutate(coded_data,  mother_age_int = as.integer(NA))
+    coded_data = mutate(coded_data,  mother_age = as.integer(NA))
 
     if('DMAGE' %in% names(coded_data)) {
       coded_data = mutate(
         coded_data,
-        mother_age_int = coalesce(mother_age_int, DMAGE)
+        mother_age = coalesce(mother_age, DMAGE)
       )
     }
 
     if('UMAGERPT' %in% names(coded_data)) {
       coded_data = mutate(
         coded_data,
-        mother_age_int = coalesce(mother_age_int, UMAGERPT)
+        mother_age = coalesce(mother_age, UMAGERPT)
       )
     }
 
     if('MAGER' %in% names(coded_data)) {
       coded_data = mutate(
         coded_data,
-        mother_age_int = coalesce(
-          mother_age_int, ifelse(MAGER %in% 13:49, MAGER, NA)
+        mother_age = coalesce(
+          mother_age, ifelse(MAGER %in% 13:49, MAGER, NA)
         )
       )
     }
@@ -222,8 +222,8 @@ staged_data = function(set_year, column_selection=NA) {
     if('MAGER41' %in% names(coded_data)) {
       coded_data = mutate(
         coded_data,
-        mother_age_int = coalesce(
-          mother_age_int, ifelse(MAGER41 %in% 2:37, MAGER41 + 13, NA)
+        mother_age = coalesce(
+          mother_age, ifelse(MAGER41 %in% 2:37, MAGER41 + 13, NA)
         )
       )
     }
@@ -461,7 +461,7 @@ staged_data = function(set_year, column_selection=NA) {
     data.table::fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
       raw_record_test %>%
       recode_na %>%
-      add_maternal_age_int %>%
+      add_maternal_age %>%
       record_weighting %>%
       recode_factors %>%
       recode_flags %>%
@@ -498,7 +498,6 @@ births = lapply(data_dictionary()$years(), function(y) {
       birth_in_hospital,
       birth_via_cesarean,
       mother_age,
-      mother_age_int,
       child_sex
     ) %>%
     summarize(cases = n())
