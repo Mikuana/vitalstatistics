@@ -862,5 +862,15 @@
     "2013": {"start": 89, "end": 90},
     "2014": {"start": 75, "end": 76},
     "2015": {"start": 75, "end": 76}
+  },
+  "MAGER41": {
+    "default": {
+      "description": "Age of Mother Recode; terrible and used only for 1 year",
+      "type": "integer",
+      "levels": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37],
+      "labels": ["Under 15 years","15 years","16 years","17 years","18 years","19 years","20 years","21 years","22 years","23 years","24 years","25 years","26 years","27 years","28 years","29 years","30 years","31 years","32 years","33 years","34 years","35 years","36 years","37 years","38 years","39 years","40 years","41 years","42 years","43 years","44 years","45 years","46 years","47 years","48 years","49 years","50 years"],
+      "ordered": "True"
+    },
+    "2003": {"start": 89, "end": 90}
   }
 }
