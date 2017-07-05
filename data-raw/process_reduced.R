@@ -223,7 +223,7 @@ staged_data = function(set_year, column_selection=NA) {
       coded_data = mutate(
         coded_data,
         mother_age = coalesce(
-          mother_age, ifelse(MAGER41 %in% 2:37, MAGER41 + 13, NA)
+          mother_age, ifelse(MAGER41 %in% 2:37, MAGER41 + 13L, NA)
         )
       )
     }
