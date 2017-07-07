@@ -24,7 +24,7 @@
 #'
 #' This column is tested for the following quality assumptions prior to packaging:
 #' \enumerate{
-#'   \item NA
+#'   \item less than 0.2% missing data after 2002
 #' }
 #'
 #' @return a \code{\link{integer}} column
