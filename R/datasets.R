@@ -1,7 +1,8 @@
 #' US Birth Certificate
 #'
-#' The primary analytic data set that is included in this package. This data frame is the result of
-#' the raw data processing that is applied to birth certificate data sets provided by the CDC.
+#' This is the primary analytic data set that included and used by this package. This data frame is
+#' the result of the raw data processing that is applied to birth certificate data sets provided by
+#' the CDC.
 #'
 #' We include a description of each field in this data set, since they are the result of a quite
 #' complicated process which blends data from over 40 years of distinct data sets with different
@@ -30,28 +31,6 @@
 #'
 #' @section Fields:
 #'
-#'   \strong{birth_weekday_date}: a date type field which represents the specific month, year, and
-#'   day of the week that the birth occurred. This is accomplished by setting the date value equal
-#'   to the corresponding day of the week in the first full week of the month when the birth
-#'   occured.
-#'
-#'   For example, if a birth occurred in January of 2014 on a Tuesday, we determine that the first
-#'   full week of January starts on the 5th (i.e. Sunday, January 5th), and that the Tuesday of that
-#'   week is 2014-01-07. Accordingly the birth_weekday_date value would be set to 2014-01-07.
-#'
-#'   This field is useful because it can be used as a date value directly, while still representing
-#'   the correct year, month, and day of the week that the birth occurred. It is important to note
-#'   that this field does not represent the actual date of birth; day of month was reported until
-#'   1988, but was omitted from records after that time for privacy reasons.
-#'
-#'   \strong{birth_month_date}:a date type field which represents the specific month and year that
-#'   the birth occurred. This date value is always set to the first day of the month, and serves as
-#'   a substitute for the birth_weekday_date for records where the day of the week is not known.
-#'
-#'   \strong{birth_state}: a factor representing the state where the birth occured. This dimension
-#'   stopped being reported by the CDC after 2004 due to privacy concerns, and all records after
-#'   that point are marked as NA.
-#'
 #'   \strong{birth_in_hospital}: a logical representation of whether the birth occurred in a
 #'   hospital. Missing records are represented by NA.
 #'
@@ -74,12 +53,8 @@
 #'   combination of dimensions that are present in a particular record of the births data set. All
 #'   math that is performed on this data set should be weighted by this value.
 #'
-#' @docType data
-#'
-#' @usage births
-#'
-#' @format An object of class \code{\link{data.frame}}
-#'
+#' @family births-data
+#' @return an object of class \code{\link[data.table]{data.table}}
 #' @keywords datasets
 #'
 #' @source CDC and this package
