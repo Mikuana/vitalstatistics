@@ -1,0 +1,51 @@
+#' US Birth Record Data
+#'
+#' This is the primary analytic data set that included and used by this package. This data frame is
+#' the result of the raw data processing that is applied to birth certificate data sets provided by
+#' the CDC.
+#'
+#' We include a description of each field in this data set, since they are the result of a quite
+#' complicated process which blends data from 50 years of distinct data sets with different
+#' field values and usages throughout that time.
+#'
+#' @section Conceptual Prefixes:
+#'
+#' Each field is named with a conceptual prefix in order to make its meaning more clear intuitive.
+#' This is useful to delineate fields that might be confusing, such as date of birth. If we were to
+#' simply use "date" as our field name, it leaves some question as to whether this is the date of
+#' birth, date of conception, date of reporting, etc. Instead, we use one of a defined set of words
+#' as the first word in every field to make the meaning clear.
+#'
+#' \strong{birth}: fields prefixed with "birth_" describe values relative to the delivery event. For
+#' example, the "birth_hour" is intended to be the time when the delivery was completed, and
+#' "birth_in_hospital" refers to whether the final moment of the delivery occured in the hospital,
+#' regardless of the length of time that might have been spent in labor outside the hospital.
+#'
+#' \strong{mother}: the mother is the primary subject addressed by this data set. Unless otherwise
+#' stated in the field definition, all dependent attributes of the mother should be considered in
+#' the context of the birth. For example, the age of the mother calculated at the time of the birth,
+#' her state of residence at the time of the birth, and so forth.
+#'
+#' \strong{child}: the child (i.e. newly born infant) is the secondary subject addressed by this
+#' data set.
+#'
+#' @section Fields:
+#' \enumerate{
+#'   \item \code{\link{birth_month_date}}
+#'   \item \code{\link{birth_weekday_date}}
+#'   \item \code{\link{birth_state}}
+#'   \item \code{\link{birth_in_hospital}}
+#'   \item \code{\link{birth_via_cesarean}}
+#'   \item \code{\link{mother_age}}
+#'   \item child_sex ...
+#'   \item cases ...
+#' }
+#'   \strong{cases}: an integer representing the number of birth records that are represented by the
+#'   combination of dimensions that are present in a particular record of the births data set. All
+#'   math that is performed on this data set should be weighted by this value.
+#'
+#' @return an object of class \code{\link[data.table]{data.table}}
+#' @keywords datasets
+#'
+#' @source CDC and this package
+"births"

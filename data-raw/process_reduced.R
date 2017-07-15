@@ -192,60 +192,43 @@ staged_data = function(set_year, column_selection=NA) {
     }
   }
 
-  add_maternal_age_int = function(coded_data) {
+  add_maternal_age = function(coded_data) {
     # Age of mother at time of delivery. This function maps single years.
-    coded_data = mutate(coded_data,  mother_age_int = as.integer(NA))
+    coded_data = mutate(coded_data,  mother_age = as.integer(NA))
+
+    if('DMAGE' %in% names(coded_data)) {
+      coded_data = mutate(
+        coded_data,
+        mother_age = coalesce(mother_age, DMAGE)
+      )
+    }
 
     if('UMAGERPT' %in% names(coded_data)) {
-      coded_data = mutate(coded_data, mother_age_int = UMAGERPT)
+      coded_data = mutate(
+        coded_data,
+        mother_age = coalesce(mother_age, UMAGERPT)
+      )
     }
 
     if('MAGER' %in% names(coded_data)) {
-      coded_data = mutate(coded_data, mother_age_int = ifelse(MAGER %in% 13:49, MAGER, NA))
+      coded_data = mutate(
+        coded_data,
+        mother_age = coalesce(
+          mother_age, ifelse(MAGER %in% 13:49, MAGER, NA)
+        )
+      )
+    }
+
+    if('MAGER41' %in% names(coded_data)) {
+      coded_data = mutate(
+        coded_data,
+        mother_age = coalesce(
+          mother_age, ifelse(MAGER41 %in% 2:37, MAGER41 + 13L, NA)
+        )
+      )
     }
 
     return(coded_data)
-  }
-
-  add_maternal_age_label = function(labeled_data) {
-    # Age of mother at time of delivery. This function maps single years of
-    # age into the factors that are report in more recent data sets, where 10-12
-    # and 50-54 are reported as a single group.
-    labeled_data = mutate(labeled_data,
-        mother_age = ordered(
-          NA,
-          levels = data_dictionary()[['2004']][['MAGER']][['levels']],
-          labels = data_dictionary()[['2004']][['MAGER']][['labels']]
-        )
-    )
-
-    if('UMAGERPT' %in% names(labeled_data)) {
-      # Recode individual years 10-12 and 50-54 to 12 and 50. These values
-      # get mapped to factors which represent these ranges.
-      labeled_data = mutate(labeled_data,
-        UMAGERPT =
-          ifelse(UMAGERPT %in% 10:12, 12,
-          ifelse(UMAGERPT %in% 50:54, 50,
-          ifelse(UMAGERPT %in% 13:49, UMAGERPT,
-            NA))),
-        mother_age = ordered(
-          UMAGERPT,
-          levels = data_dictionary()[['2004']][['MAGER']][['levels']],
-          labels = data_dictionary()[['2004']][['MAGER']][['labels']]
-        )
-      )
-    }
-
-    if('MAGER' %in% names(labeled_data)) {
-      labeled_data = mutate(labeled_data,
-        mother_age = ordered(
-          MAGER,
-          levels = data_dictionary()[['2004']][['MAGER']][['levels']],
-          labels = data_dictionary()[['2004']][['MAGER']][['labels']]
-        )
-      )
-    }
-    return(labeled_data)
   }
 
   add_cesarean_logical = function(labeled_data) {
@@ -328,10 +311,10 @@ staged_data = function(set_year, column_selection=NA) {
       return(
         mutate(labeled_data,
           BFACIL3 =
-            recode(PODEL,
+            recode(PODEL1975,
               `Hospital or Institution` = 'In Hospital',
               `Clinic, Center, or a Home` = 'Not in Hospital',
-              `Names places (Dr's. Offices)` = 'Not in Hospital',
+              `Names places (Drs. Offices)` = 'Not in Hospital',
               `Street Address` = 'Not in Hospital',
               .default = 'Unknown or Not Stated'
             )
@@ -343,7 +326,7 @@ staged_data = function(set_year, column_selection=NA) {
       return(
         mutate(labeled_data,
           BFACIL3 =
-            recode(PODEL,
+            recode(ATTEND_AT_BIRTH,
               `Births in hospitals or institutions` = 'In Hospital',
               `Births not in hospitals; Attended by physician` = 'Not in Hospital',
               `Births not in hospitals; Attended by midwife` = 'Not in Hospital',
@@ -478,7 +461,7 @@ staged_data = function(set_year, column_selection=NA) {
     data.table::fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
       raw_record_test %>%
       recode_na %>%
-      add_maternal_age_int %>%
+      add_maternal_age %>%
       record_weighting %>%
       recode_factors %>%
       recode_flags %>%
@@ -489,7 +472,6 @@ staged_data = function(set_year, column_selection=NA) {
       add_birth_month_date %>%
       add_birth_weekday_date %>%
       add_cesarean_logical %>%
-      add_maternal_age_label %>%
       remap_BFACIL %>%
       add_hospital_logical %>%
       remap_STATENAT %>%
@@ -516,7 +498,6 @@ births = lapply(data_dictionary()$years(), function(y) {
       birth_in_hospital,
       birth_via_cesarean,
       mother_age,
-      mother_age_int,
       child_sex
     ) %>%
     summarize(cases = n())

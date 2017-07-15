@@ -47,5 +47,6 @@ This column is tested for the following quality assumptions prior to packaging:
 Other births-column: \code{\link{birth_in_hospital}},
   \code{\link{birth_month_date}},
   \code{\link{birth_state}},
-  \code{\link{birth_via_cesarean}}
+  \code{\link{birth_via_cesarean}},
+  \code{\link{mother_age}}
 }
