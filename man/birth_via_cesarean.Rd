@@ -83,5 +83,6 @@ ggplot() +
 Other births-column: \code{\link{birth_in_hospital}},
   \code{\link{birth_month_date}},
   \code{\link{birth_state}},
-  \code{\link{birth_weekday_date}}
+  \code{\link{birth_weekday_date}},
+  \code{\link{mother_age}}
 }
