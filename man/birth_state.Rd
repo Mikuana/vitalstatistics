@@ -37,5 +37,5 @@ Other births-column: \code{\link{birth_in_hospital}},
   \code{\link{birth_month_date}},
   \code{\link{birth_via_cesarean}},
   \code{\link{birth_weekday_date}},
-  \code{\link{mother_age}}
+  \code{\link{child_sex}}, \code{\link{mother_age}}
 }
