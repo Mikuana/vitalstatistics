@@ -1,5 +1,5 @@
 ---
-title: "Maternal Age Exploration"
+title: "Child Sex Exploration"
 subtitle: "Vital Statistics"
 author: "Christopher Boyd, MPA"
 output:
@@ -31,18 +31,30 @@ library(ggplot2)
 b = copy(births)
 ```
 
-
 ```{r}
+ext.birth_decade(b)
+```
+
+
+```{r, fig.height=8}
 b %>%
-  filter(mother_age %in% 12:50) %>%
+  filter(!is.na(birth_state)) %>%
+  group_by(birth_state) %>%
+  mutate(state_size = sum(cases)) %>%
   group_by(
-    birth_year = year(birth_month_date),
-    mother_age
+    birth_decade,
+    birth_state,
+    child_sex
   ) %>%
   summarize(cases = sum(cases)) %>%
-  group_by(birth_year) %>%
-  mutate(annual_share = cases / sum(cases)) %>%
-  ggplot(aes(mother_age, birth_year, fill=annual_share)) +
-    geom_raster() +
-    scale_fill_gradientn(colours=c("#0000FFFF","#FFFFFFFF","#FF0000FF"))
+  group_by(
+    birth_state,
+    birth_decade
+  ) %>%
+  mutate(male_share = cases / sum(cases)) %>%
+  filter(child_sex=='Male') %>%
+  ggplot(aes(male_share, birth_state, color=birth_decade)) +
+    geom_point(stat = "identity") +
+    geom_vline(xintercept = 0.5, color='pink')
+    # facet_grid(. ~ birth_decade)
 ```

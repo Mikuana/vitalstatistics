@@ -1,24 +1,28 @@
 ---
-title: "Trends and Patterns of Birth"
-subtitle: "a data science approach to understanding the societal changes of a universal event in the United States"
+title: "Vital Statistics"
+subtitle: "a data science approach to understanding trends and patterns of Birth"
 author: "Christopher Boyd, MPA"
 output:
   tufte::tufte_html: default
 link-citations: yes
 ---
 
-```{r, include=FALSE}
+```{r setup, echo=FALSE}
+knitr::read_chunk('chunks.R')
+library(knitr)
 library(tufte)
+suppressMessages(library(vitalstatistics))
+suppressMessages(library(dplyr))
+library(ggplot2)
 ```
 
-Birth is a topic that is critically in need of informed decision making. It is an important topic financially, emotionally, and societally. Our understanding of birth is subject to rapid change with the advancement of technology, the development of grand political strategies, and shifts in family paradigms. It is a topic that is subject to fiercely competing definitions at the most fundamental level. Is it a problem, or a process; is it medical, or natural; is it a right, or a privilege; is it a choice, or an obligation.
+```{r page-defaults, echo=FALSE, results='asis'}
+```
+
+`r tufte::margin_note('[Directory](directory)')`
+
+The birth process is a topic of personal and public policy which is critically in need of informed decision making. It is an important topic financially, emotionally, and societally. Our understanding of birth is subject to rapid change with the advancement of technology, the development of grand political strategies, and shifts in family paradigms. It is a topic that is subject to fiercely competing definitions at the most fundamental level. Is it a problem, or a process; is it medical, or natural; is it a right, or a privilege; is it a choice, or an obligation.
 
 Birth also happens to be a subject which is ripe for the tools of data science. Various governments in the United States have collected certificates of live birth for decades, and much of that data is made publicly available as far back as 1968. These data sets allow us to perform a longitudinal study of many different aspects of the birth for nearly every person born in the US over the course of 50 years.
 
-This project uses birth certificate data to understand what is really happening, with 100% programmatically reproproducible research, which is publicly available for anyone to inspect, refute, refine, or add to. The code to obtain and process the final data are entirely contained within the [`vitalstatistics`](https://github.com/Mikuana/vitalstatistics), along with the source code to generate the documents and figures that we use to make our arguments.
-
-# Attribute Exploration
-
-As a necessary component of more complex analysis, this project will develop a number of brief _exploratory_ analysis of the various attributes available in the data, one attribute at a time. Links and references to these will serve as shorthand to reduce length and complexity in more comprehensive analysis.
-
- - [Day of Week](ExploreDoW): what impact does day of the week have on the number of births?
+This project uses birth certificate data to understand what is really happening, with 100% programmatically reproproducible research, which is publicly available for anyone to inspect, refute, refine, or add to. The code to obtain and process the final data are entirely contained within the [`vitalstatistics`](https://github.com/Mikuana/vitalstatistics) repository, along with the source code to generate the documents and figures that you see here.
