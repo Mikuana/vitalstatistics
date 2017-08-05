@@ -1,0 +1,29 @@
+---
+title: "Page Directory"
+subtitle: "Vital Statistics"
+author: "Christopher Boyd, MPA"
+output:
+  tufte::tufte_html: default
+bibliography: skeleton.bib
+link-citations: yes
+---
+
+```{r setup, echo=FALSE}
+knitr::read_chunk('chunks.R')
+library(knitr)
+library(tufte)
+suppressMessages(library(vitalstatistics))
+suppressMessages(library(dplyr))
+library(ggplot2)
+```
+
+```{r page-defaults, echo=FALSE, results='asis'}
+```
+
+`r tufte::margin_note('[Home Page](index)')`
+
+# Attribute Exploration
+
+As a necessary component of more complex analysis, this project performs a number of brief _exploratory_ analysis of the various attributes available in the data set. Links and references to these will serve as shorthand to reduce length of arguments, and reduce complexity in more comprehensive analysis.
+
+ - [Day of Week](ExploreDoW): what impact does day of the week have on the number of births?
