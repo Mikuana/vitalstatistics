@@ -20,9 +20,9 @@ devtools::install_github("Mikuana/vitalstatistics", dependencies=TRUE)
 
 It is crucial to recognize that the `births` data set in this package is reduced from hundreds of millions of records using a simple dimensional record count strategy. This makes the table somewhat similar to a [OLAP Cube](https://en.wikipedia.org/wiki/OLAP_cube), and accordingly you cannot perform simple arithmetic but instead must always account for the `cases` field to obtain the correct result.
 
-# 3) Raw Data Processing
+# Raw Data Processing
 
-A key feature of this project is the ability to process the raw Birth Data files into analytic data sets that are more suitable for data science. This is achieved prior to the R package build, and therefore is unncessary to understand if the `births` data set is adequate for your purposes. However, if you need more you can get more, but it will require you to step outside of R and use several different tools. You can get started by looking at the [raw data readme](data-raw/README.md).
+A key feature of this project is the ability to process the raw Birth Data files into analytic data sets that are more suitable for data science. This is achieved prior to the R package build, and therefore is unncessary to understand if the `births` data set is adequate for your purposes. If you need more you can get more, but it will require you to step outside of R and use several different tools. You can get started by looking at the [raw data readme](data-raw/README.md).
 
 # Disclaimer
 
