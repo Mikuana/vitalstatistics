@@ -16,7 +16,8 @@ Depends:
 Imports:
     dplyr,
     lubridate,
-    matrixStats
+    matrixStats,
+    feather
 Suggests:
     ggplot2,
     testthat,
