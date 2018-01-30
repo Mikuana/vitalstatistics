@@ -5,7 +5,7 @@
 #'
 #' @name featherize
 featherize = function() {
-  rp = file.path('..', 'VitalStories', 'templates', 'VitalStatistics')
+  rp = file.path('..', 'VitalStories', 'static', 'feathers')
 
   feather::write_feather(births, file.path(rp, 'births.feather'))
   feather::write_feather(HHS_cesarean_1989, file.path(rp, 'HHS_cesarean_1989.feather'))
