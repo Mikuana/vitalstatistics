@@ -48,4 +48,6 @@
 #' @keywords datasets
 #'
 #' @source CDC and this package
-"births"
+#' @name births
+# "births"
+NULL

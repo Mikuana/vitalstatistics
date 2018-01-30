@@ -48,7 +48,7 @@
     "2013": {"record_counts": 3940764, "data_counts": 3940764},
     "2014": {"record_counts": 3998175, "data_counts": 3998175},
     "2015": {"record_counts": 3978497, "data_counts": 3978497}
-    
+
   },
 
   "RECWT": {
@@ -233,7 +233,6 @@
     "1999": {"start": 180, "end": 180},
     "2000": {"start": 180, "end": 180},
     "2001": {"start": 180, "end": 180},
-    "2002": {"start": 180, "end": 180},
     "2002": {"start": 180, "end": 180},
     "2003": {"start": 29, "end": 29},
     "2004": {"start": 29, "end": 29},
