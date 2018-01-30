@@ -1,0 +1,30 @@
+http://www.cdc.gov/nchs/data/nvsr/nvsr63/nvsr63_06.pdf
+National Vital Statistics Reports, Volume 63, Number 6 November 5, 2014:
+Trends in Low-risk Cesarean Delivery in the United States, 1990–2013
+by Michelle J.K. Osterman, M.H.S.; and Joyce A. Martin, M.P.H., Division of Vital Statistics
+Table A. Cesarean delivery and low-risk cesarean delivery: United States, final 1990–2012 and preliminary 2013
+Year | TotalCesareans | LowRiskCesareans | TotalCesareanRate | LowRiskCesareanRate
+2013 | 1291071 | 341532 | 32.7 | 26.9
+2012 | 1296070 | 350877 | 32.8 | 27.3
+2011 | 1293267 | 354700 | 32.8 | 27.3
+2010 | 1309182 | 363143 | 32.8 | 27.6
+2009 | 1353572 | 382896 | 32.9 | 28.1
+2008 | 1369273 | 384090 | 32.3 | 27.8
+2007 | 1367340 | 384212 | 31.8 | 27.5
+2006 | 1321054 | 369944 | 31.1 | 27.1
+2005 | 1248815 | 359016 | 30.3 | 26.6
+2004 | 1190210 | 347051 | 29.1 | 25.7
+2003 | 1119388 | 330185 | 27.5 | 24.3
+2002 | 1043846 | 306148 | 26.1 | 23.1
+2001 | 978411 | 287030 | 24.4 | 21.6
+2000 | 923991 | 274017 | 22.9 | 20.3
+1999 | 862086 | 255900 | 22.0 | 19.5
+1998 | 825870 | 245548 | 21.2 | 18.7
+1997 | 799033 | 241734 | 20.8 | 18.4
+1996 | 797119 | 246475 | 20.7 | 18.5
+1995 | 806722 | 253567 | 20.8 | 18.8
+1994 | 830517 | 258640 | 21.2 | 19.1
+1993 | 861987 | 272587 | 21.8 | 20.2
+1992 | 888622 | 282543 | 22.3 | 21.0
+1991 | 905077 | 290670 | 22.6 | 21.4
+1990 | 914096 | 296917 | 22.7 | 21.6
