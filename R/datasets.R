@@ -39,8 +39,8 @@ featherize = function() {
 #'
 #' by Michelle J.K. Osterman, M.H.S.; and Joyce A. Martin, M.P.H., Division of Vital
 #' Statistics
-#'
-"CDC_cesarean_2013"
+#' @name CDC_cesarean_2013
+NULL
 
 
 #' Cesarean rates by age: United States, 1965-86
@@ -62,8 +62,8 @@ featherize = function() {
 #'   Table 16. Vital and Health Statistics, Series 13, Number 101, September 1989
 #'
 #'   Pokras R, Kozak LJ, McCarthy E, Graves EJ. National Center for Health Statistics.
-#'
-"HHS_cesarean_1989"
+#' @name HHS_cesarean_1989
+NULL
 
 
 #' Cesarean rates by age: United States, 1988-92
@@ -85,5 +85,5 @@ featherize = function() {
 #'   Table 26. Vital and Health Statistics, Series 13, Number 124, June 1996
 #'
 #'   Gillum BS, Graves EJ, Kozak LJ. National Center for Health Statistics.
-#'
-"HHS_cesarean_1996"
+#' @name HHS_cesarean_1996
+NULL
