@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Use the dictionary provided in this project to run a loop process where values are 
 extracted from the fixed width files provided by the CDC FTP server, and converted
