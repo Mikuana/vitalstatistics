@@ -5,20 +5,18 @@ into a friendlier comma delimited format that can be read more easily.
 """
 import os
 import shutil
-from configparser import ConfigParser
 from ftplib import FTP
 from tqdm import tqdm
 import subprocess
 import json
-import random
 
 
-def loop(start=1968, end=2014, sample=False, **kwargs):
+def loop(start=1968, end=2014, **kwargs):
     for year in range(start, end+1):
-        manage(year, sample=sample, **kwargs)
+        manage(year, **kwargs)
 
 
-def manage(year, remove_zip=False, remove_raw=True, remove_stage=True, sample=False):
+def manage(year, remove_zip=False, remove_raw=True, remove_stage=True):
     p = PathFinder(year)
     d = SchemaLessDD(p.dictionary)
 
@@ -30,7 +28,7 @@ def manage(year, remove_zip=False, remove_raw=True, remove_stage=True, sample=Fa
                 uz(p.zip, p.uz_folder)  # unzip into data folder
 
             data_dictionary = d.year(year)
-            stage(data_dictionary, p.stage_file, p.raw_file(), year, sample=sample)
+            stage(data_dictionary, p.stage_file, p.raw_file(), year)
         mz(p.stage_file)
 
     if remove_raw and os.path.exists(p.uz_folder):
@@ -55,18 +53,20 @@ def mz(stage_file):
     subprocess.check_output(['gzip', stage_file])
 
 
+# noinspection SpellCheckingInspection
 def ftp_get(zip_file, zip_path):
     ftp = FTP('ftp.cdc.gov')
     ftp.login()
+    # noinspection SpellCheckingInspection
     ftp.cwd('pub/Health_Statistics/NCHS/Datasets/DVS/natality')
     total = ftp.size(zip_file)
 
     with open(zip_path, 'wb') as f:
         print("Starting download of {}".format(zip_file))
-        with tqdm(total=total) as pbar:  # use tqdm to show download progress
+        with tqdm(total=total) as progress_bar:  # use tqdm to show download progress
             def cb(data):
-                l = len(data)
-                pbar.update(l)
+                data_length = len(data)
+                progress_bar.update(data_length)
                 f.write(data)
             ftp.retrbinary('RETR {}'.format(zip_file), cb)
 
@@ -90,9 +90,8 @@ class SchemaLessDD(object):
         with open(self.dict_path) as f:
             data = json.load(f)
 
-
-        for nonfield in [k for k in data if k.startswith('__') and k.endswith('__')]:
-            del data[nonfield]
+        for non_field in [k for k in data if k.startswith('__') and k.endswith('__')]:
+            del data[non_field]
 
         master = {}
         for col in data:
@@ -123,7 +122,7 @@ class SchemaLessDD(object):
         return d
 
 
-def stage(dd, stage_file_path, raw_file_path, year, sample=False):
+def stage(dd, stage_file_path, raw_file_path, year):
     year = str(year)
 
     with open(stage_file_path, 'w') as w:
@@ -143,40 +142,21 @@ def stage(dd, stage_file_path, raw_file_path, year, sample=False):
             total = sum(1 for _ in r)
             print("{} rows".format(total))
 
-            randoms = None
-            if sample:
-                # Randomly sample 1% of each annual data set
-                percentage = float(config['SAMPLING']['percentage'])
-                randoms = sorted(
-                    random.sample(range(1, total), int(total * percentage)),
-                    reverse=True
-                )
-
         with open(raw_file_path, encoding='cp1252') as r:
             print("Writing rows for new {} file".format(year))
             lc = 0
-            conscript = None
 
             for line in tqdm(r, total=total):
                 lc += 1
-                if sample is True and conscript is None:
-                    if randoms == []:
-                        break
-                    else:
-                        conscript = randoms.pop()
-
-                if sample is False or lc == conscript:
-                    if line.isspace():
-                        pass  # this skips any line that is pure whitespace, since it's not data
-                    else:
-                        w.write(','.join(
-                            [handlers[dd[c]['type']]
-                             (line[int(dd[c]['start']) - 1:int(dd[c]['end'])])
-                             for c in dd
-                             ]
-                        ) + '\n')
-
-                    conscript = None
+                if line.isspace():
+                    pass  # this skips any line that is pure whitespace, since it's not data
+                else:
+                    w.write(','.join(
+                        [handlers[dd[c]['type']]
+                         (line[int(dd[c]['start']) - 1:int(dd[c]['end'])])
+                         for c in dd
+                         ]
+                    ) + '\n')
 
 
 class PathFinder(object):
@@ -187,7 +167,6 @@ class PathFinder(object):
         stage_gz_template = 'births{}.csv.gz'
         data_raw_path = os.path.join('.')
 
-        self.config = os.path.join(data_raw_path, 'config.ini')
         self.dictionary = os.path.join(data_raw_path, 'dictionary.json')
         self.zip_name = zip_file_template.format(y, '' if year < 1994 else 'us')
         self.zip = os.path.join(data_raw_path, 'data', self.zip_name)
@@ -204,18 +183,5 @@ class PathFinder(object):
         return os.path.join(self.uz_folder, sizes[0][1])
 
 
-# Read configuration file
-config = ConfigParser()
-config.read(os.path.join('.', 'config.ini'))
-
-
-loop(
-    sample=config['SAMPLING']['enabled'] == 'True',
-    start=int(config['RAWDATA']['start']),
-    end=int(config['RAWDATA']['end']),
-    remove_zip=config['RAWDATA']['remove_zip'] == 'True',
-    remove_raw=config['RAWDATA']['remove_raw'] == 'True',
-    remove_stage=config['RAWDATA']['remove_stage'] == 'True'
-)
 if __name__ == '__main__':
-    pass
+    loop()

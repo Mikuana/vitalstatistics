@@ -12,3 +12,8 @@ inst/doc
 # Ignore Pages cache files
 pages/*_cache/
 pages/*_files/
+
+
+# Ignore JetBrains Idea folder
+.idea/
+/data-raw/data/*.csv

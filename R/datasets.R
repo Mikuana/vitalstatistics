@@ -3,14 +3,14 @@
 #' Exports all data sets included in this package into the feather format. This is intended for use
 #' by the Python pandas package.
 #'
-#' @name featherize
-featherize = function() {
-  rp = file.path('..', 'VitalStories', 'static', 'feathers')
-
-  feather::write_feather(births, file.path(rp, 'births.feather'))
-  feather::write_feather(HHS_cesarean_1989, file.path(rp, 'HHS_cesarean_1989.feather'))
-  feather::write_feather(HHS_cesarean_1989, file.path(rp, 'HHS_cesarean_1996.feather'))
-  feather::write_feather(HHS_cesarean_1989, file.path(rp, 'CDC_cesarean_2013.feather'))
+#' @param destination_path the path to the folder where you would like your feather files to be placed
+#'
+#' @export
+featherize = function(destination_path='.') {
+  feather::write_feather(births, file.path(destination_path, 'births.feather'))
+  feather::write_feather(HHS_cesarean_1989, file.path(destination_path, 'HHS_cesarean_1989.feather'))
+  feather::write_feather(HHS_cesarean_1996, file.path(destination_path, 'HHS_cesarean_1996.feather'))
+  feather::write_feather(CDC_cesarean_2013, file.path(destination_path, 'CDC_cesarean_2013.feather'))
 
   # for(rd in list_files_with_exts('man', 'Rd')) {
   #   fp = rd %>% basename %>% file_path_sans_ext %>% paste0('.html') %>% file.path(rp, .)

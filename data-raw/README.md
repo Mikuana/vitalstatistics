@@ -1,6 +1,6 @@
-# Raw Data Processing
+# Instructions
 
-A shell script named `process.sh` is provided as a convenience wrapper to execute all of the necessary steps to perform raw data processing.
+To process the data in this package from source, first run `process_raw.py` to download, decompress, and extract the relevant columns of data for each vital statistics file. Then, execute the `process_reduced.R`.
 
 ## Definition Challenges
 
