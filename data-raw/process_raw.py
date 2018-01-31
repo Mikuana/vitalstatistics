@@ -53,18 +53,20 @@ def mz(stage_file):
     subprocess.check_output(['gzip', stage_file])
 
 
+# noinspection SpellCheckingInspection
 def ftp_get(zip_file, zip_path):
     ftp = FTP('ftp.cdc.gov')
     ftp.login()
+    # noinspection SpellCheckingInspection
     ftp.cwd('pub/Health_Statistics/NCHS/Datasets/DVS/natality')
     total = ftp.size(zip_file)
 
     with open(zip_path, 'wb') as f:
         print("Starting download of {}".format(zip_file))
-        with tqdm(total=total) as pbar:  # use tqdm to show download progress
+        with tqdm(total=total) as progress_bar:  # use tqdm to show download progress
             def cb(data):
                 data_length = len(data)
-                pbar.update(data_length)
+                progress_bar.update(data_length)
                 f.write(data)
             ftp.retrbinary('RETR {}'.format(zip_file), cb)
 
@@ -88,8 +90,8 @@ class SchemaLessDD(object):
         with open(self.dict_path) as f:
             data = json.load(f)
 
-        for nonfield in [k for k in data if k.startswith('__') and k.endswith('__')]:
-            del data[nonfield]
+        for non_field in [k for k in data if k.startswith('__') and k.endswith('__')]:
+            del data[non_field]
 
         master = {}
         for col in data:
