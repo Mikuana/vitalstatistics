@@ -4,7 +4,10 @@
 \alias{featherize}
 \title{Vital Statistics Data into Feathers}
 \usage{
-featherize()
+featherize(destination_path = ".")
+}
+\arguments{
+\item{destination_path}{the path to the folder where you would like your feather files to be placed}
 }
 \description{
 Exports all data sets included in this package into the feather format. This is intended for use
