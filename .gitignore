@@ -17,3 +17,6 @@ pages/*_files/
 # Ignore JetBrains Idea folder
 .idea/
 /data-raw/data/*.csv
+
+
+data-raw/__pycache__
