@@ -111,7 +111,7 @@ def decode(column_map, gz_file, nrows=None) -> pd.DataFrame:
 
         # if column has NA value, convert to int64 extension and cast NA as NaN
         if 'na_value' in v.keys():
-            df[k] = pd.Series(df[k].map(lambda x: np.nan if x == v['na_value'] else x), dtype='Int64')
+            df[k] = pd.Series(df[k].map(lambda x: np.nan if x == v['na_value'] else x), dtype='float')
 
     return df
 
@@ -124,8 +124,8 @@ def load_year(year: int, nrows=None) -> pd.DataFrame:
 
 def write_subset():
     for year in Years.keys():
-        df = load_year(year)
-        df.to_csv(Path(staged_folder, f'{year}.csv.gz'))
+        df = load_year(year, nrows=1e5)
+        df.to_feather(Path(staged_folder, f'{year}.feather'))
 
 
 if __name__ == '__main__':
