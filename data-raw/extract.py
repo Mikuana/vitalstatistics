@@ -80,6 +80,10 @@ def ftp_get(source_file, destination_path):
 
 
 def decode(column_map, gz_file, nrows=None) -> pd.DataFrame:
+    """
+    Load raw, encoded fixed-width-files into pandas DataFrame, decoding values using the definitions provided by
+    the data dictionary class.
+    """
     # we do strange math on start and stop, because the data dictionary uses values verbatim from
     # guides published by the CDC, but these are not zero indexed. So we need to make the start
     # column zero indexed, but ALSO make the tuple behave like a range, where the end value goes
@@ -117,14 +121,16 @@ def decode(column_map, gz_file, nrows=None) -> pd.DataFrame:
 
 
 def load_year(year: int, nrows=None) -> pd.DataFrame:
+    """ Load a specific encoded year file as a pandas DataFrame """
     df = decode(Years().__year__(str(year)), Path(staged_folder, f"{year}.fwf.gz"), nrows=nrows)
     df['YEAR'] = int(year)
     return df
 
 
 def write_subset():
+    """ Convert all compressed and encoded fixed-width-files into decoded feather format """
     for year in Years.keys():
-        df = load_year(year, nrows=1e5)
+        df = load_year(year)
         df.to_feather(Path(staged_folder, f'{year}.feather'))
 
 
