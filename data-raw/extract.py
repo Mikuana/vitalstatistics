@@ -1,5 +1,5 @@
 import gzip
-from birthcount.data_dictionary import Years
+from data_dictionary import Years
 from pathlib import Path
 import os
 import shutil
@@ -120,3 +120,15 @@ def load_year(year: int, nrows=None) -> pd.DataFrame:
     df = decode(Years().__year__(str(year)), Path(staged_folder, f"{year}.fwf.gz"), nrows=nrows)
     df['YEAR'] = int(year)
     return df
+
+
+def write_subset():
+    for year in Years.keys():
+        df = load_year(year)
+        df.to_csv(Path(staged_folder, f'{year}.csv.gz'))
+
+
+if __name__ == '__main__':
+    get_zips(staged_folder)
+    re_zip(staged_folder)
+    write_subset()

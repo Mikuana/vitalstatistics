@@ -1,9 +1,8 @@
 import json
-from birthcount import __dictionary_path__
 
 
 class DataDictionary(object):
-    with open(__dictionary_path__) as f:
+    with open('dictionary.json') as f:
         raw = json.load(f)
 
 
