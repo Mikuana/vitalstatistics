@@ -249,8 +249,8 @@ staged_data = function(set_year, column_selection=NA) {
       if('OSTATE' %in% fields) {
         # Use 2002 STATENAT definitions to remap OSTATE codes
         lkp = setNames(
-          data_dictionary()$columns$STATENAT$metadata$levels,
-          data_dictionary()$columns$STATENAT$metadata$labels
+          data_dictionary$columns$STATENAT$metadata$levels,
+          data_dictionary$columns$STATENAT$metadata$labels
           )
         mutate(labeled_data,
           STATENAT = factor(lkp[as.character(OSTATE)], lkp, names(lkp))
@@ -272,8 +272,8 @@ staged_data = function(set_year, column_selection=NA) {
       if('SEX' %in% fields) {
         # Use 2002 CSEX definitions to remap SEX codes
         lkp = setNames(
-            data_dictionary()$columns$CSEX$metadata$levels,
-            data_dictionary()$columns$CSEX$metadata$labels
+            data_dictionary$columns$CSEX$metadata$levels,
+            data_dictionary$columns$CSEX$metadata$labels
           )
         mutate(labeled_data,
           CSEX = factor(lkp[as.character(SEX)], lkp, names(lkp))
@@ -371,7 +371,7 @@ staged_data = function(set_year, column_selection=NA) {
 # reduce the number of physical records by grouping and counting by a data set
 # with minimal dimensions.
 #===============================================================================
-births = lapply(names(data_dictionary()$data_set), function(y) {
+births = lapply(names(data_dictionary$data_set), function(y) {
   staged_data(y) %>%
     group_by(
       birth_month_date,
