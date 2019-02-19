@@ -130,9 +130,11 @@ def load_year(year: int, nrows=None) -> pd.DataFrame:
 def write_subset():
     """ Convert all compressed and encoded fixed-width-files into decoded feather format """
     for year in Years.keys():
-        print(f"Converting {year} file to feather format")
-        df = load_year(year)
-        df.to_feather(Path(staged_folder, f'{year}.feather'))
+        feather_path = Path(staged_folder, f'{year}.feather')
+        if not feather_path.exists():
+            print(f"Converting {year} file to feather format")
+            df = load_year(year)
+            df.to_feather(feather_path)
 
 
 if __name__ == '__main__':
