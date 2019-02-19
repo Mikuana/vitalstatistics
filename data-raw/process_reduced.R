@@ -1,122 +1,8 @@
-# This script "stitches" together the various years of data that are mapped by the
-# data dictionary, and reduces records across dimensions as much as possible without
-# loss of information.
-
 library(dplyr)
 
-data_dictionary = function() {
-  get_tree = function() {
-    jsonlite::fromJSON(file.path('.', 'dictionary.json'))
-  }
-
-
-  get_nodes = function() {
-    nodes = names(get_tree())
-    property_node_pattern = '^__\\w+__$'
-
-    # ignore non-field
-    list(
-      fields = nodes[!grepl(property_node_pattern, nodes)],
-      properties = nodes[grepl(property_node_pattern, nodes)]
-    )
-
-  }
-
-  tree = get_tree()
-  nodes = get_nodes()
-
-  materialize = function() {
-    # Materialize full property definitions for each year node by adding in default values if
-    # the year doesn't define them already. This also swaps the node order from code (field)
-    # coming before year, to year coming before field.
-    dict = list()
-    for(node in nodes$fields) {
-      defs = tree[[node]][['default']]
-      subnodes = names(tree[[node]])
-      years = subnodes[which(subnodes != 'default')]
-
-      for(year in subnodes) {
-        props = tree[[node]][[year]]
-        dict[[year]][[node]] = c(props, defs[!names(defs) %in% names(props)])
-      }
-    }
-
-    dict$years = function() {
-      # Returns a vector of years that are included in the data dictionary
-      names(tree$`__checks__`)
-    }
-
-    dict$checks = tree$`__checks__`
-
-    return(dict)
-  }
-  materialize()
-}
-
-
-# Call up config file attributes and cast them for R
-config = ini::read.ini(file.path('.', 'config.ini'))
-config$SAMPLING$enabled = config$SAMPLING$enabled == "True"
-config$SAMPLING$percentage = as.numeric(config$SAMPLING$percentage)
-
+data_dictionary = jsonlite::fromJSON(file.path('dictionary.json'))
 
 staged_data = function(set_year, column_selection=NA) {
-  data_folder = file.path('.', 'data')
-  if(is.na(column_selection)) { column_selection=TRUE }
-  dict = data_dictionary()
-  set_dict = dict[[as.character(set_year)]][column_selection]
-
-  #===============================================================================
-  # Data Dictionary Labelling and Transformations
-  #===============================================================================
-  recode_factors = function(coded_data) {
-    # Read definitions from data from dictionary and apply it to dataset, and
-    # construct ordered factor mutate statements as strings.
-    fms = list()
-    for(i in names(set_dict)) {
-      if(all(c('levels', 'labels') %in% names(set_dict[[i]]))) {
-        levels = set_dict[[i]]$levels
-        if(is.numeric(levels)) {
-          levels = paste0(set_dict[[i]]$levels, collapse=",")
-        }else{
-          levels = paste0('"', set_dict[[i]]$levels, '"', collapse=",")
-        }
-        labels = paste0('"', set_dict[[i]]$labels, '"' , collapse=",")
-        cast_type = ifelse(set_dict[[i]]$ordered=='True', 'ordered', 'factor')
-        fms[[i]] = paste0(cast_type,"(",i,", levels=c(",levels,"), labels=c(",labels,"))")
-      }
-    }
-    return(mutate_(coded_data, .dots = fms))
-  }
-
-  recode_flags = function(coded_data) {
-    lg_fields = NULL
-    for(x in names(set_dict)) {
-      if(set_dict[[x]][['type']]=='logical') {
-        lg_fields = c(lg_fields, x)
-      }
-    }
-    lg_mutate = function(x) { as.logical(ifelse(is.na(x), 0, x)) }
-    if(is.null(lg_fields)) { return(coded_data) }
-    else { return( coded_data %>% mutate_each_(funs(lg_mutate(.)), lg_fields) )}
-  }
-
-  recode_na = function(coded_data) {
-    na_formulas = list()
-    for(x in names(set_dict)) {
-      if('na_value' %in% names(set_dict[[x]])) {
-        row = set_dict[[x]]
-        na_formulas[x] = paste0("ifelse(", x," == ", row$na_value,", NA,", x, ")")
-      }
-    }
-    return(mutate_(coded_data, .dots = na_formulas))
-  }
-
-  add_year = function(coded_data) {
-    mutate(coded_data, birth_year=as.integer(set_year))
-
-  }
-
   #===============================================================================
   # Data set filtering
   #===============================================================================
@@ -131,7 +17,7 @@ staged_data = function(set_year, column_selection=NA) {
     # Prior to 1985, much of the birth weight records represented 50% samples. For
     # our purposes this requires duplication of any record with a RECWT value
     # equal to 2. Prior to 1972, the the RECWT field did not exist, but all records
-    # were 50%, so we impute the values
+    # were 50% samples, so we impute the values as RECWT = 2
      if(set_year %in% 1968:1971) {
       coded_data = mutate(coded_data, RECWT = 2)
      }
@@ -144,6 +30,11 @@ staged_data = function(set_year, column_selection=NA) {
         data.table::rbindlist(use.names=TRUE)
      }
      else {return(coded_data)}
+  }
+
+  add_birth_year = function(coded_data) {
+    # rename YEAR to birth_year, in order to fit with existing references
+    return( rename(coded_data, birth_year=YEAR) )
   }
 
   add_birth_date = function(coded_data) {
@@ -199,14 +90,14 @@ staged_data = function(set_year, column_selection=NA) {
     if('DMAGE' %in% names(coded_data)) {
       coded_data = mutate(
         coded_data,
-        mother_age = coalesce(mother_age, DMAGE)
+        mother_age = coalesce(mother_age, as.integer(DMAGE))
       )
     }
 
     if('UMAGERPT' %in% names(coded_data)) {
       coded_data = mutate(
         coded_data,
-        mother_age = coalesce(mother_age, UMAGERPT)
+        mother_age = coalesce(mother_age, as.integer(UMAGERPT))
       )
     }
 
@@ -214,7 +105,7 @@ staged_data = function(set_year, column_selection=NA) {
       coded_data = mutate(
         coded_data,
         mother_age = coalesce(
-          mother_age, ifelse(MAGER %in% 13:49, MAGER, NA)
+          mother_age, ifelse(MAGER %in% 13:49, as.integer(MAGER), NA)
         )
       )
     }
@@ -223,7 +114,7 @@ staged_data = function(set_year, column_selection=NA) {
       coded_data = mutate(
         coded_data,
         mother_age = coalesce(
-          mother_age, ifelse(MAGER41 %in% 2:37, MAGER41 + 13L, NA)
+          mother_age, ifelse(MAGER41 %in% 2:37, as.integer(MAGER41) + 13L, as.integer(NA))
         )
       )
     }
@@ -358,8 +249,8 @@ staged_data = function(set_year, column_selection=NA) {
       if('OSTATE' %in% fields) {
         # Use 2002 STATENAT definitions to remap OSTATE codes
         lkp = setNames(
-            data_dictionary()$`2002`$STATENAT$levels,
-            data_dictionary()$`2002`$STATENAT$labels
+          data_dictionary()$columns$STATENAT$metadata$levels,
+          data_dictionary()$columns$STATENAT$metadata$labels
           )
         mutate(labeled_data,
           STATENAT = factor(lkp[as.character(OSTATE)], lkp, names(lkp))
@@ -381,8 +272,8 @@ staged_data = function(set_year, column_selection=NA) {
       if('SEX' %in% fields) {
         # Use 2002 CSEX definitions to remap SEX codes
         lkp = setNames(
-            data_dictionary()$`2002`$CSEX$levels,
-            data_dictionary()$`2002`$CSEX$labels
+            data_dictionary()$columns$CSEX$metadata$levels,
+            data_dictionary()$columns$CSEX$metadata$labels
           )
         mutate(labeled_data,
           CSEX = factor(lkp[as.character(SEX)], lkp, names(lkp))
@@ -450,24 +341,15 @@ staged_data = function(set_year, column_selection=NA) {
   # Function Execution
   #===============================================================================
 
-  # Assemble a command to return the decompressed gz staging file
-  gz_com = paste('zcat', file.path(data_folder, paste0('births', set_year ,'.csv.gz')))
-
-  sel = set_dict %>% names
-  col = setNames(set_dict[sel] %>%  sapply(function(x) x[['type']]) %>% as.character, sel)
-
+  data_folder = file.path('~/Data/BirthCount/')
+  df = feather::read_feather(file.path(data_folder, paste0(set_year, '.feather')))
 
   tryCatch({
-    data.table::fread(input=gz_com, stringsAsFactors=FALSE, select = sel, colClasses = col) %>%
-      raw_record_test %>%
-      recode_na %>%
+    df %>%
       add_maternal_age %>%
       record_weighting %>%
-      recode_factors %>%
-      recode_flags %>%
       filter_residents %>%
-      # resident_record_test %>%
-      add_year %>%
+      add_birth_year %>%
       add_birth_date %>%
       add_birth_month_date %>%
       add_birth_weekday_date %>%
@@ -489,7 +371,7 @@ staged_data = function(set_year, column_selection=NA) {
 # reduce the number of physical records by grouping and counting by a data set
 # with minimal dimensions.
 #===============================================================================
-births = lapply(data_dictionary()$years(), function(y) {
+births = lapply(names(data_dictionary()$data_set), function(y) {
   staged_data(y) %>%
     group_by(
       birth_month_date,
@@ -503,10 +385,6 @@ births = lapply(data_dictionary()$years(), function(y) {
     summarize(cases = n())
 }) %>%
   data.table::rbindlist(use.names=TRUE)
-
-if(config$SAMPLING$enabled) {
-  births = mutate(births, cases = cases / config$SAMPLING$percentage)
-}
 
 devtools::use_data(births, overwrite=TRUE)
 
