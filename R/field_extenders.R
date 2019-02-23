@@ -17,32 +17,34 @@
 #'
 #' @examples
 #' dt = data.table::copy(births)
-#' ext.birth_weekday(dt)
+#' dt = ext.birth_weekday(dt)
 #' dt
 #'
 #' @export
 ext.birth_weekday = function(births_data) {
-  births_data[,`:=`(birth_weekday = lubridate::wday(birth_weekday_date, label=TRUE))]
+  dplyr::mutate(births_data, birth_weekday = lubridate::wday(birth_weekday_date, label=TRUE))
 }
 
 #' @rdname ext.birth_weekday
 #' @export
 ext.birth_month = function(births_data) {
-  births_data[,`:=`(birth_month = lubridate::month(birth_month_date, label=TRUE))]
+  dplyr::mutate(births_data, birth_month = lubridate::month(birth_month_date, label=TRUE))
 }
 
 #' @rdname ext.birth_weekday
 #' @export
 ext.birth_year = function(births_data) {
-  births_data[,`:=`(birth_year = lubridate::year(birth_month_date))]
+  dplyr::mutate(births_data, birth_year = lubridate::year(birth_month_date))
 }
 
 #' @rdname ext.birth_weekday
 #' @export
 ext.birth_decade = function(births_data) {
-  births_data[,`:=`(
-    birth_decade = ordered(paste0(floor((lubridate::year(birth_month_date)) / 10) * 10, "s"))
-  )][,`:=`(birth_decade = dplyr::recode(birth_decade, '1960s' = '1968/9'))]
+  dplyr::mutate(
+    births_data,
+    birth_decade = ordered(paste0(floor((lubridate::year(birth_month_date)) / 10) * 10, "s")),
+    birth_decade = dplyr::recode(birth_decade, '1960s' = '1968/9')
+  )
 }
 
 #' Birth Data Field Extender Suites
@@ -55,10 +57,16 @@ ext.birth_decade = function(births_data) {
 #'   changes may alter the results of these calculations)
 #' @return a data frame with the newly applied calculated fields
 #'
+#' @examples
+#' dt = data.table::copy(births)
+#' dt = ext.birth_weekday(dt)
+#' dt
+#'
 #' @export
 ext_suite.birth_date = function(births_data) {
-  ext.birth_decade(births_data)
-  ext.birth_year(births_data)
-  ext.birth_month(births_data)
-  ext.birth_weekday(births_data)
+  births_data = ext.birth_decade(births_data)
+  births_data = ext.birth_year(births_data)
+  births_data = ext.birth_month(births_data)
+  births_data = ext.birth_weekday(births_data)
+  return(births_data)
 }

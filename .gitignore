@@ -3,6 +3,9 @@
 .RData
 .Ruserdata
 
+# Ignore pycaches
+**/__pycache__
+
 # Ignore compressed data files
 *.gz
 *.zip

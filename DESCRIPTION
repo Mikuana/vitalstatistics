@@ -1,7 +1,7 @@
 Package: vitalstatistics
 Type: Package
 Title: CDC Vital Statistics Analysis Tools
-Version: 0.0.2.900
+Version: 0.0.3.000
 Author: Christopher Boyd
 Maintainer: Christopher Boyd <mikuana@gmail.com>
 Description: 
@@ -11,7 +11,6 @@ LazyData: true
 RoxygenNote: 6.0.1
 Depends: 
     R (>= 2.10),
-    data.table,
     magrittr
 Imports:
     dplyr,
@@ -21,6 +20,7 @@ Imports:
 Suggests:
     ggplot2,
     testthat,
+    data.table,
     knitr,
     tufte,
     rmarkdown,
